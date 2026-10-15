@@ -323,7 +323,7 @@
       <div class="flex flex-wrap items-center gap-6 mt-10 animate-fade-up d6">
         <div>
           <p class="font-black text-3xl text-secondary" id="stat-students"
-             style="font-family:'Nunito',sans-serif;">5&nbsp;00+</p>
+             style="font-family:'Nunito',sans-serif;">+5000 </p>
           <p class="text-primary-dark/55 text-xs font-semibold mt-0.5">Élèves actifs</p>
         </div>
         <div class="w-px h-10 bg-primary/15"></div>
@@ -349,7 +349,7 @@
         <div class="rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
              style="height:430px; background:linear-gradient(145deg,#4F46E5 0%,#3730A3 60%,#272275 100%);">
 
-            <img src="sary_fianarana.webp" alt="Élève Matematikup"
+            <img src="image_etudiant.jpeg" alt="Élève Matematikup"
                  class="w-full h-full object-cover object-top" />
 
           <div class="w-full h-full flex items-end justify-center relative">
@@ -999,7 +999,7 @@
   const io = new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting && !counted) {
       counted = true;
-      animateCount(document.getElementById('stat-students'), 12000, '+');
+      animateCount(document.getElementById('stat-students'), 5000,'+');
       animateCount(document.getElementById('stat-courses'),  500,   '+');
       io.disconnect();
     }
