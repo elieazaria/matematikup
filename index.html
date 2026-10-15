@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATEMATIKUP — La plateforme maths #1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Arial', 'sans-serif'],
+            body:    ['Arial', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              DEFAULT: '#3730A3',
+              dark:    '#272275',
+              light:   '#4F46E5',
+            },
+            secondary: {
+              DEFAULT: '#FF5A36',
+              dark:    '#E04824',
+              light:   '#FF7A5C',
+            },
+            accent: {
+              DEFAULT: '#2FD9A8',
+              dark:    '#24AE86',
+              light:   '#55E3BA',
+            },
+          },
+          keyframes: {
+            'fade-down': {
+              '0%':   { opacity: '0', transform: 'translateY(-20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            'fade-up': {
+              '0%':   { opacity: '0', transform: 'translateY(28px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            'fade-right': {
+              '0%':   { opacity: '0', transform: 'translateX(48px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+            'float': {
+              '0%,100%': { transform: 'translateY(0px)' },
+              '50%':     { transform: 'translateY(-12px)' },
+            },
+            'slide-badge': {
+              '0%':   { opacity: '0', transform: 'translateX(24px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+          },
+          animation: {
+            'fade-down':   'fade-down .6s cubic-bezier(.22,.68,0,1.2) both',
+            'fade-up':     'fade-up .65s cubic-bezier(.22,.68,0,1.2) both',
+            'fade-right':  'fade-right .7s cubic-bezier(.22,.68,0,1.2) both',
+            'float':       'float 4s ease-in-out infinite',
+            'slide-badge': 'slide-badge .55s cubic-bezier(.22,.68,0,1.2) both',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: #fff;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4,h5,button,.font-display { font-family: 'Nunito', sans-serif; }
+
+    /* Delay helpers */
+    .d1 { animation-delay: .05s; }
+    .d2 { animation-delay: .15s; }
+    .d3 { animation-delay: .27s; }
+    .d4 { animation-delay: .38s; }
+    .d5 { animation-delay: .48s; }
+    .d6 { animation-delay: .58s; }
+    .d7 { animation-delay: .72s; }
+    .d8 { animation-delay: .88s; }
+
+    /* Underline accent */
+    .uline-accent {
+      text-decoration: underline;
+      text-decoration-color: #2FD9A8;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 5px;
+    }
+
+    /* Wave */
+    .wave-wrap { position: absolute; bottom: -1px; left: 0; width: 100%; line-height: 0; }
+    .wave-wrap svg { display: block; width: 100%; }
+
+    /* Search */
+    .search-input::placeholder { color: rgba(0,0,0,.4); }
+    .search-input:focus { outline: none; }
+
+    /* Dropdown */
+    .has-dropdown { position: relative; }
+    .dropdown-panel {
+      display: none; position: absolute; top: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%); background: #272275;
+      border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+      padding: 6px 0; min-width: 150px; z-index: 100;
+    }
+    .has-dropdown:hover .dropdown-panel { display: block; }
+    .dropdown-panel a {
+      display: block; padding: 8px 16px; font-size: .84rem;
+      color: rgba(255,255,255,.7); transition: color .15s;
+    }
+    .dropdown-panel a:hover { color: #2FD9A8; }
+
+    /* Mobile menu */
+    #mob-menu { display: none; }
+    #mob-menu.open { display: block; }
+
+    /* Course / badge pills */
+    .badge-pill {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      letter-spacing: .03em;
+    }
+    .tag-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 99px;
+    }
+
+    .pill {
+  display: inline-block;
+  border: 2px solid #3730A3;          /* primary */
+  color: #3730A3;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.pill sup { font-size: .6em; vertical-align: super; }
+.pill:hover { background: #3730A3; color: #fff; }
+
+    /* Filter button states */
+    .active-primary   { background:#3730A3; color:#fff; }
+    .active-secondary { background:#FF5A36; color:#fff; }
+    .active-accent    { background:#2FD9A8; color:#272275; }
+    .inactive-pill    { background:#F3F4F6; color:#374151; }
+    .inactive-pill:hover { background:#E5E7EB; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #272275; }
+    ::-webkit-scrollbar-thumb { background: #FF5A36; border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     HERO SECTION
+════════════════════════════════════ -->
+<section class="relative min-h-screen overflow-hidden pt-[72px] bg-white">
+
+  <!-- Glow blobs -->
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div class="absolute -top-32 -left-24 w-[500px] h-[500px] rounded-full opacity-10"
+         style="background:radial-gradient(circle,#4F46E5,transparent 70%);"></div>
+    <div class="absolute bottom-0 right-0 w-[420px] h-[420px] rounded-full opacity-10"
+         style="background:radial-gradient(circle,#FF5A36,transparent 70%);"></div>
+  </div>
+
+  <!-- ────── NAVBAR ────── -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 w-full px-5 md:px-10 lg:px-16 py-3
+                 border-b border-primary/5 bg-white/95 backdrop-blur-md transition-shadow duration-300">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+
+      <!-- Logo (image locale) -->
+      <a href="#" class="flex items-center flex-shrink-0 animate-fade-down d1" aria-label="MATEMATIKUP — Accueil">
+        <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+      </a>
+
+      <!-- Nav links -->
+      <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark animate-fade-down d2">
+        <!-- Classe (menu déroulant) -->
+          <li class="group relative">
+  <button class="flex items-center gap-1 hover:text-secondary transition-colors duration-200 py-2">
+    Classe
+    <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+
+  <!-- Méga-menu -->
+  <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+    <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]"
+         style="background:#EEF0FF;">
+
+      <!-- Collège -->
+      <div class="w-[190px] flex-shrink-0">
+        <p class="font-black text-primary-dark text-sm mb-4" style="font-family:'Nunito',sans-serif;">Collège</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="classe.html#6e" class="pill">6<sup>e</sup></a>
+          <a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+          <a href="classe.html#4e" class="pill">4<sup>e</sup></a>
+          <a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+        </div>
+      </div>
+
+      <!-- Séparateur -->
+      <div class="w-px bg-primary/15"></div>
+
+      <!-- Lycée -->
+      <div class="flex-1">
+        <p class="font-black text-primary-dark text-sm mb-4" style="font-family:'Nunito',sans-serif;">Lycée</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="classe.html#seconde" class="pill">Seconde</a>
+          <a href="classe.html#premiere-l"   class="pill">1<sup>re</sup> L</a>
+          <a href="classe.html#premiere-s"   class="pill">1<sup>re</sup> S</a>
+          <a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+          <a href="classe.html#terminale-l"   class="pill">Terminale L</a>
+          <a href="classe.html#terminale-s"   class="pill">Terminale S</a>
+          <a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</li>
+        <li><a href="#premium" class="hover:text-secondary transition-colors duration-200">Nos offres</a></li>
+        <li><a href="sujets.html" class="hover:text-secondary transition-colors duration-200">Sujets types</a></li>
+        <li><a href="prepa.html" class="hover:text-secondary transition-colors duration-200">Cours prépa</a></li>
+        <li><a href="a-propos.html" class="hover:text-secondary transition-colors duration-200">Qui sommes-nous&nbsp;?</a></li>
+        <li><a href="parents.html" class="hover:text-secondary transition-colors duration-200">Espace parents</a></li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2.5 animate-fade-down d3">
+        <a href="auth.html#register"
+           class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl
+                  shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97]
+                  transition-all duration-200 whitespace-nowrap">
+          S'inscrire
+        </a>
+        <a href="auth.html#login"
+           class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl
+                  hover:border-primary hover:bg-primary/5 transition-all duration-200 whitespace-nowrap">
+          Connexion
+        </a>
+
+        <!-- Mobile burger -->
+        <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+          <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span>
+          <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span>
+          <span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu panel -->
+    <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+      <a href="classe.html" class="block hover:text-secondary transition-colors">Classe</a>
+      <a href="#premium" class="block hover:text-secondary transition-colors">Nos offres</a>
+      <a href="sujets.html" class="block hover:text-secondary transition-colors">Sujets types</a>
+      <a href="prepa.html" class="block hover:text-secondary transition-colors">Cours prépa</a>
+      <a href="a-propos.html" class="block hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a>
+      <a href="parents.html" class="block hover:text-secondary transition-colors">Espace parents</a>
+      <hr class="border-primary/10 my-2" />
+      <a href="auth.html#login" class="block text-primary hover:text-secondary transition-colors">Connexion</a>
+    </div>
+
+  </header>
+
+  <!-- ────── MAIN CONTENT ────── -->
+  <div class="relative z-10 max-w-7xl mx-auto px-5 md:px-10 lg:px-16
+              pt-14 pb-44 grid lg:grid-cols-2 gap-10 items-center">
+
+    <!-- LEFT -->
+    <div class="max-w-[560px]">
+
+      <!-- Badge pill -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-4 py-1.5 text-xs font-bold text-primary mb-7 animate-fade-up d1">
+        <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        La plateforme n°1 pour mieux apprendre les #maths
+      </div>
+
+      <!-- H1 -->
+      <h1 class="font-black text-4xl sm:text-5xl lg:text-[3.3rem] leading-[1.08] tracking-tight mb-6 text-primary-dark
+                 animate-fade-up d2" style="font-family:'Nunito',sans-serif;">
+        Comprends les maths,  <br/>
+        <span class="text-secondary uline-accent">ne les récite plus.</span><br/>
+        Et si tu apprenais enfin à 
+        <span class="text-secondary">les aimer ?</span>
+      </h1>
+
+      <!-- Description -->
+      <p class="text-primary-dark/60 text-[1.02rem] leading-relaxed mb-9 animate-fade-up d3">
+        Construisez vos compétences en maths jour après jour, sans attendre l’examen !
+      </p>
+
+      <div class="p-1.5">
+            <button class="bg-secondary hover:bg-secondary-dark text-white font-black text-sm
+                           px-5 py-3 rounded-xl transition-all hover:scale-[1.02] active:scale-[.97]
+                           whitespace-nowrap h-full">
+              Inscris-toi gratuitement
+            </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex flex-wrap items-center gap-6 mt-10 animate-fade-up d6">
+        <div>
+          <p class="font-black text-3xl text-secondary" id="stat-students"
+             style="font-family:'Nunito',sans-serif;">5&nbsp;00+</p>
+          <p class="text-primary-dark/55 text-xs font-semibold mt-0.5">Élèves actifs</p>
+        </div>
+        <div class="w-px h-10 bg-primary/15"></div>
+        <div>
+          <p class="font-black text-3xl text-secondary" id="stat-courses"
+             style="font-family:'Nunito',sans-serif;">200+</p>
+          <p class="text-primary-dark/55 text-xs font-semibold mt-0.5">Cours disponibles</p>
+        </div>
+        <div class="w-px h-10 bg-primary/15"></div>
+        <div>
+          <p class="font-black text-3xl text-secondary"
+             style="font-family:'Nunito',sans-serif;">4.9/5</p>
+          <p class="text-primary-dark/55 text-xs font-semibold mt-0.5">Note moyenne</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Image + badges -->
+    <div class="relative flex justify-center lg:justify-end mt-8 lg:mt-0 animate-fade-right d3">
+      <div class="relative animate-float" style="width:360px;">
+
+        <!-- Person card -->
+        <div class="rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border border-white/10"
+             style="height:430px; background:linear-gradient(145deg,#4F46E5 0%,#3730A3 60%,#272275 100%);">
+
+            <img src="sary_fianarana.webp" alt="Élève Matematikup"
+                 class="w-full h-full object-cover object-top" />
+
+          <div class="w-full h-full flex items-end justify-center relative">
+            <!-- Placeholder silhouette -->
+            <div class="absolute inset-0 flex items-center justify-center flex-col gap-2 opacity-30">
+              <svg class="w-24 h-24 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+              <p class="text-white text-xs font-semibold text-center leading-relaxed px-6">
+                Remplacer par<br/>l'image de l'élève
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge: rating (top-right) -->
+        <div class="absolute -top-4 -right-4 bg-white border border-primary/10 rounded-2xl shadow-xl px-4 py-3
+                    flex items-center gap-2.5 animate-slide-badge d7 z-10">
+          <span class="text-secondary text-2xl leading-none">★</span>
+          <div>
+            <p class="font-black text-primary-dark text-base leading-none"
+               style="font-family:'Nunito',sans-serif;">4.9/5</p>
+            <p class="text-primary-dark/45 text-[11px] mt-0.5 font-semibold">Satisfaction élèves</p>
+          </div>
+        </div>
+
+        <!-- Badge: niveau débloqué (bottom-left) -->
+        <div class="absolute -bottom-5 -left-5 bg-primary border border-white/10
+                    rounded-2xl shadow-xl px-3.5 py-3 flex items-center gap-2.5
+                    animate-slide-badge d7 z-10" style="max-width:210px">
+          <div class="w-9 h-9 bg-secondary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <span class="text-[1.1rem]">🏆</span>
+          </div>
+          <div class="min-w-0">
+            <p class="font-black text-white text-[13px] leading-tight"
+               style="font-family:'Nunito',sans-serif;">Niveau débloqué !</p>
+            <p class="text-white/55 text-[11px] mt-0.5 truncate font-semibold">
+              Algèbre — Niveau 3 / 5
+            </p>
+          </div>
+        </div>
+
+        <!-- Badge: résultats (bottom-right) -->
+        <div class="absolute -bottom-5 right-2 bg-primary border border-white/10
+                    rounded-2xl shadow-xl px-3.5 py-3 flex items-center gap-2
+                    animate-slide-badge d8 z-10" style="max-width:155px">
+          <div class="w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          </div>
+          <div>
+            <p class="text-accent font-black text-[13px] leading-tight"
+               style="font-family:'Nunito',sans-serif;">+78% résultats</p>
+            <p class="text-white/50 text-[11px] mt-0.5 font-semibold">Moyenne en hausse</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave séparateur -->
+  <div class="wave-wrap" aria-hidden="true">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,45 C480,90 960,0 1440,45 L1440,90 L0,90 Z" fill="#EEF0FF"/>
+    </svg>
+  </div>
+
+</section>
+<!-- ═══ FIN HERO SECTION ═══ -->
+
+
+<!-- ════════════════════════════════════
+     SECTION — PREMIUM
+════════════════════════════════════ -->
+<section id="premium" style="background:#EEF0FF;" class="py-16 px-5 md:px-10 lg:px-16">
+  <div class="max-w-7xl mx-auto">
+    <div class="rounded-3xl overflow-hidden relative bg-primary-dark">
+
+      <!-- Decorative circles -->
+      <div class="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-20"
+           style="background:radial-gradient(circle,#FF5A36,transparent 70%);"></div>
+      <div class="pointer-events-none absolute -bottom-16 left-[30%] w-56 h-56 rounded-full opacity-20"
+           style="background:radial-gradient(circle,#2FD9A8,transparent 70%);"></div>
+
+      <div class="relative z-10 grid lg:grid-cols-2 gap-0 items-stretch">
+
+        <!-- LEFT — Text -->
+        <div class="p-8 md:p-12 flex flex-col justify-center">
+
+          <!-- Badge pill -->
+          <div class="inline-flex items-center gap-2 bg-secondary/15 border border-secondary/30
+                      rounded-full px-4 py-1.5 text-xs font-black text-secondary-light mb-6 w-fit
+                      uppercase tracking-widest">
+            👑 MATEMATIKUP PREMIUM
+          </div>
+
+          <h2 class="font-black text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-4"
+              style="font-family:'Nunito',sans-serif;">
+            Passez au niveau<br/>
+            <span class="text-secondary underline decoration-accent decoration-4 underline-offset-4">supérieur</span>
+            avec<br/>MATEMATIKUP Premium
+            <span class="text-3xl ml-1">🚀</span>
+          </h2>
+
+          <p class="text-white/60 text-base leading-relaxed mb-8 max-w-md">
+            Accédez à l'intégralité de notre catalogue, bénéficiez d'un accompagnement IA personnalisé
+            et révisez sans limites avoir des bons résultats.
+          </p>
+
+          <!-- Feature list 2-cols -->
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-10">
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Accès illimité à tous les cours
+            </li>
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Corrections détaillées par IA
+            </li>
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Planning de révision personnalisé
+            </li>
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Sessions live avec des professeurs
+            </li>
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Téléchargement des fiches de cours
+            </li>
+            <li class="flex items-start gap-2.5 text-white/80 text-sm">
+              <span class="w-5 h-5 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-3 h-3 text-primary-dark" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              Concours &amp; examens blancs illimités
+            </li>
+          </ul>
+
+          <!-- CTA buttons -->
+          <div class="flex flex-wrap gap-3">
+            <a href="#"
+               class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white
+                      font-black px-7 py-3.5 rounded-2xl text-sm transition-all duration-200
+                      shadow-lg shadow-secondary/30 hover:scale-[1.02] active:scale-[.98]"
+               style="font-family:'Nunito',sans-serif;">
+              Voir tous les offres →
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT — Pricing card -->
+        <div class="p-8 md:p-12 flex items-center justify-center lg:justify-end">
+          <div class="w-full max-w-sm rounded-2xl p-7 border border-white/10"
+               style="background:rgba(255,255,255,0.07); backdrop-filter:blur(16px);">
+
+            <!-- Popular badge -->
+            <div class="flex justify-center mb-5">
+              <span class="inline-flex items-center gap-1.5 bg-secondary text-white
+                           font-black text-xs px-5 py-2 rounded-full"
+                    style="font-family:'Nunito',sans-serif;">
+                🔥 LE PLUS POPULAIRE
+              </span>
+            </div>
+
+            <p class="text-white/50 text-sm text-center mb-3 font-semibold">Abonnement mensuel</p>
+
+            <!-- Price -->
+            <div class="flex items-end justify-center gap-1 mb-1">
+              <span class="font-black text-white leading-none"
+                    style="font-family:'Nunito',sans-serif; font-size:4.5rem; line-height:1;">50 000</span>
+              <span class="text-sm font-semibold text-white/60">MGA/mois</span>
+            </div>
+
+            <p class="text-center text-secondary-light text-sm line-through font-black mb-1">Au lieu de 75.000 Ariary</p>
+
+            <!-- Feature mini-list -->
+            <ul class="space-y-3 mb-7">
+              <li class="flex items-center gap-3 text-white/75 text-sm">
+                <span class="text-lg flex-shrink-0">✅</span>
+                Tous les cours débloqués
+              </li>
+              <li class="flex items-center gap-3 text-white/75 text-sm">
+                <span class="text-lg flex-shrink-0">🤖</span>
+                Assistant IA
+              </li>
+              <li class="flex items-center gap-3 text-white/75 text-sm">
+                <span class="text-lg flex-shrink-0">📊</span>
+                Suivi de progression
+              </li>
+            </ul>
+
+            <!-- CTA -->
+            <a href="#"
+               class="block text-center bg-secondary hover:bg-secondary-dark text-white font-black
+                      py-4 rounded-xl text-sm transition-all duration-200
+                      shadow-lg shadow-secondary/25 hover:scale-[1.02] active:scale-[.98]"
+               style="font-family:'Nunito',sans-serif;">
+              ⚡ Commencer maintenant
+            </a>
+            <p class="text-center text-white/40 text-xs mt-3">Annulation possible à tout moment</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ════════════════════════════════════
+     SECTION — NOS ATOUTS POUR TOI
+════════════════════════════════════ -->
+<section id="features" style="background:#EEF0FF;" class="py-20 px-5 md:px-10 lg:px-16">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-14">
+      <!-- Pill badge -->
+      <div class="inline-flex items-center gap-2 bg-white border border-primary/10
+                  rounded-full px-5 py-2 text-xs font-black text-primary/70 mb-6
+                  shadow-sm tracking-widest uppercase">
+        ✨ Pourquoi Matematikup ?
+      </div>
+      <h2 class="font-black text-4xl md:text-5xl text-primary-dark mb-4 leading-tight"
+          style="font-family:'Nunito',sans-serif;">
+        Nos <span class="text-secondary underline decoration-accent decoration-4 underline-offset-4">atouts</span>
+        pour toi 🚀
+      </h2>
+      <p class="text-primary-dark/60 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+        Tout ce dont tu as besoin pour progresser en maths, au même
+        endroit — conçu spécialement pour les collégiens et lycéens.
+      </p>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <!-- Card 1 — secondary -->
+      <div class="feature-card bg-white rounded-2xl p-6 shadow-sm border border-primary/10
+                  hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute top-2 right-2 w-20 h-20 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"
+             style="background:radial-gradient(circle,#FFE3DC,transparent);"></div>
+        <span class="absolute top-4 right-4 w-6 h-6 rounded-full bg-secondary text-white
+                     text-xs font-black flex items-center justify-center z-10"
+              style="font-family:'Nunito',sans-serif;">1</span>
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 text-2xl" style="background:#FFE9E3;">
+          📚
+        </div>
+        <h3 class="font-black text-secondary-dark text-base mb-2 leading-snug"
+            style="font-family:'Nunito',sans-serif;">
+          + de 500 cours<br/>contextualisés
+        </h3>
+        <p class="text-primary-dark/60 text-sm leading-relaxed">
+          Des leçons adaptées à chaque niveau (6ème → Terminale), avec
+          des exemples du quotidien pour mieux comprendre.
+        </p>
+        <div class="mt-5 h-1 w-10 rounded-full bg-secondary"></div>
+      </div>
+
+      <!-- Card 2 — primary-light -->
+      <div class="feature-card bg-white rounded-2xl p-6 shadow-sm border border-primary/10
+                  hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute top-2 right-2 w-20 h-20 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"
+             style="background:radial-gradient(circle,#DDDBFF,transparent);"></div>
+        <span class="absolute top-4 right-4 w-6 h-6 rounded-full bg-primary-light text-white
+                     text-xs font-black flex items-center justify-center z-10"
+              style="font-family:'Nunito',sans-serif;">2</span>
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 text-2xl" style="background:#E4E3FF;">
+          🎮
+        </div>
+        <h3 class="font-black text-primary-light text-base mb-2 leading-snug"
+            style="font-family:'Nunito',sans-serif;">
+          Contenus interactifs &<br/>ludiques
+        </h3>
+        <p class="text-primary-dark/60 text-sm leading-relaxed">
+          Quizz, défis chronométrés, badges de progression…
+          Apprends les maths comme tu joues à un jeu vidéo.
+        </p>
+        <div class="mt-5 h-1 w-10 rounded-full bg-primary-light"></div>
+      </div>
+
+      <!-- Card 3 — accent -->
+      <div class="feature-card bg-white rounded-2xl p-6 shadow-sm border border-primary/10
+                  hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute top-2 right-2 w-20 h-20 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"
+             style="background:radial-gradient(circle,#CFF7EA,transparent);"></div>
+        <span class="absolute top-4 right-4 w-6 h-6 rounded-full bg-accent-dark text-white
+                     text-xs font-black flex items-center justify-center z-10"
+              style="font-family:'Nunito',sans-serif;">3</span>
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 text-2xl" style="background:#DDFAF1;">
+          📊
+        </div>
+        <h3 class="font-black text-accent-dark text-base mb-2 leading-snug"
+            style="font-family:'Nunito',sans-serif;">
+          Tableau de bord<br/>+ planning
+        </h3>
+        <p class="text-primary-dark/60 text-sm leading-relaxed">
+          Organise tes révisions grâce à un planning intelligent adapté à ton
+          emploi du temps et tes objectifs.
+        </p>
+        <div class="mt-5 h-1 w-10 rounded-full bg-accent"></div>
+      </div>
+
+      <!-- Card 4 — primary -->
+      <div class="feature-card bg-white rounded-2xl p-6 shadow-sm border border-primary/10
+                  hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
+        <div class="absolute top-2 right-2 w-20 h-20 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"
+             style="background:radial-gradient(circle,#D5D3F2,transparent);"></div>
+        <span class="absolute top-4 right-4 w-6 h-6 rounded-full bg-primary text-white
+                     text-xs font-black flex items-center justify-center z-10"
+              style="font-family:'Nunito',sans-serif;">4</span>
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 text-2xl" style="background:#E0DFF5;">
+          🤖
+        </div>
+        <h3 class="font-black text-primary text-base mb-2 leading-snug"
+            style="font-family:'Nunito',sans-serif;">
+          Suivi individuel<br/>+ assistant IA
+        </h3>
+        <p class="text-primary-dark/60 text-sm leading-relaxed">
+          Un assistant IA analyse tes erreurs et te propose des exercices ciblés
+          pour progresser rapidement.
+        </p>
+        <div class="mt-5 h-1 w-10 rounded-full bg-primary"></div>
+      </div>
+
+    </div><!-- /grid -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     SECTION — BADGES BANNER
+════════════════════════════════════ -->
+<section style="background:#EEF0FF;" class="pb-14 px-5 md:px-10 lg:px-16">
+  <div class="max-w-7xl mx-auto">
+    <div class="rounded-3xl px-8 md:px-10 py-8 flex flex-col md:flex-row items-start md:items-center
+                gap-8 justify-between bg-primary">
+
+      <!-- Left text -->
+      <div class="max-w-md">
+        <h3 class="font-black text-white text-xl md:text-2xl mb-2 leading-snug"
+            style="font-family:'Nunito',sans-serif;">
+          Progresse et gagne des badges 🏅
+        </h3>
+        <p class="text-white/65 text-sm leading-relaxed">
+          Chaque cours complété, chaque quiz réussi te rapproche d'un nouveau trophée.
+          Défie tes camarades et grimpe dans le classement !
+        </p>
+      </div>
+
+      <!-- Right badges -->
+      <div class="flex items-center gap-3 flex-wrap flex-shrink-0">
+
+        <!-- Badge 1 — Génie des maths -->
+        <div class="flex flex-col items-center gap-1.5 bg-white/10 border border-white/10
+                    rounded-2xl px-5 py-4 hover:bg-white/15 hover:border-secondary/60
+                    transition-all duration-200 cursor-default">
+          <span class="text-3xl">🥇</span>
+          <span class="text-secondary-light text-[11px] font-black text-center leading-tight"
+                style="font-family:'Nunito',sans-serif;">Génie des maths</span>
+        </div>
+
+        <!-- Badge 2 — Quiz Speedster -->
+        <div class="flex flex-col items-center gap-1.5 bg-white/10 border border-white/10
+                    rounded-2xl px-5 py-4 hover:bg-white/15 hover:border-white/50
+                    transition-all duration-200 cursor-default">
+          <span class="text-3xl">⚡</span>
+          <span class="text-white text-[11px] font-black text-center leading-tight"
+                style="font-family:'Nunito',sans-serif;">Quiz Speedster</span>
+        </div>
+
+        <!-- Badge 3 — Série x7 -->
+        <div class="flex flex-col items-center gap-1.5 bg-white/10 border border-white/10
+                    rounded-2xl px-5 py-4 hover:bg-white/15 hover:border-secondary/60
+                    transition-all duration-200 cursor-default">
+          <span class="text-3xl">🔥</span>
+          <span class="text-secondary-light text-[11px] font-black text-center leading-tight"
+                style="font-family:'Nunito',sans-serif;">Série x7</span>
+        </div>
+
+        <!-- Badge 4 — 100% Précision -->
+        <div class="flex flex-col items-center gap-1.5 bg-white/10 border border-white/10
+                    rounded-2xl px-5 py-4 hover:bg-white/15 hover:border-accent/60
+                    transition-all duration-200 cursor-default">
+          <span class="text-3xl">🎯</span>
+          <span class="text-accent text-[11px] font-black text-center leading-tight"
+                style="font-family:'Nunito',sans-serif;">100% Précision</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="bg-primary-dark">
+
+  <!-- ── Main footer grid ── -->
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 pt-16 pb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+
+      <!-- Col 1 — Brand -->
+      <div class="sm:col-span-2 lg:col-span-1">
+        <!-- Logo -->
+         <!-- Logo (image locale) -->
+      <a href="#" class="flex items-center flex-shrink-0 animate-fade-down d1" aria-label="MATEMATIKUP — Accueil">
+        <img src="logo_footer.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+      </a>
+        
+
+        <!-- Tagline -->
+        <p class="text-white/50 text-sm leading-relaxed mb-6 max-w-[260px]">
+          La plateforme e-learning qui réinvente l'apprentissage des mathématiques pour
+          les collégiens et lycéens français.
+        </p>
+
+        <!-- Contact -->
+        <ul class="space-y-3 mb-7">
+          <li class="flex items-center gap-2.5 text-white/50 text-sm">
+            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M2 7l10 7 10-7"/>
+            </svg>
+            <a href="mailto:contact@matematikup.fr"
+               class="hover:text-white transition-colors">contact@matematikup.mg</a>
+          </li>
+          <li class="flex items-center gap-2.5 text-white/50 text-sm">
+            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+            </svg>
+            <a href="tel:+261328818952"
+               class="hover:text-white transition-colors">+261 32 88 189 52</a>
+          </li>
+          <li class="flex items-center gap-2.5 text-white/50 text-sm">
+            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Antananarivo, Madagascar</span>
+          </li>
+        </ul>
+
+        <!-- Social icons -->
+        <div class="flex items-center gap-3">
+          <!-- Facebook -->
+          <a href="#" aria-label="Facebook"
+             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
+                    flex items-center justify-center text-white/50
+                    hover:border-secondary hover:text-secondary transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+            </svg>
+          </a>
+          <!-- Twitter / X -->
+          <a href="#" aria-label="Twitter"
+             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
+                    flex items-center justify-center text-white/50
+                    hover:border-secondary hover:text-secondary transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <!-- Instagram -->
+          <a href="#" aria-label="Instagram"
+             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
+                    flex items-center justify-center text-white/50
+                    hover:border-secondary hover:text-secondary transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <!-- YouTube -->
+          <a href="#" aria-label="YouTube"
+             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
+                    flex items-center justify-center text-white/50
+                    hover:border-secondary hover:text-secondary transition-all">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 001.95-1.97A29 29 0 0023 12a29 29 0 00-.46-5.58z"/>
+              <polygon fill="#272275" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Col 2 — Plateforme -->
+      <div>
+        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
+            style="font-family:'Nunito',sans-serif;">Plateforme</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Accueil</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Programmes</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Concours &amp; Examens</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Version Premium</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">À propos</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3 — Niveaux -->
+      <div>
+        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
+            style="font-family:'Nunito',sans-serif;">Niveaux</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">6ème – 5ème</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">4ème – 3ème</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">2nde – 1ère</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Terminale</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Prépa &amp; Concours</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4 — Support -->
+      <div>
+        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
+            style="font-family:'Nunito',sans-serif;">Support</h4>
+        <ul class="space-y-3">
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Nous contacter</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Blog</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Tutoriels</a></li>
+          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Espace parents</a></li>
+        </ul>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ── Newsletter banner ── -->
+    <div class="mt-12 rounded-2xl border border-white/10 bg-white/5 px-6 md:px-10 py-7
+                flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <!-- Left text -->
+      <div>
+        <p class="font-black text-white text-lg mb-1" style="font-family:'Nunito',sans-serif;">
+          📩 Restez informé(e) des nouveaux cours
+        </p>
+        <p class="text-white/50 text-sm">
+          Recevez nos actualités, astuces et nouveaux contenus chaque semaine.
+        </p>
+      </div>
+      <!-- Form -->
+      <form id="newsletter-form"
+            class="flex items-stretch w-full md:w-auto rounded-xl overflow-hidden
+                   border border-white/15 bg-primary flex-shrink-0"
+            onsubmit="handleNewsletter(event)">
+        <input
+          id="nl-email"
+          type="email"
+          placeholder="votre@email.fr"
+          required
+          class="bg-transparent text-white text-sm px-4 py-3 flex-1 min-w-0 md:w-64
+                 placeholder-white/40 focus:outline-none"
+        />
+        <button type="submit"
+                class="bg-secondary hover:bg-secondary-dark active:scale-[.97]
+                       text-white font-black text-sm px-6 py-3
+                       transition-all whitespace-nowrap flex-shrink-0">
+          S'abonner →
+        </button>
+      </form>
+      <!-- Success message (hidden by default) -->
+      <p id="nl-success"
+         class="hidden text-accent text-sm font-bold md:absolute">
+        ✓ Inscrit(e) avec succès !
+      </p>
+    </div>
+
+  </div><!-- /max-w -->
+
+  <!-- ── Bottom bar ── -->
+  <div class="border-t border-white/10 mt-2">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-5
+                flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-white/40 text-xs">
+        © 2026 MATEMATIKUP. Tous droits réservés.
+      </p>
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Cookies</a>
+      </nav>
+    </div>
+  </div>
+
+</footer>
+<!-- ═══ FIN FOOTER ═══ -->
+
+
+<!-- ════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
+<script>
+  /* ── Mobile burger ── */
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('mob-menu').classList.toggle('open');
+  });
+
+  /* ── Counter animation (triggered on view) ── */
+  function animateCount(el, target, suffix, duration = 1600) {
+    let current = 0;
+    const increment = target / (duration / 16);
+    const run = () => {
+      current = Math.min(current + increment, target);
+      el.textContent = Math.floor(current).toLocaleString('fr-FR') + suffix;
+      if (current < target) requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
+  }
+
+  const statsSection = document.getElementById('stat-students');
+  let counted = false;
+  const io = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && !counted) {
+      counted = true;
+      animateCount(document.getElementById('stat-students'), 12000, '+');
+      animateCount(document.getElementById('stat-courses'),  500,   '+');
+      io.disconnect();
+    }
+  }, { threshold: 0.4 });
+  io.observe(statsSection);
+
+  /* ── Navbar sticky scroll shadow ── */
+  const mainHeader = document.getElementById('main-header');
+  window.addEventListener('scroll', () => {
+    if (scrollY > 8) {
+      mainHeader.style.boxShadow = '0 4px 24px rgba(39,34,117,.12)';
+      mainHeader.style.borderBottomColor = 'rgba(55,48,163,0.12)';
+    } else {
+      mainHeader.style.boxShadow = 'none';
+      mainHeader.style.borderBottomColor = 'rgba(55,48,163,0.05)';
+    }
+  }, { passive: true });
+
+  /* ── Course filter system (actif uniquement si la section cours existe) ── */
+  (function() {
+    const searchInput = document.getElementById('course-search');
+    if (!searchInput) return;
+
+    const state = { niveau: 'all', theme: 'all', diff: 'all', search: '' };
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('.course-item');
+      let visible = 0;
+      cards.forEach(card => {
+        const matchNiveau = state.niveau === 'all' || card.dataset.niveau === state.niveau;
+        const matchTheme  = state.theme  === 'all' || card.dataset.theme  === state.theme;
+        const matchDiff   = state.diff   === 'all' || card.dataset.diff   === state.diff;
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const matchSearch = state.search === '' || title.includes(state.search);
+        const show = matchNiveau && matchTheme && matchDiff && matchSearch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      document.getElementById('course-count').textContent = visible;
+      document.getElementById('no-results').classList.toggle('hidden', visible > 0);
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.filter;
+        const val  = btn.dataset.val;
+        state[type] = val;
+
+        const groupMap = { niveau: 'active-primary', theme: 'active-secondary', diff: 'active-accent' };
+        const activeClass   = groupMap[type];
+        const inactiveClass = 'inactive-pill';
+        document.querySelectorAll('[data-filter="' + type + '"]').forEach(b => {
+          b.classList.remove(activeClass, inactiveClass);
+          b.classList.add(b === btn ? activeClass : inactiveClass);
+        });
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener('input', function() {
+      state.search = this.value.toLowerCase().trim();
+      applyFilters();
+    });
+  })();
+
+  /* ── Newsletter ── */
+  function handleNewsletter(e) {
+    e.preventDefault();
+    const form    = document.getElementById('newsletter-form');
+    const success = document.getElementById('nl-success');
+    form.style.display = 'none';
+    success.classList.remove('hidden');
+    success.style.position = 'static';
+  }
+</script>
+
+</body>
+</html>
