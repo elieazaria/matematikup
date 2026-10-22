@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sujets types — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
+    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+
+    /* Header : menu Classe */
+    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; }
+    .pill sup { font-size:.6em; vertical-align:super; }
+    .pill:hover { background:#3730A3; color:#fff; }
+    #mob-menu { display:none; } #mob-menu.open { display:block; }
+
+    /* Filtres */
+    .seg { font-family:'Nunito',sans-serif; font-weight:900; font-size:.9rem; padding:12px 26px; border-radius:14px;
+           border:2px solid rgba(55,48,163,.15); color:#3730A3; background:#fff; transition:all .2s; }
+    .seg:hover { border-color:#3730A3; }
+    .seg.active { background:#3730A3; border-color:#3730A3; color:#fff; box-shadow:0 10px 24px -10px rgba(55,48,163,.6); }
+    .chip { font-family:'Nunito',sans-serif; font-weight:900; font-size:.8rem; text-transform:uppercase; padding:7px 18px;
+            border-radius:999px; border:2px solid #3730A3; color:#3730A3; background:#fff; transition:all .2s; white-space:nowrap; }
+    .chip:hover { background:rgba(55,48,163,.08); }
+    .chip.active { background:#3730A3; color:#fff; }
+
+    /* Offre (réutilisé dans la fenêtre) */
+    .chk { list-style:none; padding:0; margin:0; }
+    .chk li { position:relative; padding-left:30px; font-size:.9rem; line-height:1.45; font-weight:600; margin-bottom:12px; }
+    .chk li::before { content:""; position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:50%;
+      background:#3730A3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/11px no-repeat; }
+    .chk.accent li::before {
+      background:#2FD9A8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23272275' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/11px no-repeat; }
+    .price { font-family:'Nunito',sans-serif; font-weight:900; line-height:1; letter-spacing:-.02em; }
+
+    /* Fenêtre centrée */
+    #modal { display:none; } #modal.open { display:flex; }
+    @keyframes pop { from { opacity:0; transform:translateY(16px) scale(.97); } to { opacity:1; transform:none; } }
+    #modal.open .modal-box { animation: pop .3s cubic-bezier(.22,.68,0,1.2) both; }
+
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
+    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
+      <li class="group relative">
+        <button class="flex items-center gap-1 hover:text-secondary transition-colors py-2">
+          Classe
+          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
+            <div class="w-[190px] flex-shrink-0">
+              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+              </div>
+            </div>
+            <div class="w-px bg-primary/15"></div>
+            <div class="flex-1">
+              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#seconde" class="pill">Seconde</a>
+                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
+      <li><a href="sujets.html" class="text-secondary">Sujets types</a></li>
+      <li><a href="prepa.html" class="hover:text-secondary transition-colors">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
+      <li><a href="parents.html" class="hover:text-secondary transition-colors">Espace parents</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2.5">
+      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
+      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
+      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+    <a href="classe.html" class="block hover:text-secondary">Classe</a>
+    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+    <a href="sujets.html" class="block text-secondary">Sujets types</a>
+    <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
+    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
+    <a href="parents.html" class="block hover:text-secondary">Espace parents</a>
+    <hr class="border-primary/10 my-2" />
+    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
+  </div>
+</header>
+
+
+<!-- ═══════════════ CONTENU ═══════════════ -->
+<main class="relative overflow-hidden pt-[110px] pb-24 px-5 md:px-10 lg:px-16">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+    <div class="absolute top-[50%] -right-40 w-[560px] h-[560px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+  </div>
+
+  <div class="relative max-w-4xl mx-auto">
+
+    <!-- Titre -->
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase mb-6">📝 Entraîne-toi</div>
+      <h1 class="font-black text-4xl md:text-5xl text-primary-dark leading-tight mb-4">
+        Sujets <span class="text-secondary underline decoration-accent decoration-4 underline-offset-4">types</span>
+      </h1>
+      <p class="text-primary-dark/60 text-base md:text-lg leading-relaxed">
+        Télécharge gratuitement les sujets d'examen. Pour la correction détaillée, découvre l'offre Sujet type.
+      </p>
+    </div>
+
+    <!-- Filtres -->
+    <div class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8 space-y-6">
+
+      <div>
+        <p class="text-xs font-black uppercase tracking-widest text-primary-dark/50 mb-3">Niveau</p>
+        <div class="flex flex-wrap gap-3" id="level-tabs">
+          <button class="seg active" data-level="terminale">Terminale — Baccalauréat</button>
+          <button class="seg" data-level="3eme">3<sup>ème</sup> — BEPC / Brevet</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-xs font-black uppercase tracking-widest text-primary-dark/50 mb-3">Système</p>
+        <div class="flex flex-wrap gap-3" id="system-tabs">
+          <button class="seg active" data-system="mg">Système malagasy</button>
+          <button class="seg" data-system="fr">Système français</button>
+        </div>
+      </div>
+
+      <div id="series-block">
+        <p class="text-xs font-black uppercase tracking-widest text-primary-dark/50 mb-3" id="series-label">Série</p>
+        <div class="flex flex-wrap gap-2.5" id="series-chips"></div>
+      </div>
+    </div>
+
+    <!-- Liste -->
+    <div class="flex items-end justify-between mb-4 px-1">
+      <h2 class="font-black text-xl" id="list-title">Sujets disponibles</h2>
+      <p class="text-sm font-bold text-primary-dark/50"><span id="count">0</span> sujet(s)</p>
+    </div>
+    <ul id="subject-list" class="space-y-3"></ul>
+    <p id="empty" class="hidden text-center text-primary-dark/50 font-bold py-12 bg-primary/5 rounded-2xl">Aucun sujet disponible pour cette sélection pour le moment.</p>
+  </div>
+</main>
+
+
+<!-- ═══════════════ FENÊTRE : OFFRE SUJET TYPE ═══════════════ -->
+<div id="modal" class="fixed inset-0 z-50 items-center justify-center p-4 bg-primary-dark/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Offre Sujet type">
+  <div class="modal-box relative w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl">
+    <button id="modal-close" aria-label="Fermer"
+            class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-primary/5 hover:bg-primary hover:text-white text-primary flex items-center justify-center font-black transition-colors">✕</button>
+
+    <!-- Offre 4 — Sujet type -->
+    <article class="plan flex flex-col bg-white border border-primary/10 rounded-2xl p-8 shadow-sm">
+      <div class="flex items-center gap-4 mb-5 pr-10">
+        <div class="w-[72px] h-[72px] rounded-full flex items-center justify-center flex-shrink-0" style="background:#FFE9E3;">
+          <svg class="w-9 h-9 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>
+          </svg>
+        </div>
+        <h2 class="font-black text-2xl">Sujet type</h2>
+      </div>
+      <p class="font-black text-secondary text-lg mb-2">Rassure-toi face au changement !!!</p>
+      <p class="text-primary-dark/65 text-sm leading-relaxed mb-6">
+        Des sujets d'examen avec corrections expliquées : la méthode, le raisonnement, les erreurs fréquentes, et pas seulement la réponse finale.
+      </p>
+      <p class="font-black text-sm uppercase tracking-wider text-primary mb-4">Ce que tu reçois</p>
+      <ul class="chk accent mb-8">
+        <li>3 sujets types de ton choix</li>
+        <li>Des corrigés détaillés, étape par étape</li>
+        <li>Une vidéo explicative pour chaque sujet</li>
+        <li>Les erreurs fréquentes à éviter</li>
+        <li>De quoi repérer ce que tu maîtrises et ce que tu dois retravailler, bien avant l'examen</li>
+      </ul>
+      <div class="mt-auto">
+        <hr class="border-primary/10 mb-6" />
+        <p class="flex items-end gap-2 mb-6"><span class="price text-5xl">20&nbsp;000</span><span class="text-primary-dark/50 font-bold mb-1">Ar</span></p>
+        <a href="inscription.html" class="block text-center bg-secondary hover:bg-secondary-dark text-white font-black text-sm py-3.5 rounded-xl shadow-lg shadow-secondary/25 transition-colors">Je m'inscris </a>
+      </div>
+    </article>
+  </div>
+</div>
+
+
+<footer class="bg-primary-dark">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+
+<script>
+  /* ───────────────────────────────────────────────
+     DONNÉES — à remplacer par tes vrais sujets.
+     Chaque sujet : { titre, annee, level, system, serie, file }
+       level  : 'terminale' | '3eme'
+       system : 'mg' | 'fr'
+       serie  : code de la série (voir SERIES) ; null pour 3ème
+       file   : chemin du PDF téléchargeable
+  ─────────────────────────────────────────────── */
+  const SERIES = {
+    'terminale-mg': [
+      { id: 'A', label: 'Série A' }, { id: 'C', label: 'Série C' }, { id: 'D', label: 'Série D' },
+      { id: 'L', label: 'Série L' }, { id: 'S', label: 'Série S' }, { id: 'OSE', label: 'Série OSE' },
+    ],
+    'terminale-fr': [
+      { id: 'STMG', label: 'STMG' }, { id: 'GEN', label: 'Voie générale' },
+      { id: 'STI2D', label: 'STI2D' }, { id: 'AUTRES', label: 'Autres' },
+    ],
+  };
+
+  const SUBJECTS = [];
+  const add = (level, system, serie, annees) => annees.forEach(annee =>
+    SUBJECTS.push({
+      titre: 'Mathématiques — Session ' + annee, annee, level, system, serie,
+      file: 'sujets/' + [level, system, serie, annee].filter(Boolean).join('-').toLowerCase() + '.pdf',
+    }));
+
+  ['A','C','D','L','S','OSE'].forEach(s => add('terminale', 'mg', s, [2024, 2023, 2022]));
+  ['STMG','GEN','STI2D','AUTRES'].forEach(s => add('terminale', 'fr', s, [2024, 2023]));
+  add('3eme', 'mg', null, [2024, 2023, 2022]);   // BEPC
+  add('3eme', 'fr', null, [2024, 2023, 2022]);   // Brevet
+
+  /* ── État & rendu ── */
+  const state = { level: 'terminale', system: 'mg', serie: 'all' };
+  const $ = id => document.getElementById(id);
+
+  function examName() {
+    if (state.level === 'terminale') return 'Baccalauréat';
+    return state.system === 'mg' ? 'BEPC' : 'Brevet';
+  }
+
+  function renderChips() {
+    const list = SERIES[state.level + '-' + state.system];
+    $('series-block').classList.toggle('hidden', !list);
+    if (!list) return;
+    $('series-label').textContent = state.system === 'mg' ? 'Série' : 'Filière';
+    const chips = [{ id: 'all', label: 'Toutes' }, ...list];
+    $('series-chips').innerHTML = chips.map(c =>
+      `<button class="chip ${state.serie === c.id ? 'active' : ''}" data-serie="${c.id}">${c.label}</button>`).join('');
+  }
+
+  function renderList() {
+    const rows = SUBJECTS
+      .filter(s => s.level === state.level && s.system === state.system && (state.serie === 'all' || s.serie === state.serie))
+      .sort((a, b) => b.annee - a.annee || String(a.serie).localeCompare(String(b.serie)));
+
+    $('count').textContent = rows.length;
+    $('empty').classList.toggle('hidden', rows.length > 0);
+    $('list-title').textContent = 'Sujets ' + examName() + (state.system === 'mg' ? ' — système malagasy' : ' — système français');
+
+    $('subject-list').innerHTML = rows.map(s => {
+      const serieLabel = s.serie
+        ? (SERIES[s.level + '-' + s.system].find(x => x.id === s.serie) || {}).label
+        : null;
+      return `
+      <li class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white border border-primary/10 rounded-2xl p-4 sm:p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#EEF0FF;">
+          <svg class="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-black text-primary-dark leading-snug">${s.titre}</p>
+          <p class="text-xs font-bold text-primary-dark/50 mt-1">${examName()} ${s.annee}${serieLabel ? ' · ' + serieLabel : ''}</p>
+        </div>
+        <div class="flex flex-wrap gap-2.5 sm:flex-shrink-0">
+          <a href="${s.file}" download
+             class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-4 py-2.5 rounded-xl hover:bg-primary hover:text-white transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Télécharger
+          </a>
+          <button type="button" class="open-offer inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white font-black text-sm px-4 py-2.5 rounded-xl shadow-md shadow-secondary/25 transition-colors">
+            Voir correction
+          </button>
+        </div>
+      </li>`;
+    }).join('');
+  }
+
+  function setActive(container, attr, value) {
+    container.querySelectorAll('.seg').forEach(b => b.classList.toggle('active', b.dataset[attr] === value));
+  }
+
+  $('level-tabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-level]'); if (!b) return;
+    state.level = b.dataset.level; state.serie = 'all';
+    setActive($('level-tabs'), 'level', state.level);
+    renderChips(); renderList();
+  });
+  $('system-tabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-system]'); if (!b) return;
+    state.system = b.dataset.system; state.serie = 'all';
+    setActive($('system-tabs'), 'system', state.system);
+    renderChips(); renderList();
+  });
+  $('series-chips').addEventListener('click', e => {
+    const b = e.target.closest('[data-serie]'); if (!b) return;
+    state.serie = b.dataset.serie; renderChips(); renderList();
+  });
+
+  /* ── Fenêtre « Voir correction » ── */
+  const modal = $('modal');
+  const openModal  = () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; };
+  const closeModal = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
+  $('subject-list').addEventListener('click', e => { if (e.target.closest('.open-offer')) openModal(); });
+  $('modal-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* ── Header ── */
+  $('burger').addEventListener('click', () => $('mob-menu').classList.toggle('open'));
+  addEventListener('scroll', () => {
+    $('main-header').style.boxShadow = scrollY > 8 ? '0 4px 24px rgba(39,34,117,.12)' : 'none';
+  }, { passive: true });
+
+  renderChips(); renderList();
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programmes de mathématiques — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
+    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+
+    /* Pills (menu Classe + sélecteur) */
+    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
+    .pill sup { font-size:.6em; vertical-align:super; }
+    .pill:hover { background:#3730A3; color:#fff; }
+    .pill.active { background:#3730A3; color:#fff; box-shadow:0 8px 20px -8px rgba(55,48,163,.7); }
+    #mob-menu { display:none; } #mob-menu.open { display:block; }
+
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
+    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
+      <li class="group relative">
+        <button class="flex items-center gap-1 text-secondary py-2">
+          Classe
+          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
+            <div class="w-[190px] flex-shrink-0">
+              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+              </div>
+            </div>
+            <div class="w-px bg-primary/15"></div>
+            <div class="flex-1">
+              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#seconde" class="pill">Seconde</a>
+                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
+      <li><a href="sujets.html" class="hover:text-secondary transition-colors">Sujets types</a></li>
+      <li><a href="prepa.html" class="hover:text-secondary transition-colors">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
+      <li><a href="parents.html" class="hover:text-secondary transition-colors">Espace parents</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2.5" id="header-right">
+      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
+      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
+      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+    <a href="classe.html" class="block text-secondary">Classe</a>
+    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+    <a href="sujets.html" class="block hover:text-secondary">Sujets types</a>
+    <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
+    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
+    <a href="parents.html" class="block hover:text-secondary">Espace parents</a>
+    <hr class="border-primary/10 my-2" />
+    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
+  </div>
+</header>
+
+
+<!-- ═══════════════ CONTENU ═══════════════ -->
+<main class="relative overflow-hidden pt-[100px] pb-20 px-5 md:px-10 lg:px-16">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto">
+
+    <!-- Fil d'Ariane -->
+    <nav class="text-sm font-bold text-primary/60 mb-6" aria-label="Fil d'Ariane">
+      <a href="index.html" class="hover:text-primary">Accueil</a>
+      <span class="mx-1">›</span>
+      <span id="crumb-classe" class="text-primary">Choisir une classe</span>
+    </nav>
+
+    <!-- Titre + CTA -->
+    <section class="flex flex-wrap items-end justify-between gap-5">
+      <div>
+        <h1 id="titre" class="font-black text-4xl md:text-5xl tracking-tight">Mathématiques</h1>
+        <p id="classe-sous-titre" class="mt-2 text-base font-semibold text-primary-dark/65"></p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="#programmes" class="rounded-xl border-2 border-primary px-5 py-2.5 text-sm font-black text-primary hover:bg-primary/5 transition-colors">Découvrir les programmes</a>
+        <a id="cta-test" href="inscription.html" class="rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 transition-colors">
+          S'inscrire gratuitement pour passer au test
+        </a>
+      </div>
+    </section>
+
+    <!-- Sélecteur de classe -->
+    <section class="mt-8 bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 flex flex-col md:flex-row gap-6" aria-label="Choisir une classe">
+      <div class="md:w-[210px] flex-shrink-0">
+        <p class="font-black text-sm mb-3">Collège</p>
+        <div id="nav-college" class="flex flex-wrap gap-2.5"></div>
+      </div>
+      <div class="hidden md:block w-px bg-primary/15"></div>
+      <div class="flex-1">
+        <p class="font-black text-sm mb-3">Lycée</p>
+        <div id="nav-lycee" class="flex flex-wrap gap-2.5"></div>
+      </div>
+    </section>
+
+    <!-- Programme de la classe choisie -->
+    <section id="programmes" class="mt-10 scroll-mt-28" aria-live="polite"></section>
+
+    <!-- CTA final (visiteurs) -->
+    <section id="cta-bas" class="hidden mt-14 rounded-3xl bg-primary p-8 text-center text-white">
+      <h2 class="text-2xl font-black">Prêt à voir où tu en es ?</h2>
+      <p class="mx-auto mt-2 max-w-md font-semibold text-white/80">Crée ton compte gratuit, passe le test et suis ta progression chapitre par chapitre.</p>
+      <a href="inscription.html" class="mt-5 inline-block rounded-xl bg-secondary hover:bg-secondary-dark px-6 py-3 font-black text-white transition-colors">S'inscrire gratuitement</a>
+    </section>
+  </div>
+</main>
+
+<footer class="bg-primary-dark">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-white/40 text-xs">© 2025 MATEMATIKUP. Tous droits réservés.</p>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+
+<script>
+  /* ============ DONNÉES — une seule structure pour toutes les classes ============ */
+  // Pour ajouter un chapitre : une ligne dans "chapitres". Pour remplir une classe : renseigner "parties".
+  // Les pourcentages de "progression" sont des exemples (ordre = chapitres 1, 2, 3…).
+  const CLASSES = {
+    "6eme": { nom: "6ème", progression: [100,60,30,0, 80,20,0, 45,0,0, 10,0,0,0,0, 0,0,0,0, 0,0,0],
+      parties: [
+        { titre: "Nombre", chapitres: ["Écriture d'un nombre", "Nombre décimal", "Fraction", "Encadrement"] },
+        { titre: "Opération", chapitres: ["Règle de priorité", "L'échelle", "Pourcentage"] },
+        { titre: "Algèbre", chapitres: ["Proportionnalité", "Représentation des relations", "Équations"] },
+        { titre: "Géométrie", chapitres: ["Les quadrilatères", "Les angles", "Les prismes et non-prismes", "Les polygones", "Les transformations : rotation, réflexion et translation"] },
+        { titre: "Mesure", chapitres: ["Calcul des mesures", "Aires", "Traçage d'un triangle, rectangle et parallélogramme", "Volumes des prismes à bases rectangulaires"] },
+        { titre: "Traitement de données", chapitres: ["Formulation d'une question ou d'une hypothèse dans le cadre d'une expérience ou d'un sondage", "Diagrammes", "Probabilité"] }
+      ] },
+    "5eme": { nom: "5ème", progression: [100,100,70,40,10, 60,20,0,0,0,0, 30,0,0,0],
+      parties: [
+        { titre: "Nombre", chapitres: ["Les entiers", "Nombres décimaux", "Fraction", "Échelle", "Pourcentage, taux et rendement"] },
+        { titre: "Opération", chapitres: ["Puissances", "Propriétés sur les puissances", "Règle de signe", "Opérations dans ℤ", "Différentes écritures de fraction et des nombres décimaux", "Encadrement d'une fraction"] },
+        { titre: "Algèbre", chapitres: ["Distributivité simple et factorisation", "Expression littérale", "Résolution d'une équation du premier degré", "Développement et réduction d'une expression littérale"] },
+        { titre: "Géométrie", chapitres: ["Triangles", "Construction d'un triangle", "Repérage sur une droite graduée et dans le plan muni d'un repère orthogonal", "Angles", "Les polygones", "Dans un triangle et ses propriétés", "Les droites particulières dans un triangle"] },
+        { titre: "Mesure", chapitres: ["Conversion", "Calcul avec les grandeurs mesurables de même unité", "Périmètres et aires des figures géométriques", "Périmètres et aires d'un assemblage de figures", "Correspondance entre les unités de volume et les unités de contenance"] },
+        { titre: "Traitement de données", chapitres: ["Lecture, interprétation et organisation des données recueillies", "Tableau des effectifs et des fréquences", "Représentation des effectifs et des fréquences", "Nombre d'essais", "Probabilité d'un évènement", "Arbre et tableau de probabilité"] }
+      ] },
+    "4eme": { nom: "4ème", progression: [],
+      parties: [
+        { titre: "Nombre", chapitres: ["Notation scientifique", "Développement décimal d'un nombre", "Nombres entiers relatifs", "Relation entre les quantités de même nature", "Différence entre rapport et taux", "Rapport et proportion", "Proportionnalité et équivalence"] },
+        { titre: "Opération", chapitres: ["Multiplication et division avec les entiers relatifs", "Relation entre la multiplication et la division", "Puissances entières", "Règles de la priorité des opérations", "Stratégies variées pour effectuer des calculs mentaux", "Opérations sur les nombres décimaux", "Opérations sur les fractions", "Techniques d'arrondissement des résultats"] },
+        { titre: "Algèbre", chapitres: ["Relation entre deux grandeurs proportionnelles", "Tableau de proportionnalité", "Représentation d'une situation", "Interpolation ou extrapolation des données dans un tableau de valeurs et représentation graphique", "Passage entre une situation et une représentation", "Utilisation de la règle sous la forme y = ax ou y = ax + b", "Valeur de l'inconnue dans une équation", "Situations algébriques équivalentes", "Opérations sur les monômes et binômes", "Résolution des situations problèmes"] },
+        { titre: "Géométrie", chapitres: ["Symétrie centrale", "Symétrie axiale", "Propriétés de conservation de la symétrie centrale", "Propriétés de conservation de la symétrie axiale", "Programme de construction", "Translation ou glissement", "Images par la translation ou glissement", "Homothétie, réduction et agrandissement"] },
+        { titre: "Mesure", chapitres: ["Pyramide et cône de révolution", "Aire latérale d'une pyramide et d'un cône de révolution", "Volume d'une pyramide et d'un cône de révolution", "Correspondance entre unités de volume et unités de capacité", "Grandeur produit et grandeur quotient", "Unités sur les grandeurs composées", "Rapport d'agrandissement ou de réduction pour calculer les longueurs et les volumes"] },
+        { titre: "Traitement de données", chapitres: ["Population, effectif et fréquence", "Tableau statistique et diagramme", "Fréquence d'une série statistique", "Moyenne d'une série statistique", "Probabilité d'un événement", "Événement contraire"] }
+      ] },
+    "3eme": { nom: "3ème", progression: [],
+      parties: [
+        { titre: "Nombre", chapitres: ["Nombres rationnels et nombres irrationnels", "Racine carrée", "Sous-ensembles de ℝ", "Préfixes du système international et notation scientifique"] },
+        { titre: "Opération", chapitres: ["Développement du sens des opérations sur des nombres rationnels", "Priorité des opérations sur des nombres rationnels", "Rapports, proportions, taux, taux unitaires et pourcentages", "Puissance", "Puissance de 10"] },
+        { titre: "Algèbre", chapitres: ["Variable dépendante et variable indépendante", "Représentations graphiques d'une situation algébrique", "Fonction affine", "Variation directe et variation partielle", "Taux de variation", "Règle d'une fonction affine et changement de paramètre", "Détermination de la valeur d'une variable par interpolation ou extrapolation", "Fonction inverse", "Équation d'une droite dans un plan cartésien", "Types d'équation d'une droite", "Représentation graphique d'une droite", "Équation de la droite connaissant", "Détermination d'une équation d'une droite", "Position relative de deux droites", "Équation d'une droite parallèle ou perpendiculaire à une autre droite", "Simplification des expressions algébriques", "Résolution d'une équation du premier degré"] },
+        { titre: "Géométrie et mesure", chapitres: ["Triangles semblables", "Propriétés de Thalès", "Polygone régulier", "Volume d'une pyramide et volume d'un cône de révolution", "Boule et sphère"] },
+        { titre: "Traitement de données", chapitres: ["Échantillon et population", "Tendance centrale", "Interpolation de la médiane", "Médiane", "Tableaux des effectifs, effectifs cumulés et fréquences cumulées", "Moyenne simple et moyenne pondérée", "Notion de probabilité", "Langage probabiliste", "Probabilité d'un évènement supplémentaire"] }
+      ] },
+    "2nde": { nom: "Seconde", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Ensemble ℝ", "Règles de calcul dans ℝ", "Intervalles et valeurs absolues", "Encadrements", "Trinôme du second degré", "Équation du troisième degré", "Équation rationnelle", "Généralités sur les fonctions de référence", "Courbes représentatives des fonctions de référence", "Interprétations d'une courbe"] },
+        { titre: "Algèbre", chapitres: ["Logique", "Algorithmique"] },
+        { titre: "Géométrie", chapitres: ["Droites", "Cercles", "Cercle trigonométrique", "Fonction trigonométrique", "Construction graphique, parallélisme et orthogonalité de deux droites", "Intersection d'une droite et d'un cercle", "Généralités sur les vecteurs"] },
+        { titre: "Traitement de données", chapitres: ["Regroupement des données statistiques", "Caractères d'une série statistique", "Représentation graphique d'une distribution statistique"] }
+      ] },
+    "1ere": { nom: "Première", progression: [], parties: [] },
+    "terminale": { nom: "Terminale", progression: [], parties: [] }
+  };
+
+  /* ============ NAVIGATION — lien du menu (#hash) → classe + série ============
+     Les liens du header (classe.html#6e, #premiere-s, #terminale-ose…) sont traduits
+     vers les clés de CLASSES ci-dessus. Les clés brutes (#6eme, #2nde…) restent acceptées. */
+  const NAV = [
+    { id: "6e",           classe: "6eme",      label: "6<sup>e</sup>",           groupe: "college" },
+    { id: "5e",           classe: "5eme",      label: "5<sup>e</sup>",           groupe: "college" },
+    { id: "4e",           classe: "4eme",      label: "4<sup>e</sup>",           groupe: "college" },
+    { id: "3e",           classe: "3eme",      label: "3<sup>e</sup>",           groupe: "college" },
+    { id: "seconde",      classe: "2nde",      label: "Seconde",                 groupe: "lycee" },
+    { id: "premiere-l",   classe: "1ere",      serie: "L",   label: "1<sup>re</sup> L",   groupe: "lycee" },
+    { id: "premiere-s",   classe: "1ere",      serie: "S",   label: "1<sup>re</sup> S",   groupe: "lycee" },
+    { id: "premiere-ose", classe: "1ere",      serie: "OSE", label: "1<sup>re</sup> OSE", groupe: "lycee" },
+    { id: "terminale-l",  classe: "terminale", serie: "L",   label: "Terminale L",   groupe: "lycee" },
+    { id: "terminale-s",  classe: "terminale", serie: "S",   label: "Terminale S",   groupe: "lycee" },
+    { id: "terminale-ose",classe: "terminale", serie: "OSE", label: "Terminale OSE", groupe: "lycee" },
+  ];
+
+  // null = visiteur non connecté. Exemple connecté : { nom: "Harilala" }
+  const USER = null;
+
+  /* ============ RENDU ============ */
+  const $ = (id) => document.getElementById(id);
+  const connecte = !!USER;
+
+  if (connecte) {
+    $("header-right").innerHTML =
+      `<span class="hidden sm:inline text-sm font-black">${USER.nom}</span>
+       <a href="tableau-de-bord.html" class="rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-white hover:bg-primary-dark transition-colors">Tableau de bord</a>`;
+    ["cta-test", "cta-bas"].forEach((id) => $(id).remove());
+  }
+
+  const motif = `<span aria-hidden="true" class="pointer-events-none absolute inset-0 select-none overflow-hidden text-5xl font-extrabold leading-none text-accent/25">
+      <span class="absolute -bottom-2 left-3">π</span><span class="absolute bottom-6 left-1/2">∑</span><span class="absolute -bottom-1 right-4">√</span></span>`;
+
+  // Boutons de sélection (collège / lycée)
+  ["college", "lycee"].forEach((g) => {
+    $("nav-" + g).innerHTML = NAV.filter((n) => n.groupe === g)
+      .map((n) => `<a href="#${n.id}" data-nav="${n.id}" class="pill">${n.label}</a>`).join("");
+  });
+
+  // Trouve { classe, serie, id } à partir du hash
+  function resoudre(hash) {
+    const n = NAV.find((x) => x.id === hash);
+    if (n) return { classe: n.classe, serie: n.serie || null, id: n.id };
+    if (CLASSES[hash]) return { classe: hash, serie: null, id: null };
+    return null;
+  }
+
+  function afficher(r) {
+    const c = CLASSES[r.classe];
+    const nomComplet = c.nom + (r.serie ? " — série " + r.serie : "");
+
+    document.querySelectorAll("[data-nav]").forEach((b) => b.classList.toggle("active", b.dataset.nav === r.id));
+    $("crumb-classe").textContent = nomComplet;
+    $("titre").textContent = "Mathématiques " + nomComplet;
+    $("classe-sous-titre").textContent = "Programme de la classe de " + nomComplet;
+    document.title = "Mathématiques " + nomComplet + " — MATEMATIKUP";
+    if (!connecte) $("cta-bas").classList.remove("hidden");
+
+    if (!c.parties.length) {
+      $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Le programme de la ${nomComplet} arrive bientôt.</p>`;
+      return;
+    }
+
+    let n = 0;
+    $("programmes").innerHTML = c.parties.map((p, i) => {
+      const cartes = p.chapitres.map((titre) => {
+        const pct = connecte ? (c.progression[n] || 0) : 0;
+        n++;
+        const lien = `chapitre.html?classe=${r.classe}${r.serie ? "&serie=" + r.serie : ""}&n=${n}`;
+        return `
+        <a href="${lien}" class="block overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <div class="relative flex h-28 items-start bg-accent/15 p-4">
+            ${motif}
+            <h3 class="relative text-base font-black leading-snug">${titre}</h3>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center justify-between text-xs font-bold text-primary/60">
+              <span>Chapitre ${n}</span>
+              <span>${connecte ? pct + " %" : "Non commencé"}</span>
+            </div>
+            <div class="mt-2 h-2 overflow-hidden rounded-full bg-primary/10" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du chapitre ${n}">
+              <div class="h-full rounded-full bg-accent" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </a>`;
+      }).join("");
+      return `
+      <div class="${i ? "mt-12" : ""}">
+        <p class="text-sm font-bold text-primary/60">Partie ${i + 1}</p>
+        <h2 class="text-2xl font-black">${p.titre}</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">${cartes}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function afficherAccueil() {
+    document.querySelectorAll("[data-nav]").forEach((b) => b.classList.remove("active"));
+    $("crumb-classe").textContent = "Choisir une classe";
+    $("titre").textContent = "Mathématiques";
+    $("classe-sous-titre").textContent = "";
+    $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Clique sur ta classe pour découvrir son programme.</p>`;
+  }
+
+  // Route : appelée à l'arrivée sur la page ET à chaque changement de #hash
+  // (cliquer dans le menu « Classe » quand on est déjà sur cette page ne recharge pas la page).
+  function route(defile) {
+    const r = resoudre(decodeURIComponent(location.hash.slice(1)));
+    if (!r) return afficherAccueil();
+    afficher(r);
+    if (defile) $("programmes").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  addEventListener("hashchange", () => route(true));
+  route(false);
+
+  /* Header */
+  $("burger").addEventListener("click", () => $("mob-menu").classList.toggle("open"));
+  addEventListener("scroll", () => {
+    $("main-header").style.boxShadow = scrollY > 8 ? "0 4px 24px rgba(39,34,117,.12)" : "none";
+  }, { passive: true });
+</script>
+</body>
+</html>
