@@ -19,7 +19,7 @@
     body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
     h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
 
-    /* Pills (menu Classe + sélecteur) */
+    /* Pills (menu Classe + sélecteur mobile) */
     .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
             font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
     .pill sup { font-size:.6em; vertical-align:super; }
@@ -27,16 +27,92 @@
     .pill.active { background:#3730A3; color:#fff; box-shadow:0 8px 20px -8px rgba(55,48,163,.7); }
     #mob-menu { display:none; } #mob-menu.open { display:block; }
 
+    /* Sidebar */
+    .sb-link { display:flex; align-items:center; gap:12px; border-radius:12px; padding:10px 12px; font-family:'Nunito',sans-serif;
+               font-weight:800; font-size:.9rem; color:rgba(55,48,163,.6); transition:all .15s; width:100%; text-align:left; }
+    .sb-link:hover { background:rgba(55,48,163,.06); color:#3730A3; }
+    .sb-link.active { background:rgba(55,48,163,.1); color:#272275; }
+    .sb-link svg { width:20px; height:20px; flex-shrink:0; }
+    .toc-btn { display:flex; justify-content:space-between; gap:8px; width:100%; text-align:left; border-radius:10px; padding:7px 12px;
+               font-size:.82rem; font-weight:700; color:rgba(39,34,117,.7); transition:all .15s; }
+    .toc-btn:hover { background:rgba(47,217,168,.15); color:#272275; }
+
     ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
     ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+    #sidebar::-webkit-scrollbar { width:4px; } #sidebar::-webkit-scrollbar-track { background:transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background:rgba(55,48,163,.2); }
   </style>
 </head>
 <body>
 
+<!-- ═══════════════ SIDEBAR (desktop) ═══════════════ -->
+<aside id="sidebar" class="hidden lg:flex fixed left-0 top-0 bottom-0 z-50 w-64 flex-col gap-5 bg-white border-r border-primary/10 p-5 overflow-y-auto" aria-label="Navigation du programme">
+
+  <!-- Logo -->
+  <a href="index.html" class="block" aria-label="MATEMATIKUP — Accueil">
+    <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-11 w-auto" />
+  </a>
+
+  <!-- Choix de la classe (dynamique) -->
+  <div class="relative">
+    <button id="cls-btn" type="button" class="sb-link border border-primary/15 bg-white" aria-haspopup="listbox" aria-expanded="false">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+      <span id="cls-label" class="flex-1 truncate text-primary-dark">Choisir une classe</span>
+      <svg id="cls-chevron" class="transition-transform" style="width:16px;height:16px" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div id="cls-panel" class="hidden absolute left-0 right-0 top-full mt-2 z-10 max-h-80 overflow-y-auto rounded-2xl border border-primary/10 bg-white p-3 shadow-2xl" role="listbox">
+      <p class="px-2 pb-1 pt-1 text-xs font-black uppercase tracking-widest text-primary/50">Collège</p>
+      <div id="dd-college" class="mb-2"></div>
+      <p class="px-2 pb-1 pt-2 text-xs font-black uppercase tracking-widest text-primary/50 border-t border-primary/10">Lycée</p>
+      <div id="dd-lycee"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex flex-col gap-1" aria-label="Navigation principale">
+    <a href="index.html" class="sb-link">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5Z"/></svg>
+      Accueil
+    </a>
+    <a href="#programmes" class="sb-link active">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg>
+      Parcourir
+    </a>
+    <button id="search-toggle" type="button" class="sb-link" aria-expanded="false">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Recherche
+    </button>
+    <div id="search-box" class="hidden px-1 pb-1">
+      <input id="search-input" type="search" placeholder="Chercher un chapitre…" autocomplete="off"
+             class="w-full rounded-xl border-2 border-primary/15 px-3 py-2 text-sm font-semibold text-primary-dark placeholder:text-primary-dark/35 focus:outline-none focus:border-primary" />
+    </div>
+    <a id="sb-login" href="connexion.html" class="sb-link">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"/></svg>
+      Se connecter
+    </a>
+  </nav>
+
+  <!-- Sommaire de la classe choisie (dynamique) -->
+  <div id="toc-block" class="hidden">
+    <p class="px-3 pb-2 text-xs font-black uppercase tracking-widest text-primary/50">Dans cette classe</p>
+    <div id="toc" class="flex flex-col gap-0.5"></div>
+  </div>
+
+  <!-- CTA d'inscription (visiteurs) -->
+  <div id="sidebar-cta" class="mt-auto rounded-2xl border border-primary/15 p-4 text-center">
+    <p class="text-sm font-black">Teste ton niveau gratuitement</p>
+    <a href="inscription.html" class="mt-3 block rounded-xl bg-secondary px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 hover:bg-secondary-dark transition-colors">
+      S'inscrire gratuitement
+    </a>
+  </div>
+</aside>
+
+
 <!-- ═══════════════ HEADER ═══════════════ -->
-<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+<header id="main-header" class="fixed top-0 left-0 lg:left-64 right-0 z-40 px-5 md:px-10 lg:px-10 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
   <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
-    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+    <!-- Le logo est dans la sidebar sur grand écran -->
+    <a href="index.html" class="flex items-center flex-shrink-0 lg:hidden" aria-label="MATEMATIKUP — Accueil">
       <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
     </a>
 
@@ -95,70 +171,73 @@
 </header>
 
 
-<!-- ═══════════════ CONTENU ═══════════════ -->
-<main class="relative overflow-hidden pt-[100px] pb-20 px-5 md:px-10 lg:px-16">
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-    <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
-  </div>
+<!-- ═══════════════ CONTENU (décalé à droite de la sidebar) ═══════════════ -->
+<div class="lg:pl-64">
+  <main class="relative overflow-hidden pt-[100px] pb-20 px-5 md:px-10">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+    </div>
 
-  <div class="relative max-w-7xl mx-auto">
+    <div class="relative max-w-6xl mx-auto">
 
-    <!-- Fil d'Ariane -->
-    <nav class="text-sm font-bold text-primary/60 mb-6" aria-label="Fil d'Ariane">
-      <a href="index.html" class="hover:text-primary">Accueil</a>
-      <span class="mx-1">›</span>
-      <span id="crumb-classe" class="text-primary">Choisir une classe</span>
-    </nav>
+      <!-- Fil d'Ariane -->
+      <nav class="text-sm font-bold text-primary/60 mb-6" aria-label="Fil d'Ariane">
+        <a href="index.html" class="hover:text-primary">Accueil</a>
+        <span class="mx-1">›</span>
+        <span id="crumb-classe" class="text-primary">Choisir une classe</span>
+      </nav>
 
-    <!-- Titre + CTA -->
-    <section class="flex flex-wrap items-end justify-between gap-5">
-      <div>
-        <h1 id="titre" class="font-black text-4xl md:text-5xl tracking-tight">Mathématiques</h1>
-        <p id="classe-sous-titre" class="mt-2 text-base font-semibold text-primary-dark/65"></p>
-      </div>
-      <div class="flex flex-wrap gap-3">
-        <a href="#programmes" class="rounded-xl border-2 border-primary px-5 py-2.5 text-sm font-black text-primary hover:bg-primary/5 transition-colors">Découvrir les programmes</a>
-        <a id="cta-test" href="inscription.html" class="rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 transition-colors">
-          S'inscrire gratuitement pour passer au test
-        </a>
-      </div>
-    </section>
+      <!-- Titre + CTA -->
+      <section class="flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <h1 id="titre" class="font-black text-4xl md:text-5xl tracking-tight">Mathématiques</h1>
+          <p id="classe-sous-titre" class="mt-2 text-base font-semibold text-primary-dark/65"></p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="#programmes" class="rounded-xl border-2 border-primary px-5 py-2.5 text-sm font-black text-primary hover:bg-primary/5 transition-colors">Découvrir les programmes</a>
+          <a id="cta-test" href="inscription.html" class="rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 transition-colors">
+            S'inscrire gratuitement pour passer au test
+          </a>
+        </div>
+      </section>
 
-    <!-- Sélecteur de classe -->
-    <section class="mt-8 bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 flex flex-col md:flex-row gap-6" aria-label="Choisir une classe">
-      <div class="md:w-[210px] flex-shrink-0">
-        <p class="font-black text-sm mb-3">Collège</p>
-        <div id="nav-college" class="flex flex-wrap gap-2.5"></div>
-      </div>
-      <div class="hidden md:block w-px bg-primary/15"></div>
-      <div class="flex-1">
-        <p class="font-black text-sm mb-3">Lycée</p>
-        <div id="nav-lycee" class="flex flex-wrap gap-2.5"></div>
-      </div>
-    </section>
+      <!-- Sélecteur de classe (mobile / tablette — sur grand écran, c'est la sidebar qui sert de sélecteur) -->
+      <section class="lg:hidden mt-8 bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 flex flex-col md:flex-row gap-6" aria-label="Choisir une classe">
+        <div class="md:w-[210px] flex-shrink-0">
+          <p class="font-black text-sm mb-3">Collège</p>
+          <div id="nav-college" class="flex flex-wrap gap-2.5"></div>
+        </div>
+        <div class="hidden md:block w-px bg-primary/15"></div>
+        <div class="flex-1">
+          <p class="font-black text-sm mb-3">Lycée</p>
+          <div id="nav-lycee" class="flex flex-wrap gap-2.5"></div>
+        </div>
+      </section>
 
-    <!-- Programme de la classe choisie -->
-    <section id="programmes" class="mt-10 scroll-mt-28" aria-live="polite"></section>
+      <!-- Programme de la classe choisie -->
+      <section id="programmes" class="mt-10 scroll-mt-28" aria-live="polite"></section>
+      <p id="no-result" class="hidden mt-6 rounded-2xl border border-primary/15 p-6 text-center font-bold">Aucun chapitre ne correspond à ta recherche.</p>
 
-    <!-- CTA final (visiteurs) -->
-    <section id="cta-bas" class="hidden mt-14 rounded-3xl bg-primary p-8 text-center text-white">
-      <h2 class="text-2xl font-black">Prêt à voir où tu en es ?</h2>
-      <p class="mx-auto mt-2 max-w-md font-semibold text-white/80">Crée ton compte gratuit, passe le test et suis ta progression chapitre par chapitre.</p>
-      <a href="inscription.html" class="mt-5 inline-block rounded-xl bg-secondary hover:bg-secondary-dark px-6 py-3 font-black text-white transition-colors">S'inscrire gratuitement</a>
-    </section>
-  </div>
-</main>
+      <!-- CTA final (visiteurs) -->
+      <section id="cta-bas" class="hidden mt-14 rounded-3xl bg-primary p-8 text-center text-white">
+        <h2 class="text-2xl font-black">Prêt à voir où tu en es ?</h2>
+        <p class="mx-auto mt-2 max-w-md font-semibold text-white/80">Crée ton compte gratuit, passe le test et suis ta progression chapitre par chapitre.</p>
+        <a href="inscription.html" class="mt-5 inline-block rounded-xl bg-secondary hover:bg-secondary-dark px-6 py-3 font-black text-white transition-colors">S'inscrire gratuitement</a>
+      </section>
+    </div>
+  </main>
 
-<footer class="bg-primary-dark">
-  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
-    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
-    </nav>
-  </div>
-</footer>
+  <footer class="bg-primary-dark">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
+      <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+        <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+      </nav>
+    </div>
+  </footer>
+</div>
 
 
 <script>
@@ -208,25 +287,67 @@
         { titre: "Géométrie", chapitres: ["Droites", "Cercles", "Cercle trigonométrique", "Fonction trigonométrique", "Construction graphique, parallélisme et orthogonalité de deux droites", "Intersection d'une droite et d'un cercle", "Généralités sur les vecteurs"] },
         { titre: "Traitement de données", chapitres: ["Regroupement des données statistiques", "Caractères d'une série statistique", "Représentation graphique d'une distribution statistique"] }
       ] },
-    "1ere": { nom: "Première", progression: [], parties: [] },
-    "terminale": { nom: "Terminale", progression: [], parties: [] }
+    "1ere-L": { nom: "1ère L", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Généralités sur les fonctions numériques d'une variable réelle", "Étude d'une fonction numérique : fonction polynomiale", "Étude d'une fonction numérique : fonction homographique"] },
+        { titre: "Algèbre", chapitres: ["Logique", "Suites numériques", "Suites arithmétiques et suites géométriques", "Équations du second degré", "Inéquations du second degré", "Système de deux équations linéaires à deux inconnues"] },
+        { titre: "Traitement de données", chapitres: ["Pourcentage", "Série statistique à deux variables", "Dénombrement", "Probabilité"] }
+      ] },
+    "1ere-S": { nom: "1ère S", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Fonction numérique d'une variable réelle", "Équations du second degré", "Équations du second degré avec paramètre", "Équations de degré 3", "Système d'équations linéaires à 3 inconnues"] },
+        { titre: "Arithmétique", chapitres: ["Notion sur les systèmes de numération", "Nombre premier", "Divisibilité et décomposition d'un nombre en produit de facteurs premiers"] },
+        { titre: "Algorithme", chapitres: ["Notion de boucle : « tant que » et « pour »"] },
+        { titre: "Algèbre", chapitres: ["Logique", "Généralités sur les suites numériques", "Suites arithmétiques et suites géométriques"] },
+        { titre: "Géométrie", chapitres: ["Calcul vectoriel", "Barycentre", "Transformations du plan", "Repérage dans l'espace d'un cube ou d'un parallélépipède", "Géométrie vectorielle dans l'espace", "Équation cartésienne dans l'espace", "Relation entre le degré, le radian et le grade", "Trigonométrie", "Équations et inéquations trigonométriques"] },
+        { titre: "Traitement de données et probabilités", chapitres: ["Organisation des données", "Statistique", "Dénombrement", "Probabilité"] }
+      ] },
+    "1ere-OSE": { nom: "1ère OSE", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Généralités sur les fonctions numériques d'une variable réelle", "Plan d'étude d'une fonction numérique"] },
+        { titre: "Algèbre", chapitres: ["Logique", "Système de deux équations linéaires à deux inconnues", "Système de trois équations linéaires à trois inconnues", "Généralités sur les suites numériques", "Suites arithmétiques/Suites géométriques"] },
+        { titre: "Algorithme", chapitres: ["Notion de boucle : « tant que » et « pour »"] },
+        { titre: "Géométrie", chapitres: ["Relation entre le degré, le radian et le grade", "Formules trigonométriques", "Équations trigonométriques"] },
+        { titre: "Traitement de données et probabilités", chapitres: ["Organisation des données", "Statistique", "Notion sur la théorie des ensembles", "Applications", "Probabilité"] },
+        { titre: "Mathématiques financières", chapitres: ["Notion de base sur les mathématiques financières", "Intérêt simple", "Valeur acquise", "Escompte à intérêts simples"] }
+      ] },
+    "terminale-L": { nom: "Terminale L", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Fonctions numériques à variable réelle", "Fonctions logarithmiques", "Fonctions exponentielles", "Primitive d'une fonction", "Intégration d'une fonction"] },
+        { titre: "Algèbre", chapitres: ["Équations du second degré", "Inéquations du second degré", "Résolution d'un système de deux équations linéaires à deux inconnues réelles", "Résolution d'un système de trois équations linéaires à trois inconnues réelles"] },
+        { titre: "Traitement de données et probabilités", chapitres: ["Série statistique à deux variables", "Probabilité"] }
+      ] },
+    "terminale-OSE": { nom: "Terminale OSE", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Limites d'une fonction", "Continuité", "Dérivabilité", "Représentations graphiques des fonctions", "Primitives", "Quelques méthodes d'intégration", "Logarithme à base quelconque", "Logarithme népérien", "Exponentielle népérienne"] },
+        { titre: "Algèbre", chapitres: ["Généralités sur les suites numériques", "Suite particulière", "Système de trois équations linéaires à trois inconnues", "Calcul matriciel", "L'ensemble ℂ", "Équation dans ℂ"] },
+        { titre: "Traitement de données et probabilités", chapitres: ["Organisation des données", "Vocabulaire", "Probabilité d'un évènement", "Généralités sur une variable aléatoire", "Loi de probabilité"] },
+        { titre: "Mathématiques financières", chapitres: ["Intérêt composé", "Les annuités"] }
+      ] },
+    "terminale-S": { nom: "Terminale S", progression: [],
+      parties: [
+        { titre: "Analyse", chapitres: ["Limites d'une fonction", "Continuité", "Dérivabilité", "Représentations graphiques de fonctions", "Primitives", "Quelques méthodes d'intégration", "Logarithme népérien", "Logarithme à base quelconque", "Exponentielle népérienne", "Équation différentielle"] },
+        { titre: "Algèbre", chapitres: ["Divisibilité dans ℤ", "PGCD et PPCM de deux ou plusieurs nombres", "Équations diophantiennes", "Ensemble ℤ/nℤ", "Le système de numération", "Calcul matriciel", "Généralités sur les suites numériques", "Suite particulière"] },
+        { titre: "Géométrie", chapitres: ["L'ensemble ℂ", "Équation dans ℂ", "Barycentre de n points pondérés", "Transformations du plan", "Isométrie", "Similitudes planes", "Vecteurs et points de l'espace", "Équations cartésiennes et équations paramétriques", "Positions relatives dans un espace"] },
+        { titre: "Traitement de données et probabilités", chapitres: ["Vocabulaire", "Probabilité d'un évènement", "Généralités sur une variable aléatoire", "Loi de probabilité"] }
+      ] },
   };
 
-  /* ============ NAVIGATION — lien du menu (#hash) → classe + série ============
+  /* ============ NAVIGATION — lien du menu (#hash) → clé de CLASSES ============
      Les liens du header (classe.html#6e, #premiere-s, #terminale-ose…) sont traduits
-     vers les clés de CLASSES ci-dessus. Les clés brutes (#6eme, #2nde…) restent acceptées. */
+     vers les clés de CLASSES ci-dessus. Les clés brutes (#6eme, #1ere-S…) restent acceptées. */
   const NAV = [
-    { id: "6e",           classe: "6eme",      label: "6<sup>e</sup>",           groupe: "college" },
-    { id: "5e",           classe: "5eme",      label: "5<sup>e</sup>",           groupe: "college" },
-    { id: "4e",           classe: "4eme",      label: "4<sup>e</sup>",           groupe: "college" },
-    { id: "3e",           classe: "3eme",      label: "3<sup>e</sup>",           groupe: "college" },
-    { id: "seconde",      classe: "2nde",      label: "Seconde",                 groupe: "lycee" },
-    { id: "premiere-l",   classe: "1ere",      serie: "L",   label: "1<sup>re</sup> L",   groupe: "lycee" },
-    { id: "premiere-s",   classe: "1ere",      serie: "S",   label: "1<sup>re</sup> S",   groupe: "lycee" },
-    { id: "premiere-ose", classe: "1ere",      serie: "OSE", label: "1<sup>re</sup> OSE", groupe: "lycee" },
-    { id: "terminale-l",  classe: "terminale", serie: "L",   label: "Terminale L",   groupe: "lycee" },
-    { id: "terminale-s",  classe: "terminale", serie: "S",   label: "Terminale S",   groupe: "lycee" },
-    { id: "terminale-ose",classe: "terminale", serie: "OSE", label: "Terminale OSE", groupe: "lycee" },
+    { id: "6e",            classe: "6eme",          label: "6<sup>e</sup>",           groupe: "college" },
+    { id: "5e",            classe: "5eme",          label: "5<sup>e</sup>",           groupe: "college" },
+    { id: "4e",            classe: "4eme",          label: "4<sup>e</sup>",           groupe: "college" },
+    { id: "3e",            classe: "3eme",          label: "3<sup>e</sup>",           groupe: "college" },
+    { id: "seconde",       classe: "2nde",          label: "Seconde",                 groupe: "lycee" },
+    { id: "premiere-l",    classe: "1ere-L",        label: "1<sup>re</sup> L",        groupe: "lycee" },
+    { id: "premiere-s",    classe: "1ere-S",        label: "1<sup>re</sup> S",        groupe: "lycee" },
+    { id: "premiere-ose",  classe: "1ere-OSE",      label: "1<sup>re</sup> OSE",      groupe: "lycee" },
+    { id: "terminale-l",   classe: "terminale-L",   label: "Terminale L",             groupe: "lycee" },
+    { id: "terminale-s",   classe: "terminale-S",   label: "Terminale S",             groupe: "lycee" },
+    { id: "terminale-ose", classe: "terminale-OSE", label: "Terminale OSE",           groupe: "lycee" },
   ];
 
   // null = visiteur non connecté. Exemple connecté : { nom: "Harilala" }
@@ -235,61 +356,120 @@
   /* ============ RENDU ============ */
   const $ = (id) => document.getElementById(id);
   const connecte = !!USER;
+  const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
   if (connecte) {
     $("header-right").innerHTML =
       `<span class="hidden sm:inline text-sm font-black">${USER.nom}</span>
        <a href="tableau-de-bord.html" class="rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-white hover:bg-primary-dark transition-colors">Tableau de bord</a>`;
-    ["cta-test", "cta-bas"].forEach((id) => $(id).remove());
+    $("sb-login").outerHTML =
+      `<a href="tableau-de-bord.html" class="sb-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 13l3-4 3 5 3-3"/></svg>${USER.nom}</a>`;
+    ["cta-test", "cta-bas", "sidebar-cta"].forEach((id) => $(id).remove());
   }
 
   const motif = `<span aria-hidden="true" class="pointer-events-none absolute inset-0 select-none overflow-hidden text-5xl font-extrabold leading-none text-accent/25">
       <span class="absolute -bottom-2 left-3">π</span><span class="absolute bottom-6 left-1/2">∑</span><span class="absolute -bottom-1 right-4">√</span></span>`;
 
-  // Boutons de sélection (collège / lycée)
+  // Sélecteur mobile (pastilles) + liste déroulante de la sidebar
   ["college", "lycee"].forEach((g) => {
-    $("nav-" + g).innerHTML = NAV.filter((n) => n.groupe === g)
-      .map((n) => `<a href="#${n.id}" data-nav="${n.id}" class="pill">${n.label}</a>`).join("");
+    const items = NAV.filter((n) => n.groupe === g);
+    $("nav-" + g).innerHTML = items.map((n) => `<a href="#${n.id}" data-nav="${n.id}" class="pill">${n.label}</a>`).join("");
+    $("dd-" + g).innerHTML = items.map((n) =>
+      `<a href="#${n.id}" data-nav="${n.id}" role="option" class="dd-item block rounded-lg px-3 py-2 text-sm font-bold text-primary-dark/80 hover:bg-primary/5 hover:text-primary">${CLASSES[n.classe].nom}</a>`).join("");
   });
 
-  // Trouve { classe, serie, id } à partir du hash
+  // Liste déroulante de classe (sidebar)
+  const panel = $("cls-panel");
+  function togglePanel(open) {
+    const show = open ?? panel.classList.contains("hidden");
+    panel.classList.toggle("hidden", !show);
+    $("cls-btn").setAttribute("aria-expanded", show);
+    $("cls-chevron").style.transform = show ? "rotate(180deg)" : "";
+  }
+  $("cls-btn").addEventListener("click", (e) => { e.stopPropagation(); togglePanel(); });
+  panel.addEventListener("click", (e) => { if (e.target.closest("a")) togglePanel(false); });
+  document.addEventListener("click", (e) => { if (!panel.contains(e.target)) togglePanel(false); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") togglePanel(false); });
+
+  // Recherche dans la classe affichée
+  function filtrer() {
+    const q = norm($("search-input").value.trim());
+    let visibles = 0;
+    document.querySelectorAll("#programmes [data-carte]").forEach((a) => {
+      const ok = !q || norm(a.querySelector("h3").textContent).includes(q);
+      a.classList.toggle("hidden", !ok);
+      if (ok) visibles++;
+    });
+    document.querySelectorAll("#programmes [data-partie]").forEach((p) => {
+      p.classList.toggle("hidden", !p.querySelector("[data-carte]:not(.hidden)"));
+    });
+    $("no-result").classList.toggle("hidden", !(q && document.querySelector("#programmes [data-carte]") && !visibles));
+  }
+  $("search-input").addEventListener("input", filtrer);
+  $("search-toggle").addEventListener("click", () => {
+    const open = $("search-box").classList.toggle("hidden") === false;
+    $("search-toggle").setAttribute("aria-expanded", open);
+    $("search-toggle").classList.toggle("active", open);
+    if (open) $("search-input").focus();
+  });
+
+  // Sommaire : défilement vers une partie (sans toucher au #hash, qui sert au routage)
+  $("toc").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-goto]"); if (!b) return;
+    const cible = $(b.dataset.goto);
+    if (cible) cible.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // Trouve { classe, id } à partir du hash
   function resoudre(hash) {
     const n = NAV.find((x) => x.id === hash);
-    if (n) return { classe: n.classe, serie: n.serie || null, id: n.id };
-    if (CLASSES[hash]) return { classe: hash, serie: null, id: null };
+    if (n) return { classe: n.classe, id: n.id };
+    const cle = Object.keys(CLASSES).find((k) => k.toLowerCase() === hash.toLowerCase());
+    if (cle) return { classe: cle, id: (NAV.find((x) => x.classe === cle) || {}).id || null };
     return null;
   }
 
   function afficher(r) {
     const c = CLASSES[r.classe];
-    const nomComplet = c.nom + (r.serie ? " — série " + r.serie : "");
+    const nom = c.nom;
 
     document.querySelectorAll("[data-nav]").forEach((b) => b.classList.toggle("active", b.dataset.nav === r.id));
-    $("crumb-classe").textContent = nomComplet;
-    $("titre").textContent = "Mathématiques " + nomComplet;
-    $("classe-sous-titre").textContent = "Programme de la classe de " + nomComplet;
-    document.title = "Mathématiques " + nomComplet + " — MATEMATIKUP";
+    $("cls-label").textContent = nom;
+    $("crumb-classe").textContent = nom;
+    $("titre").textContent = "Mathématiques " + nom;
+    $("classe-sous-titre").textContent = "Programme de la classe de " + nom;
+    document.title = "Mathématiques " + nom + " — MATEMATIKUP";
     if (!connecte) $("cta-bas").classList.remove("hidden");
 
+    // Remise à zéro de la recherche
+    $("search-input").value = "";
+    $("no-result").classList.add("hidden");
+
     if (!c.parties.length) {
-      $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Le programme de la ${nomComplet} arrive bientôt.</p>`;
+      $("toc-block").classList.add("hidden");
+      $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Le programme de la ${nom} arrive bientôt.</p>`;
       return;
     }
+
+    // Sommaire dynamique dans la sidebar
+    $("toc-block").classList.remove("hidden");
+    $("toc").innerHTML = c.parties.map((p, i) =>
+      `<button type="button" data-goto="partie-${i + 1}" class="toc-btn"><span>${p.titre}</span><span class="text-primary/40">${p.chapitres.length}</span></button>`).join("");
 
     let n = 0;
     $("programmes").innerHTML = c.parties.map((p, i) => {
       const cartes = p.chapitres.map((titre) => {
         const pct = connecte ? (c.progression[n] || 0) : 0;
         n++;
-        const lien = `chapitre.html?classe=${r.classe}${r.serie ? "&serie=" + r.serie : ""}&n=${n}`;
+        const lien = `chapitre.html?classe=${r.classe}&n=${n}`;
         return `
-        <a href="${lien}" class="block overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <a data-carte href="${lien}" class="block overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           <div class="relative flex h-28 items-start bg-accent/15 p-4">
             ${motif}
             <h3 class="relative text-base font-black leading-snug">${titre}</h3>
           </div>
           <div class="p-4">
-            <div class="flex items-center justify-between text-xs font-bold text-primary/60">
+            <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-primary/55">
               <span>Chapitre ${n}</span>
               <span>${connecte ? pct + " %" : "Non commencé"}</span>
             </div>
@@ -300,7 +480,7 @@
         </a>`;
       }).join("");
       return `
-      <div class="${i ? "mt-12" : ""}">
+      <div data-partie id="partie-${i + 1}" class="scroll-mt-28 ${i ? "mt-12" : ""}">
         <p class="text-sm font-bold text-primary/60">Partie ${i + 1}</p>
         <h2 class="text-2xl font-black">${p.titre}</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">${cartes}</div>
@@ -310,17 +490,25 @@
 
   function afficherAccueil() {
     document.querySelectorAll("[data-nav]").forEach((b) => b.classList.remove("active"));
+    $("cls-label").textContent = "Choisir une classe";
     $("crumb-classe").textContent = "Choisir une classe";
     $("titre").textContent = "Mathématiques";
     $("classe-sous-titre").textContent = "";
+    $("toc-block").classList.add("hidden");
+    $("no-result").classList.add("hidden");
     $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Clique sur ta classe pour découvrir son programme.</p>`;
   }
 
   // Route : appelée à l'arrivée sur la page ET à chaque changement de #hash
   // (cliquer dans le menu « Classe » quand on est déjà sur cette page ne recharge pas la page).
   function route(defile) {
-    const r = resoudre(decodeURIComponent(location.hash.slice(1)));
-    if (!r) return afficherAccueil();
+    const hash = decodeURIComponent(location.hash.slice(1));
+    const r = resoudre(hash);
+    if (!r) {
+      // Simple ancre de la page (ex. #programmes) : on garde la classe affichée
+      if (hash && $(hash)) return;
+      return afficherAccueil();
+    }
     afficher(r);
     if (defile) $("programmes").scrollIntoView({ behavior: "smooth", block: "start" });
   }

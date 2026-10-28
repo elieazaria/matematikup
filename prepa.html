@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cours prépa — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
+    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+    .price { font-family: 'Nunito', sans-serif; font-weight: 900; line-height: 1; letter-spacing: -.02em; }
+
+    /* Header : menu Classe */
+    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
+    .pill sup { font-size:.6em; vertical-align:super; }
+    .pill:hover { background:#3730A3; color:#fff; }
+    #mob-menu { display:none; } #mob-menu.open { display:block; }
+
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
+    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
+      <li class="group relative">
+        <button class="flex items-center gap-1 hover:text-secondary transition-colors py-2">
+          Classe
+          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
+            <div class="w-[190px] flex-shrink-0">
+              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+              </div>
+            </div>
+            <div class="w-px bg-primary/15"></div>
+            <div class="flex-1">
+              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#seconde" class="pill">Seconde</a>
+                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
+      <li><a href="sujets.html" class="hover:text-secondary transition-colors">Sujets types</a></li>
+      <li><a href="prepa.html" class="text-secondary">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
+      <li><a href="parents.html" class="hover:text-secondary transition-colors">Espace parents</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2.5">
+      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
+      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
+      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+    <a href="classe.html" class="block hover:text-secondary">Classe</a>
+    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+    <a href="sujets.html" class="block hover:text-secondary">Sujets types</a>
+    <a href="prepa.html" class="block text-secondary">Cours prépa</a>
+    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
+    <a href="parents.html" class="block hover:text-secondary">Espace parents</a>
+    <hr class="border-primary/10 my-2" />
+    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
+  </div>
+</header>
+
+
+<main>
+
+  <!-- ═══════════════ 1. TITRE + CARTE D'OFFRE ═══════════════ -->
+  <section class="relative overflow-hidden px-5 md:px-10 lg:px-16 pt-[120px] pb-16 lg:pb-20">
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-70" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+      <div class="absolute top-10 -right-40 w-[480px] h-[480px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+    </div>
+
+    <div class="relative mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-5">
+      <div class="lg:col-span-3">
+        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase">
+          🎓 Cours prépa
+        </div>
+        <h1 class="mt-6 text-4xl sm:text-5xl font-black leading-[1.1] tracking-tight text-primary-dark">
+          Vous êtes bachelier et souhaitez intégrer l’<span class="text-secondary underline decoration-accent decoration-4 underline-offset-8">université</span>&nbsp;?
+        </h1>
+        <p class="mt-6 text-xl sm:text-2xl font-black leading-snug">
+          <span class="text-secondary">Maximise tes probabilités de succès</span> au concours d’admission.
+        </p>
+        <p class="mt-5 max-w-xl text-lg leading-relaxed text-primary-dark/65">
+          Pour les nouveaux bacheliers qui veulent participer à un concours d’entrée en première année de licence à l’université.
+        </p>
+      </div>
+
+      <!-- Carte prix -->
+      <aside class="lg:col-span-2 lg:sticky lg:top-24" aria-label="Offre Cours prépa">
+        <div class="rounded-2xl border border-primary/10 border-t-8 border-t-secondary bg-white p-7 shadow-xl shadow-primary/10">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+              <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 10v6"/></svg>
+            </div>
+            <div>
+              <p class="font-black text-xl leading-tight">Cours prépa</p>
+              <p class="text-sm font-bold text-primary-dark/55">à seulement</p>
+            </div>
+          </div>
+
+          <p class="mt-6 flex items-end gap-2">
+            <span class="price text-5xl sm:text-6xl">40&nbsp;000</span>
+            <span class="text-primary-dark/50 font-bold text-xl mb-1">Ar</span>
+          </p>
+
+          <hr class="border-primary/10 my-6" />
+
+          <p class="text-sm font-black">Concours d’entrée concernés :</p>
+          <ul id="universites" class="mt-3 flex flex-wrap gap-2"></ul>
+
+          <a href="inscription.html" class="mt-7 block rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-3.5 text-center text-base font-black text-white shadow-lg shadow-secondary/25 hover:scale-[1.01] active:scale-[.98] transition-all">
+            ⚡ Je m’inscris
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 2. CE QUE TU REÇOIS ═══════════════ -->
+  <section style="background:#EEF0FF;">
+    <div class="mx-auto max-w-6xl px-5 md:px-10 lg:px-16 py-16 lg:py-20">
+      <h2 class="text-3xl sm:text-4xl font-black">Ce que tu <span class="text-secondary underline decoration-accent decoration-4 underline-offset-4">reçois</span></h2>
+      <div class="mt-8 grid gap-5 sm:grid-cols-2">
+
+        <article class="flex gap-5 rounded-2xl border border-primary/10 bg-white p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#FFE9E3;">
+            <svg class="h-7 w-7 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2Z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Des sujets types de mathématiques</h3>
+            <p class="mt-2 text-primary-dark/65">Corrigés étape par étape.</p>
+          </div>
+        </article>
+
+        <article class="flex gap-5 rounded-2xl border border-primary/10 bg-white p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#E4E3FF;">
+            <svg class="h-7 w-7 text-primary-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Des tests psychotechniques</h3>
+            <p class="mt-2 text-primary-dark/65">Pour t’entraîner au format du concours.</p>
+          </div>
+        </article>
+
+        <article class="flex gap-5 rounded-2xl border border-primary/10 bg-white p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#DDFAF1;">
+            <svg class="h-7 w-7 text-accent-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 8h6M9 12h4"/></svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Des corrections détaillées</h3>
+            <p class="mt-2 text-primary-dark/65">Pour comprendre le raisonnement, pas seulement la réponse.</p>
+          </div>
+        </article>
+
+        <article class="flex gap-5 rounded-2xl border border-primary/10 bg-white p-7 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:#E0DFF5;">
+            <svg class="h-7 w-7 text-primary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">Un entraînement qui cible tes lacunes</h3>
+            <p class="mt-2 text-primary-dark/65">Repère ce que tu dois retravailler avant l’épreuve.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ 3. CTA FINAL ═══════════════ -->
+  <section class="mx-auto max-w-6xl px-5 md:px-10 lg:px-16 py-16 lg:py-20">
+    <div class="relative overflow-hidden rounded-3xl bg-primary p-10 text-center text-white sm:p-14">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-25" style="background:radial-gradient(circle,#FF5A36,transparent 70%);"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -bottom-20 -left-10 w-64 h-64 rounded-full opacity-25" style="background:radial-gradient(circle,#2FD9A8,transparent 70%);"></div>
+      <div class="relative">
+        <h2 class="text-3xl sm:text-4xl font-black">Ton concours se prépare dès maintenant.</h2>
+        <p class="mx-auto mt-3 max-w-md text-white/80">Rejoins le Cours prépa pour 40&nbsp;000&nbsp;Ar et entraîne-toi avant le jour J.</p>
+        <a href="inscription.html" class="mt-7 inline-block rounded-xl bg-secondary px-8 py-3.5 text-lg font-black text-white shadow-lg shadow-black/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all">
+          Je m’inscris
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="bg-primary-dark">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Pour ajouter ou retirer un établissement : modifier cette liste.
+  const UNIVERSITES = ["Agronomie", "Polytechnique", "ENS", "IST", "INSCAE", "UCM", "ENI", "EMIT"];
+  document.getElementById("universites").innerHTML = UNIVERSITES.map((u) =>
+    `<li class="rounded-full border-2 border-primary bg-white px-3.5 py-1 text-xs font-black uppercase text-primary hover:bg-primary hover:text-white transition-colors">${u}</li>`
+  ).join("");
+
+  // Header
+  document.getElementById("burger").addEventListener("click", () => document.getElementById("mob-menu").classList.toggle("open"));
+  addEventListener("scroll", () => {
+    document.getElementById("main-header").style.boxShadow = scrollY > 8 ? "0 4px 24px rgba(39,34,117,.12)" : "none";
+  }, { passive: true });
+</script>
+</body>
+</html>
