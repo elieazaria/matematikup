@@ -134,7 +134,7 @@
         Sujets <span class="text-secondary underline decoration-accent decoration-4 underline-offset-4">types</span>
       </h1>
       <p class="text-primary-dark/60 text-base md:text-lg leading-relaxed">
-        Télécharge gratuitement les sujets d'examen. Pour la correction détaillée, découvre l'offre Sujet type.
+        Consulte directement les sujets d'examen en ligne. Pour la correction détaillée, découvre l'offre Sujet type.
       </p>
     </div>
 
@@ -205,7 +205,7 @@
       <div class="mt-auto">
         <hr class="border-primary/10 mb-6" />
         <p class="flex items-end gap-2 mb-6"><span class="price text-5xl">20&nbsp;000</span><span class="text-primary-dark/50 font-bold mb-1">Ar</span></p>
-        <a href="inscription.html" class="block text-center bg-secondary hover:bg-secondary-dark text-white font-black text-sm py-3.5 rounded-xl shadow-lg shadow-secondary/25 transition-colors">Je m'inscris </a>
+        <a href="inscription-sujets.html" class="block text-center bg-secondary hover:bg-secondary-dark text-white font-black text-sm py-3.5 rounded-xl shadow-lg shadow-secondary/25 transition-colors">Je m'inscris </a>
       </div>
     </article>
   </div>
@@ -228,10 +228,10 @@
   /* ───────────────────────────────────────────────
      DONNÉES — à remplacer par tes vrais sujets.
      Chaque sujet : { titre, annee, level, system, serie, file }
-       level  : 'terminale' | '3eme'
-       system : 'mg' | 'fr'
-       serie  : code de la série (voir SERIES) ; null pour 3ème
-       file   : chemin du PDF téléchargeable
+        level  : 'terminale' | '3eme'
+        system : 'mg' | 'fr'
+        serie  : code de la série (voir SERIES) ; null pour 3ème
+        file   : chemin du PDF
   ─────────────────────────────────────────────── */
   const SERIES = {
     'terminale-mg': [
@@ -251,13 +251,24 @@
       file: 'sujets/' + [level, system, serie, annee].filter(Boolean).join('-').toLowerCase() + '.pdf',
     }));
 
-  ['A','C','D','L','S','OSE'].forEach(s => add('terminale', 'mg', s, [2024, 2023, 2022]));
+  const range = (start, end) => {
+    const res = [];
+    for (let i = start; i <= end; i++) res.push(i);
+    return res;
+  };
+
+  // Séries A, C, D de 2000 à 2025
+  ['A', 'C', 'D'].forEach(s => add('terminale', 'mg', s, range(2000, 2025)));
+  // Séries L, S, OSE de 2021 à 2025
+  ['L', 'S', 'OSE'].forEach(s => add('terminale', 'mg', s, range(2021, 2025)));
+
+  // Système français & 3ème
   ['STMG','GEN','STI2D','AUTRES'].forEach(s => add('terminale', 'fr', s, [2024, 2023]));
-  add('3eme', 'mg', null, [2024, 2023, 2022]);   // BEPC
+  add('3eme', 'mg', null, range(2021, 2025));   // BEPC
   add('3eme', 'fr', null, [2024, 2023, 2022]);   // Brevet
 
   /* ── État & rendu ── */
-  const state = { level: 'terminale', system: 'mg', serie: 'all' };
+  const state = { level: 'terminale', system: 'mg', serie: 'A' };
   const $ = id => document.getElementById(id);
 
   function examName() {
@@ -268,16 +279,24 @@
   function renderChips() {
     const list = SERIES[state.level + '-' + state.system];
     $('series-block').classList.toggle('hidden', !list);
-    if (!list) return;
+    if (!list) {
+      state.serie = null;
+      return;
+    }
     $('series-label').textContent = state.system === 'mg' ? 'Série' : 'Filière';
-    const chips = [{ id: 'all', label: 'Toutes' }, ...list];
-    $('series-chips').innerHTML = chips.map(c =>
+    
+    // Si la série sélectionnée n'est pas dans la liste active, on prend la première par défaut
+    if (!list.some(c => c.id === state.serie)) {
+      state.serie = list[0].id;
+    }
+
+    $('series-chips').innerHTML = list.map(c =>
       `<button class="chip ${state.serie === c.id ? 'active' : ''}" data-serie="${c.id}">${c.label}</button>`).join('');
   }
 
   function renderList() {
     const rows = SUBJECTS
-      .filter(s => s.level === state.level && s.system === state.system && (state.serie === 'all' || s.serie === state.serie))
+      .filter(s => s.level === state.level && s.system === state.system && (s.serie === state.serie || (!s.serie && !state.serie)))
       .sort((a, b) => b.annee - a.annee || String(a.serie).localeCompare(String(b.serie)));
 
     $('count').textContent = rows.length;
@@ -298,10 +317,12 @@
           <p class="text-xs font-bold text-primary-dark/50 mt-1">${examName()} ${s.annee}${serieLabel ? ' · ' + serieLabel : ''}</p>
         </div>
         <div class="flex flex-wrap gap-2.5 sm:flex-shrink-0">
-          <a href="${s.file}" download
+          <a href="${s.file}" target="_blank" rel="noopener noreferrer"
              class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-4 py-2.5 rounded-xl hover:bg-primary hover:text-white transition-colors">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Télécharger
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            Aperçu
           </a>
           <button type="button" class="open-offer inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white font-black text-sm px-4 py-2.5 rounded-xl shadow-md shadow-secondary/25 transition-colors">
             Voir correction
@@ -317,13 +338,15 @@
 
   $('level-tabs').addEventListener('click', e => {
     const b = e.target.closest('[data-level]'); if (!b) return;
-    state.level = b.dataset.level; state.serie = 'all';
+    state.level = b.dataset.level; 
+    state.serie = null;
     setActive($('level-tabs'), 'level', state.level);
     renderChips(); renderList();
   });
   $('system-tabs').addEventListener('click', e => {
     const b = e.target.closest('[data-system]'); if (!b) return;
-    state.system = b.dataset.system; state.serie = 'all';
+    state.system = b.dataset.system; 
+    state.serie = null;
     setActive($('system-tabs'), 'system', state.system);
     renderChips(); renderList();
   });

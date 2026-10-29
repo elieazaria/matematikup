@@ -780,138 +780,110 @@
 
   <!-- ── Main footer grid ── -->
   <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 pt-16 pb-10">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+    <!-- Grid du footer réarrangée pour un meilleur aperçu -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 max-w-7xl mx-auto">
 
-      <!-- Col 1 — Brand -->
-      <div class="sm:col-span-2 lg:col-span-1">
-        <!-- Logo -->
-         <!-- Logo (image locale) -->
-      <a href="#" class="flex items-center flex-shrink-0 animate-fade-down d1" aria-label="MATEMATIKUP — Accueil">
-        <img src="logo_footer.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+  <!-- Col 1 — Brand & Contact -->
+  <div class="sm:col-span-2 lg:col-span-1 space-y-6">
+    <!-- Logo -->
+    <a href="#" class="inline-block animate-fade-down d1" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo_footer.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <!-- Tagline -->
+    <p class="text-white/60 text-sm leading-relaxed max-w-sm">
+      La plateforme e-learning qui réinvente l'apprentissage des mathématiques pour les collégiens et lycéens.
+    </p>
+
+    <!-- Contact -->
+    <ul class="space-y-3">
+      <li class="flex items-center gap-3 text-white/60 text-sm">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M2 7l10 7 10-7"/>
+        </svg>
+        <a href="mailto:contact@matematikup.mg" class="hover:text-white transition-colors">contact@matematikup.mg</a>
+      </li>
+      <li class="flex items-center gap-3 text-white/60 text-sm">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
+        </svg>
+        <a href="tel:+261328818952" class="hover:text-white transition-colors">+261 32 88 189 52</a>
+      </li>
+      <li class="flex items-center gap-3 text-white/60 text-sm">
+        <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span>Antananarivo, Madagascar</span>
+      </li>
+    </ul>
+
+    <!-- Social icons -->
+    <div class="flex items-center gap-3 pt-2">
+      <!-- Facebook -->
+      <a href="#" aria-label="Facebook"
+         class="w-10 h-10 rounded-xl border border-white/15 bg-white/5 flex items-center justify-center text-white/60 hover:border-secondary hover:text-secondary hover:bg-white/10 transition-all">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+        </svg>
       </a>
-        
+      <!-- Twitter / X -->
+      <a href="#" aria-label="Twitter"
+         class="w-10 h-10 rounded-xl border border-white/15 bg-white/5 flex items-center justify-center text-white/60 hover:border-secondary hover:text-secondary hover:bg-white/10 transition-all">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <!-- Instagram -->
+      <a href="#" aria-label="Instagram"
+         class="w-10 h-10 rounded-xl border border-white/15 bg-white/5 flex items-center justify-center text-white/60 hover:border-secondary hover:text-secondary hover:bg-white/10 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+      </a>
+      <!-- YouTube -->
+      <a href="#" aria-label="YouTube"
+         class="w-10 h-10 rounded-xl border border-white/15 bg-white/5 flex items-center justify-center text-white/60 hover:border-secondary hover:text-secondary hover:bg-white/10 transition-all">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 001.95-1.97A29 29 0 0023 12a29 29 0 00-.46-5.58z"/>
+          <polygon fill="#272275" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+        </svg>
+      </a>
+    </div>
+  </div>
 
-        <!-- Tagline -->
-        <p class="text-white/50 text-sm leading-relaxed mb-6 max-w-[260px]">
-          La plateforme e-learning qui réinvente l'apprentissage des mathématiques pour
-          les collégiens et lycéens français.
-        </p>
+  <!-- Col 2 — Plateforme -->
+  <div>
+    <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10" style="font-family:'Nunito',sans-serif;">Plateforme</h4>
+    <ul class="space-y-3">
+      <li><a href="index.html" class="text-white/60 text-sm hover:text-accent transition-colors">Accueil</a></li>
+      <li><a href="classe.html" class="text-white/60 text-sm hover:text-accent transition-colors">Classe</a></li>
+      <li><a href="sujets.html" class="text-white/60 text-sm hover:text-accent transition-colors">Sujets types</a></li>
+      <li><a href="prepa.html" class="text-white/60 text-sm hover:text-accent transition-colors">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="text-white/60 text-sm hover:text-accent transition-colors">Qui sommes-nous</a></li>
+      <li><a href="parents.html" class="text-white/60 text-sm hover:text-accent transition-colors">Espace parents</a></li>
+    </ul>
+  </div>
 
-        <!-- Contact -->
-        <ul class="space-y-3 mb-7">
-          <li class="flex items-center gap-2.5 text-white/50 text-sm">
-            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"/>
-              <path d="M2 7l10 7 10-7"/>
-            </svg>
-            <a href="mailto:contact@matematikup.fr"
-               class="hover:text-white transition-colors">contact@matematikup.mg</a>
-          </li>
-          <li class="flex items-center gap-2.5 text-white/50 text-sm">
-            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/>
-            </svg>
-            <a href="tel:+261328818952"
-               class="hover:text-white transition-colors">+261 32 88 189 52</a>
-          </li>
-          <li class="flex items-center gap-2.5 text-white/50 text-sm">
-            <svg class="w-4 h-4 text-accent flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            <span>Antananarivo, Madagascar</span>
-          </li>
-        </ul>
+  <!-- Col 3 — Support -->
+  <div>
+    <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10" style="font-family:'Nunito',sans-serif;">Support</h4>
+    <ul class="space-y-3">
+      <li><a href="#" class="text-white/60 text-sm hover:text-accent transition-colors">FAQ</a></li>
+      <li><a href="#" class="text-white/60 text-sm hover:text-accent transition-colors">Nous contacter</a></li>
+      <li><a href="#" class="text-white/60 text-sm hover:text-accent transition-colors">Blog</a></li>
+      <li><a href="#" class="text-white/60 text-sm hover:text-accent transition-colors">Tutoriels</a></li>
+    </ul>
+  </div>
 
-        <!-- Social icons -->
-        <div class="flex items-center gap-3">
-          <!-- Facebook -->
-          <a href="#" aria-label="Facebook"
-             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
-                    flex items-center justify-center text-white/50
-                    hover:border-secondary hover:text-secondary transition-all">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
-            </svg>
-          </a>
-          <!-- Twitter / X -->
-          <a href="#" aria-label="Twitter"
-             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
-                    flex items-center justify-center text-white/50
-                    hover:border-secondary hover:text-secondary transition-all">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <!-- Instagram -->
-          <a href="#" aria-label="Instagram"
-             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
-                    flex items-center justify-center text-white/50
-                    hover:border-secondary hover:text-secondary transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-            </svg>
-          </a>
-          <!-- YouTube -->
-          <a href="#" aria-label="YouTube"
-             class="w-10 h-10 rounded-xl border border-white/15 bg-white/5
-                    flex items-center justify-center text-white/50
-                    hover:border-secondary hover:text-secondary transition-all">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 001.95-1.97A29 29 0 0023 12a29 29 0 00-.46-5.58z"/>
-              <polygon fill="#272275" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Col 2 — Plateforme -->
-      <div>
-        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
-            style="font-family:'Nunito',sans-serif;">Plateforme</h4>
-        <ul class="space-y-3">
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Accueil</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Programmes</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Concours &amp; Examens</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Version Premium</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">À propos</a></li>
-        </ul>
-      </div>
-
-      <!-- Col 3 — Niveaux -->
-      <div>
-        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
-            style="font-family:'Nunito',sans-serif;">Niveaux</h4>
-        <ul class="space-y-3">
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">6ème – 5ème</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">4ème – 3ème</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">2nde – 1ère</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Terminale</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Prépa &amp; Concours</a></li>
-        </ul>
-      </div>
-
-      <!-- Col 4 — Support -->
-      <div>
-        <h4 class="font-black text-white text-base mb-4 pb-3 border-b border-white/10"
-            style="font-family:'Nunito',sans-serif;">Support</h4>
-        <ul class="space-y-3">
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">FAQ</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Nous contacter</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Blog</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Tutoriels</a></li>
-          <li><a href="#" class="text-white/50 text-sm hover:text-accent transition-colors">Espace parents</a></li>
-        </ul>
-      </div>
-
-    </div><!-- /grid -->
-
+</div><!-- /grid -->
     <!-- ── Newsletter banner ── -->
     <div class="mt-12 rounded-2xl border border-white/10 bg-white/5 px-6 md:px-10 py-7
                 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">

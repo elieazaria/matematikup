@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscription Cours prépa — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; }
+    h1, h2, h3, button, label, .font-display { font-family: 'Nunito', sans-serif; }
+    .price { font-family: 'Nunito', sans-serif; font-weight: 900; line-height: 1; letter-spacing: -.02em; }
+
+    /* Champs */
+    .field { width:100%; border:2px solid rgba(55,48,163,.15); border-radius:12px; background:#fff; padding:12px 14px;
+             font-size:.95rem; font-weight:600; color:#272275; transition:border-color .2s, box-shadow .2s; }
+    .field::placeholder { color:rgba(39,34,117,.35); font-weight:400; }
+    .field:focus { outline:none; border-color:#3730A3; box-shadow:0 0 0 4px rgba(55,48,163,.12); }
+    .field.invalid { border-color:#FF5A36; }
+    .err { color:#E04824; font-size:.78rem; font-weight:700; margin-top:6px; display:none; }
+    .err.show { display:block; }
+
+    /* Pastilles à cocher (concours) */
+    .opt { position:relative; display:inline-block; }
+    .opt input { position:absolute; opacity:0; pointer-events:none; }
+    .opt span { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+                font-size:.85rem; text-transform:uppercase; padding:9px 20px; border-radius:999px; cursor:pointer; transition:all .2s; background:#fff; }
+    .opt span:hover { background:rgba(55,48,163,.08); }
+    .opt input:checked + span { background:#3730A3; color:#fff; box-shadow:0 8px 20px -8px rgba(55,48,163,.7); }
+    .opt input:focus-visible + span { outline:3px solid rgba(55,48,163,.35); outline-offset:2px; }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Décor -->
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+    <div class="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full opacity-70" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+    <div class="absolute bottom-0 -right-32 w-[560px] h-[560px] rounded-full opacity-70" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+  </div>
+
+  <!-- Barre du haut -->
+  <header class="relative z-10 flex items-center justify-between px-5 md:px-10 lg:px-16 py-4">
+    <a href="index.html" aria-label="MATEMATIKUP — Accueil"><img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" /></a>
+    <a href="prepa.html" class="text-sm font-bold text-primary hover:text-secondary transition-colors">← Retour au Cours prépa</a>
+  </header>
+
+  <!-- Bloc central -->
+  <main class="relative z-10 flex justify-center px-5 pt-4 pb-16">
+    <section class="w-full max-w-xl bg-white border border-primary/10 rounded-3xl shadow-2xl shadow-primary/10 p-7 sm:p-10">
+
+      <div class="text-center mb-7">
+        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-4 py-1.5 text-xs font-black text-primary tracking-widest uppercase mb-4">🎓 Cours prépa</div>
+        <h1 class="font-black text-3xl text-primary-dark mb-2">Inscris-toi aux <span class="text-secondary">concours</span></h1>
+        <p class="text-primary-dark/60 text-sm">Choisis un ou plusieurs concours : le prix s'ajuste automatiquement.</p>
+      </div>
+
+      <form id="prepa-form" novalidate class="space-y-6">
+
+        <!-- 1. Concours -->
+        <div>
+          <h2 class="font-black text-base mb-3"><span class="text-secondary">1.</span> Choisis tes concours</h2>
+          <div id="univ-list" class="flex flex-wrap gap-2.5" role="group" aria-label="Concours d'entrée"></div>
+          <p class="err" id="err-univ">Choisis au moins un concours.</p>
+        </div>
+
+        <!-- Récapitulatif / prix -->
+        <div class="rounded-2xl p-5" style="background:#EEF0FF;">
+          <div class="flex items-end justify-between gap-4">
+            <div>
+              <p class="text-xs font-black uppercase tracking-widest text-primary-dark/50">Total</p>
+              <p id="sum-count" class="text-sm font-bold text-primary-dark/65 mt-1">Aucun concours choisi</p>
+            </div>
+            <p class="flex items-end gap-1.5">
+              <span class="price text-4xl" id="sum-total">0</span>
+              <span class="text-primary-dark/50 font-bold mb-0.5">Ar</span>
+            </p>
+          </div>
+          <ul id="sum-list" class="mt-3 flex flex-wrap gap-1.5 empty:hidden"></ul>
+          <p id="grille" class="mt-3 border-t border-primary/10 pt-3 text-xs font-semibold text-primary-dark/55"></p>
+        </div>
+
+        <!-- 2. Informations -->
+        <div>
+          <h2 class="font-black text-base mb-4"><span class="text-secondary">2.</span> Tes informations</h2>
+
+          <button type="button" id="google-btn"
+                  class="w-full flex items-center justify-center gap-3 border-2 border-primary/15 rounded-xl py-3 font-black text-sm text-primary-dark hover:border-primary hover:bg-primary/5 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+            Continuer avec Google
+          </button>
+
+          <div class="flex items-center gap-4 my-5">
+            <div class="flex-1 h-px bg-primary/10"></div>
+            <span class="text-xs font-bold text-primary-dark/40 uppercase tracking-widest">ou par e-mail</span>
+            <div class="flex-1 h-px bg-primary/10"></div>
+          </div>
+
+          <div class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="nom" class="block text-sm font-black mb-1.5">Nom</label>
+                <input id="nom" name="nom" type="text" autocomplete="family-name" class="field" placeholder="Rakoto" />
+                <p class="err" data-for="nom">Renseigne ton nom.</p>
+              </div>
+              <div>
+                <label for="prenoms" class="block text-sm font-black mb-1.5">Prénoms</label>
+                <input id="prenoms" name="prenoms" type="text" autocomplete="given-name" class="field" placeholder="Jean Elie" />
+                <p class="err" data-for="prenoms">Renseigne tes prénoms.</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="email" class="block text-sm font-black mb-1.5">Adresse e-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" class="field" placeholder="nom@exemple.com" />
+                <p class="err" data-for="email">Saisis une adresse e-mail valide.</p>
+              </div>
+              <div>
+                <label for="mobile" class="block text-sm font-black mb-1.5">Numéro mobile</label>
+                <input id="mobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" class="field" placeholder="034 00 000 00" />
+                <p class="err" data-for="mobile">Saisis un numéro mobile valide.</p>
+              </div>
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-black mb-1.5">Mot de passe</label>
+              <div class="relative">
+                <input id="password" name="password" type="password" autocomplete="new-password" class="field pr-24" placeholder="8 caractères minimum" />
+                <button type="button" class="toggle-pw absolute right-3 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary text-xs font-black" data-target="password">Afficher</button>
+              </div>
+              <p class="err" data-for="password">Le mot de passe doit contenir au moins 8 caractères.</p>
+            </div>
+
+            <div>
+              <label for="confirm" class="block text-sm font-black mb-1.5">Confirmer le mot de passe</label>
+              <div class="relative">
+                <input id="confirm" name="confirm" type="password" autocomplete="new-password" class="field pr-24" placeholder="Retape ton mot de passe" />
+                <button type="button" class="toggle-pw absolute right-3 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary text-xs font-black" data-target="confirm">Afficher</button>
+              </div>
+              <p class="err" data-for="confirm">Les mots de passe ne correspondent pas.</p>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submit-btn"
+                class="w-full bg-secondary hover:bg-secondary-dark text-white font-black py-3.5 rounded-xl shadow-lg shadow-secondary/25 hover:scale-[1.01] active:scale-[.98] transition-all">
+          ⚡ Je m'inscris
+        </button>
+        <p id="form-ok" class="hidden text-center text-accent-dark font-black text-sm">✓ Formulaire valide — à brancher sur ton back-end / paiement.</p>
+      </form>
+
+      <p class="text-center text-sm text-primary-dark/60 mt-7">
+        Déjà inscrit ? <a href="connexion.html" class="font-black text-primary hover:text-secondary transition-colors">Se connecter</a>
+      </p>
+    </section>
+  </main>
+
+  <script>
+    /* ═══════════ CONFIGURATION ═══════════ */
+    const UNIVERSITES = ["Agronomie", "Polytechnique", "ENS", "IST", "INSCAE", "UCM", "ENI", "EMIT"];
+    const PRIX_UNITE = 40000;          // 1 concours = 40 000 Ar, 2 = 80 000 Ar, etc.
+    const TARIFS = {};                 // exceptions éventuelles (remises), ex. : { 3: 100000, 4: 120000 }
+    const prix = (n) => TARIFS[n] ?? n * PRIX_UNITE;
+
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n) => n.toLocaleString("fr-FR").replace(/\s/g, " ");
+
+    /* ═══════════ CONCOURS ═══════════ */
+    $("univ-list").innerHTML = UNIVERSITES.map((u) =>
+      `<label class="opt"><input type="checkbox" name="concours" value="${u}"><span>${u}</span></label>`).join("");
+
+    const choisis = () => [...document.querySelectorAll('input[name="concours"]:checked')].map((i) => i.value);
+
+    function majRecap() {
+      const sel = choisis(), n = sel.length;
+      $("sum-count").textContent = n === 0 ? "Aucun concours choisi" : n + (n > 1 ? " concours choisis" : " concours choisi");
+      $("sum-list").innerHTML = sel.map((u) =>
+        `<li class="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-black uppercase text-primary">${u}</li>`).join("");
+      $("sum-total").textContent = fmt(n ? prix(n) : 0);
+      $("submit-btn").textContent = n ? `⚡ Je m'inscris — ${fmt(prix(n))} Ar` : "⚡ Je m'inscris";
+      // Rappel du barème : 1 concours = …, 2 = …, 3 = …
+      //$("grille").textContent = "Tarif : " + [1, 2, 3].map((k) => `${k} concours = ${fmt(prix(k))} Ar`).join(" · ") + " …";
+      if (n) $("err-univ").classList.remove("show");
+    }
+    document.querySelectorAll('input[name="concours"]').forEach((i) => i.addEventListener("change", majRecap));
+    majRecap();
+
+    /* ═══════════ VALIDATION ═══════════ */
+    const rules = {
+      nom:      (v) => v.trim().length > 0,
+      prenoms:  (v) => v.trim().length > 0,
+      email:    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      mobile:   (v) => /^\+?[0-9\s.-]{9,15}$/.test(v.trim()),
+      password: (v) => v.length >= 8,
+      confirm:  (v) => v.length > 0 && v === $("password").value,
+    };
+    function check(id) {
+      const ok = rules[id]($(id).value);
+      $(id).classList.toggle("invalid", !ok);
+      document.querySelector('.err[data-for="' + id + '"]').classList.toggle("show", !ok);
+      return ok;
+    }
+    Object.keys(rules).forEach((id) => $(id).addEventListener("blur", () => check(id)));
+
+    $("prepa-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const sel = choisis();
+      const univOk = sel.length > 0;
+      $("err-univ").classList.toggle("show", !univOk);
+      const champsOk = Object.keys(rules).map(check).every(Boolean);
+      const ok = univOk && champsOk;
+      $("form-ok").classList.toggle("hidden", !ok);
+      if (!ok) {
+        (univOk ? document.querySelector(".invalid") : $("univ-list")).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      const data = Object.fromEntries(new FormData($("prepa-form")));
+      delete data.confirm; delete data.concours;
+      const commande = { offre: "cours-prepa", concours: sel, total: prix(sel.length), ...data };
+      // TODO : envoyer `commande` à ton API (création du compte + paiement)
+      console.log("Inscription Cours prépa", commande);
+    });
+
+    document.querySelectorAll(".toggle-pw").forEach((btn) => btn.addEventListener("click", () => {
+      const input = $(btn.dataset.target), show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "Masquer" : "Afficher";
+    }));
+    $("google-btn").addEventListener("click", () => {
+      // TODO : brancher Google Identity Services / OAuth
+      alert("Connexion Google à brancher.");
+    });
+  </script>
+</body>
+</html>
