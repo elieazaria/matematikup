@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Chapitre — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- MathJax pour le rendu LaTeX des mathématiques -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
+    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+
+    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
+    .pill sup { font-size:.6em; vertical-align:super; }
+    .pill:hover { background:#3730A3; color:#fff; }
+    #mob-menu { display:none; } #mob-menu.open { display:block; }
+
+    .math-box { background: #EEF0FF; border-left: 4px solid #3730A3; border-radius: 0 16px 16px 0; padding: 20px; margin: 16px 0; }
+    .ex-box { background: rgba(47,217,168,0.1); border-left: 4px solid #2FD9A8; border-radius: 0 16px 16px 0; padding: 20px; margin: 16px 0; }
+
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
+    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+  </style>
+</head>
+<body class="bg-white font-sans text-primary-dark antialiased">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
+      <li class="group relative">
+        <button class="flex items-center gap-1 hover:text-secondary transition-colors py-2">
+          Classe
+          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
+            <div class="w-[190px] flex-shrink-0">
+              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+              </div>
+            </div>
+            <div class="w-px bg-primary/15"></div>
+            <div class="flex-1">
+              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#seconde" class="pill">Seconde</a>
+                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
+      <li><a href="sujets.html" class="hover:text-secondary transition-colors">Sujets types</a></li>
+      <li><a href="prepa.html" class="hover:text-secondary transition-colors">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
+      <li><a href="parents.html" class="hover:text-secondary transition-colors">Espace parents</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2.5">
+      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
+      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
+      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+    <a href="classe.html" class="block hover:text-secondary">Classe</a>
+    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+    <a href="sujets.html" class="block hover:text-secondary">Sujets types</a>
+    <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
+    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
+    <a href="parents.html" class="block hover:text-secondary">Espace parents</a>
+    <hr class="border-primary/10 my-2" />
+    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
+  </div>
+</header>
+
+<!-- ═══════════════ CONTENU DYNAMIQUE ═══════════════ -->
+<main class="relative overflow-hidden pt-[120px] pb-24 px-5 md:px-10 lg:px-16">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+    <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+    <div class="absolute top-[40%] -right-40 w-[560px] h-[560px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
+  </div>
+
+  <div class="relative max-w-4xl mx-auto" id="content-container">
+    <!-- Injecté dynamiquement -->
+  </div>
+</main>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="bg-primary-dark">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const CLASSES = {
+    "1ere-l": { nom: "1ère L", parties: [
+      { titre: "Algèbre", chapitres: ["Logique", "Suites numériques", "Suites arithmétiques et suites géométriques", "Équations du second degré"] }
+    ]},
+    "1ere-s": { nom: "1ère S", parties: [
+      { titre: "Algèbre", chapitres: ["Logique", "Généralités sur les suites numériques", "Suites arithmétiques et suites géométriques"] }
+    ]},
+    "1ere-ose": { nom: "1ère OSE", parties: [
+      { titre: "Algèbre", chapitres: ["Logique", "Système de deux équations", "Généralités sur les suites numériques", "Suites arithmétiques/Suites géométriques"] }
+    ]}
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const classeKey = params.get('classe');
+  const chapIndex = parseInt(params.get('n'), 10);
+  const container = document.getElementById('content-container');
+
+  function chargerChapitre() {
+    if (!classeKey || !CLASSES[classeKey] || isNaN(chapIndex)) {
+      container.innerHTML = `
+        <div class="text-center py-20">
+          <h1 class="text-3xl font-black text-primary-dark mb-4">Chapitre introuvable</h1>
+          <p class="text-primary-dark/65 mb-6">Le lien suivi est incorrect ou incomplet.</p>
+          <a href="classe.html" class="inline-block bg-primary text-white font-black px-6 py-3 rounded-xl">Retour aux programmes</a>
+        </div>`;
+      return;
+    }
+
+    const classeObj = CLASSES[classeKey];
+    let currentN = 0;
+    let chapitreTrouve = null;
+    let partieTrouvee = null;
+
+    for (let partie of classeObj.parties) {
+      for (let chap of partie.chapitres) {
+        currentN++;
+        if (currentN === chapIndex) {
+          chapitreTrouve = chap;
+          partieTrouvee = partie.titre;
+          break;
+        }
+      }
+      if (chapitreTrouve) break;
+    }
+
+    document.getElementById('page-title').textContent = `${chapitreTrouve || 'Chapitre'} — ${classeObj.nom} — MATEMATIKUP`;
+
+    // Si c'est le chapitre sur les suites numériques, on affiche le cours complet des documents fournis
+    if (chapitreTrouve && chapitreTrouve.toLowerCase().includes('suite')) {
+      container.innerHTML = `
+        <nav class="text-sm font-bold text-primary/60 mb-4" aria-label="Fil d'Ariane">
+          <a href="classe.html" class="hover:text-primary">Programmes</a>
+          <span class="mx-1">›</span>
+          <a href="classe.html#${classeKey}" class="hover:text-primary">${classeObj.nom}</a>
+          <span class="mx-1">›</span>
+          <span class="text-primary font-black">Chapitre ${chapIndex}</span>
+        </nav>
+
+        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase mb-4">
+          📊 ${partieTrouvee} — Notions sur les suites numériques
+        </div>
+        
+        <h1 class="font-black text-3xl md:text-4xl text-primary-dark leading-tight mb-8">
+          ${chapitreTrouve}
+        </h1>
+
+        <!-- 1. Définition -->
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">1</span>
+            Définition
+          </h2>
+          <p class="text-primary-dark/80 leading-relaxed mb-4">
+            Soit $n_{0} \in \mathbb{N}$ et $I = \{n \in \mathbb{N}, n \ge n_{0}\}$. Une suite numérique est une fonction $u: I \rightarrow \mathbb{R}$, qui, à chaque entier $n \in I$ associe un réel noté $u_{n}$[cite: 4].
+          </p>
+          <div class="math-box">
+            <p class="font-bold text-primary-dark">Autrement dit :</p>
+            <p class="text-primary-dark/80 mt-2">
+              C'est une liste de nombres, rangés et numérotés : à l'entier $0$ correspond le nombre noté $u_{0}$, à l'entier $1$ correspond le nombre noté $u_{1}$, ..., à l'entier $n$ correspond le nombre noté $u_{n}$ (appelé <strong>terme de la suite de rang $n$</strong>). La suite est notée $(u_{n})$[cite: 4].
+            </p>
+          </div>
+        </section>
+
+        <!-- 2. Vocabulaire et notation -->
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">2</span>
+            Vocabulaire et notation
+          </h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b-2 border-primary/15 text-primary font-black text-sm">
+                  <th class="py-3 px-4">Mot</th>
+                  <th class="py-3 px-4">Sens</th>
+                  <th class="py-3 px-4">Notation</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-primary/10 text-sm font-semibold text-primary-dark/80">
+                <tr><td class="py-3 px-4 font-black text-primary">Suite</td><td class="py-3 px-4">La liste complète</td><td class="py-3 px-4 font-mono font-bold text-secondary">$(u_{n})$</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Terme</td><td class="py-3 px-4">Un nombre de la liste</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n}$</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Rang ou indice</td><td class="py-3 px-4">Le numéro du terme</td><td class="py-3 px-4 font-mono font-bold text-secondary">$n$</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Premier terme</td><td class="py-3 px-4">Le début de la liste</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{0}$ (ou $u_{1}$)</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Terme général</td><td class="py-3 px-4">La formule de $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n} = \dots$</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Terme suivant</td><td class="py-3 px-4">Celui qui vient juste après $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n+1}$</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Terme précédent</td><td class="py-3 px-4">Celui qui vient juste avant $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n-1}$</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 3. Deux façons de définir une suite -->
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">3</span>
+            Deux façons de définir une suite
+          </h2>
+          <div class="space-y-4">
+            <div class="p-5 rounded-2xl bg-primary/5 border border-primary/10">
+              <h3 class="font-black text-primary text-lg mb-1">A. Forme explicite</h3>
+              <p class="text-primary-dark/80 text-sm mb-2">On donne $u_{n}$ en fonction de $n$[cite: 4].</p>
+              <p class="font-mono text-sm font-bold text-secondary bg-white p-3 rounded-xl border border-primary/10 inline-block">
+                Exemple : $u_{n} = 2n + 3 \implies u_{0} = 3,\; u_{1} = 5,\; u_{2} = 7, \dots$[cite: 4]
+              </p>
+            </div>
+            <div class="p-5 rounded-2xl bg-primary/5 border border-primary/10">
+              <h3 class="font-black text-primary text-lg mb-1">B. Forme récurrente</h3>
+              <p class="text-primary-dark/80 text-sm mb-2">On donne le premier terme et une règle pour passer d'un terme au suivant[cite: 4].</p>
+              <p class="font-mono text-sm font-bold text-secondary bg-white p-3 rounded-xl border border-primary/10 inline-block">
+                Exemple : $u_{0} = 2$ et $u_{n+1} = 3u_{n} - 1 \implies u_{1} = 5,\; u_{2} = 14, \dots$[cite: 4]
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. Variation d'une suite -->
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">4</span>
+            Variation d'une suite
+          </h2>
+          <ul class="space-y-2 mb-6 text-primary-dark/80 text-sm font-semibold">
+            <li class="flex items-center gap-2">🟢 <strong>$(u_{n})$ est croissante</strong> si $u_{n+1} \ge u_{n}$ pour tout $n$ (elle monte ou reste pareille)[cite: 4].</li>
+            <li class="flex items-center gap-2">🔴 <strong>$(u_{n})$ est décroissante</strong> si $u_{n+1} \le u_{n}$ pour tout $n$ (elle descend ou reste pareille)[cite: 4].</li>
+            <li class="flex items-center gap-2">🔵 <strong>$(u_{n})$ est constante</strong> si $u_{n+1} = u_{n}$ pour tout $n$[cite: 4].</li>
+          </ul>
+          <p class="text-sm font-bold text-primary mb-4">Si elle est croissante ou décroissante, on dit qu'elle est <strong>monotone</strong>[cite: 4].</p>
+
+          <h3 class="font-black text-primary-dark text-lg mb-3">Méthodes pour trouver la variation</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b-2 border-primary/15 text-primary font-black text-sm">
+                  <th class="py-3 px-4">Méthode</th>
+                  <th class="py-3 px-4">Comment faire</th>
+                  <th class="py-3 px-4">Conclusion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-primary/10 text-sm font-semibold text-primary-dark/80">
+                <tr><td class="py-3 px-4 font-black text-primary">La différence</td><td class="py-3 px-4">Calculer $u_{n+1} - u_{n}$</td><td class="py-3 px-4">Si $> 0$ : croissante. Si $< 0$ : décroissante[cite: 4].</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">Le quotient <span class="text-xs font-normal">(termes positifs)</span></td><td class="py-3 px-4">Calculer $\frac{u_{n+1}}{u_{n}}$</td><td class="py-3 px-4">Si $> 1$ : croissante. Si $< 1$ : décroissante[cite: 4].</td></tr>
+                <tr><td class="py-3 px-4 font-black text-primary">La fonction <span class="text-xs font-normal">(si $u_{n} = f(n)$)</span></td><td class="py-3 px-4">Étudier $f$</td><td class="py-3 px-4">$f$ croissante $\implies$ suite croissante[cite: 4].</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Exercices d'application -->
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-xl bg-secondary text-white flex items-center justify-center text-sm">✍️</span>
+            Exercices d'entraînement
+          </h2>
+          <div class="space-y-6">
+            <div class="ex-box">
+              <p class="font-black text-primary-dark mb-2">Exercice a)</p>
+              <p class="text-sm text-primary-dark/80 mb-2">
+                Soit la suite $u_{n}$ définie pour tout entier $n \in \mathbb{N}$ par la formule explicite : $u_{n} = 3n^{2} - 5n + 2$[cite: 5].
+              </p>
+              <ul class="list-disc list-inside text-sm font-semibold text-primary-dark/70 space-y-1">
+                <li>Calculer les termes $u_{0}$, $u_{1}$ et $u_{4}$[cite: 5].</li>
+                <li>Calculer $u_{10}$[cite: 5].</li>
+              </ul>
+            </div>
+            <div class="ex-box">
+              <p class="font-black text-primary-dark mb-2">Exercice b)</p>
+              <p class="text-sm text-primary-dark/80 mb-2">
+                On considère la suite $v_{n}$ définie par son premier terme $v_{0} = 1$ et par la relation de récurrence : $v_{n+1} = 2v_{n} + 3$[cite: 5].
+              </p>
+              <p class="text-sm font-semibold text-primary-dark/70">Calculer $v_{0}$, $v_{1}$ et $v_{3}$[cite: 5].</p>
+            </div>
+            <div class="ex-box">
+              <p class="font-black text-primary-dark mb-2">Exercice c)</p>
+              <p class="text-sm text-primary-dark/80 mb-2">
+                Soit la suite $w_{n}$ définie pour tout $n \in \mathbb{N}$ par : $w_{n} = \frac{2n+1}{n+2}$[cite: 5].
+              </p>
+              <ul class="list-disc list-inside text-sm font-semibold text-primary-dark/70 space-y-1">
+                <li>Calculer $w_{0}$ et $w_{1}$[cite: 5].</li>
+                <li>Étudier le sens de variation de $w_{n}$ en calculant la différence $w_{n+1} - w_{n}$[cite: 5].</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <div class="flex items-center justify-between mt-10">
+          <a href="classe.html#${classeKey}" class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-5 py-3 rounded-xl hover:bg-primary hover:text-white transition-colors">
+            ← Retour au programme
+          </a>
+          <a href="inscription.html" class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg transition-all">
+            Lancer le Quiz du chapitre →
+          </a>
+        </div>
+      `;
+    } else {
+      // Affichage standard pour les autres chapitres
+      container.innerHTML = `
+        <nav class="text-sm font-bold text-primary/60 mb-4" aria-label="Fil d'Ariane">
+          <a href="classe.html" class="hover:text-primary">Programmes</a>
+          <span class="mx-1">›</span>
+          <a href="classe.html#${classeKey}" class="hover:text-primary">${classeObj.nom}</a>
+          <span class="mx-1">›</span>
+          <span class="text-primary font-black">Chapitre ${chapIndex}</span>
+        </nav>
+        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase mb-4">
+          📚 ${partieTrouvee}
+        </div>
+        <h1 class="font-black text-3xl md:text-4xl text-primary-dark leading-tight mb-6">
+          ${chapitreTrouve}
+        </h1>
+        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
+          <h2 class="text-2xl font-black text-primary-dark mb-4">Introduction au chapitre</h2>
+          <p class="text-primary-dark/80 leading-relaxed">
+            Le cours détaillé et les exercices pour le chapitre <strong>${chapitreTrouve}</strong> seront bientôt disponibles en ligne.
+          </p>
+        </section>
+        <div class="mt-10">
+          <a href="classe.html#${classeKey}" class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-5 py-3 rounded-xl hover:bg-primary hover:text-white transition-colors">
+            ← Retour au programme
+          </a>
+        </div>
+      `;
+    }
+
+    if (window.MathJax) {
+      MathJax.typesetPromise();
+    }
+  }
+
+  chargerChapitre();
+
+  const burger = document.getElementById('burger');
+  const mobMenu = document.getElementById('mob-menu');
+  if (burger && mobMenu) {
+    burger.addEventListener('click', () => mobMenu.classList.toggle('open'));
+  }
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('main-header');
+    if (header) {
+      header.style.boxShadow = scrollY > 8 ? '0 4px 24px rgba(39,34,117,.12)' : 'none';
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>

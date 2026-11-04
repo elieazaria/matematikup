@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Espace parents — MATEMATIKUP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
+      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
+      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
+    } } } };
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
+    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+
+    /* Header : menu Classe */
+    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
+            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
+    .pill sup { font-size:.6em; vertical-align:super; }
+    .pill:hover { background:#3730A3; color:#fff; }
+    #mob-menu { display:none; } #mob-menu.open { display:block; }
+
+    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
+    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
+  </style>
+</head>
+<body class="bg-white font-sans text-primary-dark antialiased">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
+      <li class="group relative">
+        <button class="flex items-center gap-1 hover:text-secondary transition-colors py-2">
+          Classe
+          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
+          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
+            <div class="w-[190px] flex-shrink-0">
+              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+              </div>
+            </div>
+            <div class="w-px bg-primary/15"></div>
+            <div class="flex-1">
+              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="classe.html#seconde" class="pill">Seconde</a>
+                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
+                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
+      <li><a href="sujets.html" class="hover:text-secondary transition-colors">Sujets types</a></li>
+      <li><a href="prepa.html" class="hover:text-secondary transition-colors">Cours prépa</a></li>
+      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
+      <li><a href="parents.html" class="text-secondary">Espace parents</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2.5">
+      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
+      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
+      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
+        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
+      </button>
+    </div>
+  </nav>
+  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
+    <a href="classe.html" class="block hover:text-secondary">Classe</a>
+    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+    <a href="sujets.html" class="block hover:text-secondary">Sujets types</a>
+    <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
+    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
+    <a href="parents.html" class="block text-secondary">Espace parents</a>
+    <hr class="border-primary/10 my-2" />
+    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
+  </div>
+</header>
+
+<main class="mx-auto max-w-5xl px-5 pt-[120px] pb-20">
+
+  <!-- ============ 1. ACCUEIL : AUCUN ENFANT LIÉ ============ -->
+  <section class="grid items-center gap-10 py-12 md:grid-cols-5 lg:py-16">
+    <div class="md:col-span-3">
+      <h1 class="text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl">
+        Suivez les progrès de votre enfant, <span class="text-secondary">pas à pas</span>
+      </h1>
+      <p class="mt-5 max-w-xl text-lg font-medium leading-relaxed text-primary-dark/80">
+        Ajoutez votre enfant pour voir où il en est en mathématiques et comment l’aider à la maison.
+      </p>
+      <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+        <button type="button" data-ouvrir="choix" class="rounded-xl bg-secondary px-7 py-3.5 text-lg font-extrabold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+          Ajouter mon enfant
+        </button>
+        <button type="button" data-ouvrir="code" class="text-base font-extrabold underline decoration-primary/40 decoration-2 underline-offset-4 hover:decoration-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          J’ai un code de mon enfant
+        </button>
+      </div>
+      <p class="mt-5 flex items-center gap-2 text-sm font-bold text-primary-dark/70">
+        <svg class="h-5 w-5 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 4.500 3.400 7.700 8 9 4.600-1.300 8-4.500 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        Vous ne voyez qu’un résumé de sa progression. Votre enfant sait ce que vous consultez.
+      </p>
+    </div>
+
+    <!-- Illustration : deux comptes reliés -->
+    <div class="md:col-span-2" aria-hidden="true">
+      <div class="relative mx-auto flex h-64 max-w-xs items-center justify-center rounded-3xl bg-accent/15">
+        <div class="flex items-center gap-3">
+          <span class="flex h-20 w-20 items-center justify-center rounded-full border-4 border-primary bg-white text-2xl font-black">Vous</span>
+          <span class="h-1.5 w-10 rounded-full bg-secondary"></span>
+          <span class="flex h-20 w-20 items-center justify-center rounded-full border-4 border-accent bg-white text-3xl font-black">?</span>
+        </div>
+        <span class="absolute bottom-5 rounded-full bg-white px-4 py-1.5 text-sm font-extrabold shadow-sm">Liez vos comptes en 1 minute</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. CE QUE VOUS VERREZ (aperçu d'exemple) ============ -->
+  <section class="rounded-3xl bg-primary/5 p-6 sm:p-10">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 class="text-2xl font-black sm:text-3xl">Ce que vous verrez ici</h2>
+      <span class="rounded-full bg-white px-4 py-1 text-sm font-extrabold shadow-sm">Exemple</span>
+    </div>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+
+      <article class="rounded-2xl bg-white p-5 shadow-sm">
+        <h3 class="text-sm font-extrabold text-primary-dark/70">Résumé de la semaine</h3>
+        <p class="mt-3 text-3xl font-black">4 jours <span class="text-base font-bold text-primary-dark/70">de travail</span></p>
+        <p class="mt-1 font-bold">2 chapitres terminés</p>
+      </article>
+
+      <article class="rounded-2xl bg-white p-5 shadow-sm">
+        <h3 class="text-sm font-extrabold text-primary-dark/70">Progression de la classe</h3>
+        <p class="mt-3 text-3xl font-black">45 %</p>
+        <div class="mt-3 h-3 overflow-hidden rounded-full bg-primary/10"><div class="h-full w-[45%] rounded-full bg-accent"></div></div>
+      </article>
+
+      <article class="rounded-2xl bg-white p-5 shadow-sm">
+        <h3 class="text-sm font-extrabold text-primary-dark/70">Points forts et à renforcer</h3>
+        <div class="mt-3 flex flex-wrap gap-2 text-sm font-extrabold">
+          <span class="rounded-full bg-accent/25 px-3 py-1">Géométrie</span>
+          <span class="rounded-full bg-accent/25 px-3 py-1">Mesure</span>
+          <span class="rounded-full bg-secondary/15 px-3 py-1">Fractions</span>
+        </div>
+      </article>
+
+      <article class="rounded-2xl bg-white p-5 shadow-sm">
+        <h3 class="text-sm font-extrabold text-primary-dark/70">Comment l’aider à la maison</h3>
+        <p class="mt-3 font-bold leading-snug">Encouragez-le à refaire les rappels de fractions pendant 10 minutes.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 3. COMMENT ÇA MARCHE ============ -->
+  <section class="py-14">
+    <h2 class="text-2xl font-black sm:text-3xl">Comment ça marche</h2>
+    <ol class="mt-6 grid gap-4 sm:grid-cols-3">
+      <li class="rounded-2xl border-2 border-primary/15 p-5">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-lg font-black text-white">1</span>
+        <p class="mt-3 font-extrabold">Votre enfant crée son compte et passe le test gratuit</p>
+      </li>
+      <li class="rounded-2xl border-2 border-primary/15 p-5">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-lg font-black text-white">2</span>
+        <p class="mt-3 font-extrabold">Il vous donne son code à 6 chiffres, vous l’entrez ici</p>
+      </li>
+      <li class="rounded-2xl border-2 border-primary/15 p-5">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-lg font-black text-white">3</span>
+        <p class="mt-3 font-extrabold">Vous suivez ses progrès et savez comment l’aider</p>
+      </li>
+    </ol>
+
+    <div class="mt-10 rounded-3xl bg-primary p-8 text-center text-white sm:p-12 shadow-lg">
+      <h2 class="text-2xl font-black sm:text-3xl">Prêt à suivre ses progrès ?</h2>
+      <button type="button" data-ouvrir="choix" class="mt-6 rounded-xl bg-secondary px-8 py-3.5 text-lg font-extrabold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary transition-all">
+        Ajouter mon enfant
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FENÊTRE : AJOUTER MON ENFANT ============ -->
+<dialog id="modal" aria-labelledby="modal-titre" class="w-[calc(100%-2rem)] max-w-md rounded-3xl p-0 text-primary-dark backdrop:bg-primary-dark/60 shadow-2xl">
+  <div class="p-7 sm:p-8">
+    <div class="flex items-start justify-between gap-4">
+      <h2 id="modal-titre" class="text-2xl font-black leading-tight">Ajouter mon enfant</h2>
+      <button type="button" id="fermer" aria-label="Fermer" class="rounded-full p-1 text-primary-dark/60 hover:text-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <!-- Étape 1 : choix -->
+    <div id="etape-choix" class="mt-6 space-y-3">
+      <button type="button" data-ouvrir="code" class="w-full rounded-2xl border-2 border-primary/20 p-4 text-left hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors">
+        <span class="block text-lg font-extrabold">Mon enfant a déjà un compte</span>
+        <span class="mt-1 block text-sm font-medium text-primary-dark/75">J’entre le code qu’il m’a donné.</span>
+      </button>
+      <a href="inscription.html" class="block w-full rounded-2xl border-2 border-primary/20 p-4 text-left hover:bg-primary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors">
+        <span class="block text-lg font-extrabold">Mon enfant n’a pas encore de compte</span>
+        <span class="mt-1 block text-sm font-medium text-primary-dark/75">Je crée son compte gratuitement, avec le test.</span>
+      </a>
+    </div>
+
+    <!-- Étape 2 : code -->
+    <form id="etape-code" class="mt-6 hidden" novalidate>
+      <p class="font-medium leading-relaxed text-primary-dark/85">
+        Entrez le code à 6 chiffres affiché dans le profil de votre enfant, rubrique « Parent ».
+      </p>
+      <div id="cases" class="mt-5 flex justify-between gap-2" role="group" aria-label="Code à 6 chiffres"></div>
+      <p id="erreur" class="mt-3 min-h-[1.5rem] text-sm font-extrabold text-secondary" role="alert"></p>
+      <button type="submit" id="lier" disabled class="mt-2 w-full cursor-not-allowed rounded-xl bg-primary/20 px-6 py-3.5 text-lg font-extrabold text-white">
+        Lier mon enfant
+      </button>
+      <p class="mt-4 text-center text-sm font-bold">
+        Pas de code ? <a href="inscription.html" class="underline decoration-secondary decoration-2 underline-offset-4">Créer le compte de mon enfant</a>
+      </p>
+    </form>
+
+    <!-- Étape 3 : succès -->
+    <div id="etape-ok" class="mt-6 hidden text-center">
+      <span class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent">
+        <svg class="h-9 w-9" fill="none" stroke="#272275" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.500 4.500 4.500L19 7"/></svg>
+      </span>
+      <p class="mt-4 text-xl font-black">Votre enfant est lié !</p>
+      <a href="parents.html" class="mt-5 block rounded-xl bg-secondary px-6 py-3.5 text-lg font-extrabold text-white hover:opacity-90">Voir ses progrès</a>
+    </div>
+  </div>
+</dialog>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="bg-primary-dark">
+  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
+    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
+      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const modal = $("modal");
+  const etapes = { choix: $("etape-choix"), code: $("etape-code"), ok: $("etape-ok") };
+  const N = 6;
+
+  // Header interactivity
+  $("burger").addEventListener("click", () => $("mob-menu").classList.toggle("open"));
+  addEventListener("scroll", () => {
+    $("main-header").style.boxShadow = scrollY > 8 ? "0 4px 24px rgba(39,34,117,.12)" : "none";
+  }, { passive: true });
+
+  // Cases du code
+  $("cases").innerHTML = Array.from({ length: N }, (_, i) =>
+    `<input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Chiffre ${i + 1}"
+      class="h-14 w-full min-w-0 rounded-xl border-2 border-primary/25 text-center text-2xl font-black focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30">`
+  ).join("");
+  const cases = [...$("cases").querySelectorAll("input")];
+
+  function afficher(etape) {
+    Object.entries(etapes).forEach(([k, el]) => el.classList.toggle("hidden", k !== etape));
+    $("modal-titre").textContent = etape === "ok" ? "Bravo" : "Ajouter mon enfant";
+    if (etape === "code") { cases.forEach((c) => (c.value = "")); $("erreur").textContent = ""; majBouton(); cases[0].focus(); }
+  }
+  document.querySelectorAll("[data-ouvrir]").forEach((b) => b.addEventListener("click", () => {
+    if (!modal.open) modal.showModal();
+    afficher(b.dataset.ouvrir);
+  }));
+  $("fermer").addEventListener("click", () => modal.close());
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+
+  function majBouton() {
+    const pret = cases.every((c) => c.value);
+    const b = $("lier");
+    b.disabled = !pret;
+    b.className = "mt-2 w-full rounded-xl px-6 py-3.5 text-lg font-extrabold text-white " + (pret ? "bg-secondary hover:opacity-90 cursor-pointer" : "cursor-not-allowed bg-primary/20");
+  }
+  cases.forEach((c, i) => {
+    c.addEventListener("input", () => {
+      c.value = c.value.replace(/\D/g, "").slice(0, 1);
+      if (c.value && cases[i + 1]) cases[i + 1].focus();
+      majBouton();
+    });
+    c.addEventListener("keydown", (e) => { if (e.key === "Backspace" && !c.value && cases[i - 1]) cases[i - 1].focus(); });
+    c.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, N);
+      [...t].forEach((ch, j) => (cases[j].value = ch));
+      cases[Math.min(t.length, N - 1)].focus();
+      majBouton();
+    });
+  });
+
+  async function lierEnfant(code) {
+    await new Promise((r) => setTimeout(r, 500));   // simulation
+    return code === "123456";                        // démo : seul 123456 fonctionne
+  }
+
+  $("etape-code").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const code = cases.map((c) => c.value).join("");
+    $("lier").disabled = true; $("lier").textContent = "Vérification…";
+    const ok = await lierEnfant(code);
+    $("lier").textContent = "Lier mon enfant";
+    if (ok) afficher("ok");
+    else { $("erreur").textContent = "Ce code ne fonctionne pas. Vérifiez-le avec votre enfant, ou demandez-lui d’en générer un nouveau."; majBouton(); }
+  });
+</script>
+</body>
+</html>
