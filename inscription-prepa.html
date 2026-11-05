@@ -152,7 +152,7 @@
 
         <button type="submit" id="submit-btn"
                 class="w-full bg-secondary hover:bg-secondary-dark text-white font-black py-3.5 rounded-xl shadow-lg shadow-secondary/25 hover:scale-[1.01] active:scale-[.98] transition-all">
-          ⚡ Je m'inscris
+          J'achète
         </button>
         <p id="form-ok" class="hidden text-center text-accent-dark font-black text-sm">✓ Formulaire valide — à brancher sur ton back-end / paiement.</p>
       </form>
@@ -185,7 +185,7 @@
       $("sum-list").innerHTML = sel.map((u) =>
         `<li class="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-black uppercase text-primary">${u}</li>`).join("");
       $("sum-total").textContent = fmt(n ? prix(n) : 0);
-      $("submit-btn").textContent = n ? `⚡ Je m'inscris — ${fmt(prix(n))} Ar` : "⚡ Je m'inscris";
+      $("submit-btn").textContent = n ? `J'achète — ${fmt(prix(n))} Ar` : " J'achète ";
       // Rappel du barème : 1 concours = …, 2 = …, 3 = …
       //$("grille").textContent = "Tarif : " + [1, 2, 3].map((k) => `${k} concours = ${fmt(prix(k))} Ar`).join(" · ") + " …";
       if (n) $("err-univ").classList.remove("show");

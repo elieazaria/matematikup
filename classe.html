@@ -194,9 +194,8 @@
           <p id="classe-sous-titre" class="mt-2 text-base font-semibold text-primary-dark/65"></p>
         </div>
         <div class="flex flex-wrap gap-3">
-          <a href="#programmes" class="rounded-xl border-2 border-primary px-5 py-2.5 text-sm font-black text-primary hover:bg-primary/5 transition-colors">Découvrir les programmes</a>
           <a id="cta-test" href="inscription.html" class="rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 transition-colors">
-            S'inscrire gratuitement pour passer au test
+            Passer un test de niveau
           </a>
         </div>
       </section>
@@ -471,7 +470,7 @@
           <div class="p-4">
             <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-primary/55">
               <span>Chapitre ${n}</span>
-              <span>${connecte ? pct + " %" : "Non commencé"}</span>
+              <span>${connecte ? pct + " %" : " "}</span>
             </div>
             <div class="mt-2 h-2 overflow-hidden rounded-full bg-primary/10" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du chapitre ${n}">
               <div class="h-full rounded-full bg-accent" style="width:${pct}%"></div>
