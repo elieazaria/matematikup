@@ -1,391 +1,3169 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="page-title">Chapitre — MATEMATIKUP</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  
-  <!-- MathJax pour le rendu LaTeX des mathématiques -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chapitre — MATEMATIKUP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#3730A3",
+                dark: "#272275",
+                light: "#4F46E5",
+              },
+              secondary: {
+                DEFAULT: "#FF5A36",
+                dark: "#E04824",
+                light: "#FF7A5C",
+              },
+              accent: { DEFAULT: "#2FD9A8", dark: "#24AE86", light: "#55E3BA" },
+            },
+          },
+        },
+      };
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+        svg: { fontCache: "global" },
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Nunito Sans", sans-serif;
+        background: #fff;
+        color: #272275;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      button,
+      .font-display {
+        font-family: "Nunito", sans-serif;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
 
-  <script>
-    tailwind.config = { theme: { extend: { colors: {
-      primary:   { DEFAULT: '#3730A3', dark: '#272275', light: '#4F46E5' },
-      secondary: { DEFAULT: '#FF5A36', dark: '#E04824', light: '#FF7A5C' },
-      accent:    { DEFAULT: '#2FD9A8', dark: '#24AE86', light: '#55E3BA' },
-    } } } };
-  </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: 'Nunito Sans', sans-serif; background: #fff; color: #272275; overflow-x: hidden; }
-    h1,h2,h3,h4,button,.font-display { font-family: 'Nunito', sans-serif; }
+      .pill {
+        display: inline-block;
+        border: 2px solid #3730a3;
+        color: #3730a3;
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 13px;
+        text-transform: uppercase;
+        padding: 7px 18px;
+        border-radius: 999px;
+        white-space: nowrap;
+        transition: all 0.2s;
+        background: #fff;
+      }
+      .pill sup {
+        font-size: 0.6em;
+        vertical-align: super;
+      }
+      .pill:hover {
+        background: #3730a3;
+        color: #fff;
+      }
+      #mob-menu {
+        display: none;
+      }
+      #mob-menu.open {
+        display: block;
+      }
 
-    .pill { display:inline-block; border:2px solid #3730A3; color:#3730A3; font-family:'Nunito',sans-serif; font-weight:900;
-            font-size:13px; text-transform:uppercase; padding:7px 18px; border-radius:999px; white-space:nowrap; transition:all .2s; background:#fff; }
-    .pill sup { font-size:.6em; vertical-align:super; }
-    .pill:hover { background:#3730A3; color:#fff; }
-    #mob-menu { display:none; } #mob-menu.open { display:block; }
-
-    .math-box { background: #EEF0FF; border-left: 4px solid #3730A3; border-radius: 0 16px 16px 0; padding: 20px; margin: 16px 0; }
-    .ex-box { background: rgba(47,217,168,0.1); border-left: 4px solid #2FD9A8; border-radius: 0 16px 16px 0; padding: 20px; margin: 16px 0; }
-
-    ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#272275; }
-    ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
-  </style>
-</head>
-<body class="bg-white font-sans text-primary-dark antialiased">
-
-<!-- ═══════════════ HEADER ═══════════════ -->
-<header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
-  <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
-    <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
-      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
-    </a>
-
-    <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
-      <li class="group relative">
-        <button class="flex items-center gap-1 hover:text-secondary transition-colors py-2">
-          Classe
-          <svg class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50">
-          <div class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]" style="background:#EEF0FF;">
-            <div class="w-[190px] flex-shrink-0">
-              <p class="font-black text-primary-dark text-sm mb-4">Collège</p>
-              <div class="flex flex-wrap gap-3">
-                <a href="classe.html#6e" class="pill">6<sup>e</sup></a><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
-                <a href="classe.html#4e" class="pill">4<sup>e</sup></a><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
-              </div>
-            </div>
-            <div class="w-px bg-primary/15"></div>
-            <div class="flex-1">
-              <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
-              <div class="flex flex-wrap gap-3">
-                <a href="classe.html#seconde" class="pill">Seconde</a>
-                <a href="classe.html#premiere-l" class="pill">1<sup>re</sup> L</a><a href="classe.html#premiere-s" class="pill">1<sup>re</sup> S</a><a href="classe.html#premiere-ose" class="pill">1<sup>re</sup> OSE</a>
-                <a href="classe.html#terminale-l" class="pill">Terminale L</a><a href="classe.html#terminale-s" class="pill">Terminale S</a><a href="classe.html#terminale-ose" class="pill">Terminale OSE</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li><a href="offres.html" class="hover:text-secondary transition-colors">Nos offres</a></li>
-      <li><a href="sujets.html" class="hover:text-secondary transition-colors">Sujets types</a></li>
-      <li><a href="prepa.html" class="hover:text-secondary transition-colors">Cours prépa</a></li>
-      <li><a href="a-propos.html" class="hover:text-secondary transition-colors">Qui sommes-nous&nbsp;?</a></li>
-      <li><a href="parents.html" class="hover:text-secondary transition-colors">Espace parents</a></li>
-    </ul>
-
-    <div class="flex items-center gap-2.5">
-      <a href="inscription.html" class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap">S'inscrire</a>
-      <a href="connexion.html" class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap">Connexion</a>
-      <button id="burger" aria-label="Menu" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center">
-        <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-full"></span><span class="block h-0.5 bg-primary-dark rounded-full w-4/5"></span>
-      </button>
-    </div>
-  </nav>
-  <div id="mob-menu" class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark">
-    <a href="classe.html" class="block hover:text-secondary">Classe</a>
-    <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
-    <a href="sujets.html" class="block hover:text-secondary">Sujets types</a>
-    <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
-    <a href="a-propos.html" class="block hover:text-secondary">Qui sommes-nous&nbsp;?</a>
-    <a href="parents.html" class="block hover:text-secondary">Espace parents</a>
-    <hr class="border-primary/10 my-2" />
-    <a href="connexion.html" class="block text-primary hover:text-secondary">Connexion</a>
-  </div>
-</header>
-
-<!-- ═══════════════ CONTENU DYNAMIQUE ═══════════════ -->
-<main class="relative overflow-hidden pt-[120px] pb-24 px-5 md:px-10 lg:px-16">
-  <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-    <div class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
-    <div class="absolute top-[40%] -right-40 w-[560px] h-[560px] rounded-full opacity-60" style="background:radial-gradient(circle,#EEF0FF,transparent 70%);"></div>
-  </div>
-
-  <div class="relative max-w-4xl mx-auto" id="content-container">
-    <!-- Injecté dynamiquement -->
-  </div>
-</main>
-
-<!-- ═══════════════ FOOTER ═══════════════ -->
-<footer class="bg-primary-dark">
-  <div class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-    <p class="text-white/40 text-xs">© 2026 MATEMATIKUP. Tous droits réservés.</p>
-    <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Mentions légales</a>
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">CGU</a>
-      <a href="#" class="text-white/40 text-xs hover:text-white transition-colors">Politique de confidentialité</a>
-    </nav>
-  </div>
-</footer>
-
-<script>
-  const CLASSES = {
-    "1ere-l": { nom: "1ère L", parties: [
-      { titre: "Algèbre", chapitres: ["Logique", "Suites numériques", "Suites arithmétiques et suites géométriques", "Équations du second degré"] }
-    ]},
-    "1ere-s": { nom: "1ère S", parties: [
-      { titre: "Algèbre", chapitres: ["Logique", "Généralités sur les suites numériques", "Suites arithmétiques et suites géométriques"] }
-    ]},
-    "1ere-ose": { nom: "1ère OSE", parties: [
-      { titre: "Algèbre", chapitres: ["Logique", "Système de deux équations", "Généralités sur les suites numériques", "Suites arithmétiques/Suites géométriques"] }
-    ]}
-  };
-
-  const params = new URLSearchParams(window.location.search);
-  const classeKey = params.get('classe');
-  const chapIndex = parseInt(params.get('n'), 10);
-  const container = document.getElementById('content-container');
-
-  function chargerChapitre() {
-    if (!classeKey || !CLASSES[classeKey] || isNaN(chapIndex)) {
-      container.innerHTML = `
-        <div class="text-center py-20">
-          <h1 class="text-3xl font-black text-primary-dark mb-4">Chapitre introuvable</h1>
-          <p class="text-primary-dark/65 mb-6">Le lien suivi est incorrect ou incomplet.</p>
-          <a href="classe.html" class="inline-block bg-primary text-white font-black px-6 py-3 rounded-xl">Retour aux programmes</a>
-        </div>`;
-      return;
-    }
-
-    const classeObj = CLASSES[classeKey];
-    let currentN = 0;
-    let chapitreTrouve = null;
-    let partieTrouvee = null;
-
-    for (let partie of classeObj.parties) {
-      for (let chap of partie.chapitres) {
-        currentN++;
-        if (currentN === chapIndex) {
-          chapitreTrouve = chap;
-          partieTrouvee = partie.titre;
-          break;
+      /* ── Sidebar des sous-chapitres ── */
+      .sbn {
+        border: 1px solid rgba(55, 48, 163, 0.12);
+        border-radius: 16px;
+        background: #fff;
+        padding: 12px;
+        overflow-y: auto;
+        max-height: 11rem;
+      }
+      @media (min-width: 768px) {
+        .sbn {
+          position: sticky;
+          top: 84px;
+          max-height: calc(100vh - 104px);
         }
       }
-      if (chapitreTrouve) break;
-    }
+      .sbn h4 {
+        font-size: 0.7rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(55, 48, 163, 0.55);
+        margin: 2px 6px 8px;
+      }
+      .sbn .t {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border-radius: 10px;
+        padding: 7px 10px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: rgba(39, 34, 117, 0.6);
+      }
+      .sbn .t:hover {
+        background: rgba(55, 48, 163, 0.06);
+        color: #272275;
+      }
+      .sbn .t.on {
+        background: rgba(55, 48, 163, 0.1);
+        color: #272275;
+      }
+      .sub {
+        display: none;
+        margin: 2px 0 8px 12px;
+        border-left: 3px solid rgba(47, 217, 168, 0.7);
+      }
+      .t.on + .sub {
+        display: block;
+      }
+      .sub a {
+        display: block;
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: rgba(39, 34, 117, 0.75);
+      }
+      .sub a:hover {
+        background: #eef0ff;
+      }
+      .sub a.act {
+        background: #ff5a36;
+        color: #fff;
+        font-weight: 900;
+      }
 
-    document.getElementById('page-title').textContent = `${chapitreTrouve || 'Chapitre'} — ${classeObj.nom} — MATEMATIKUP`;
+      /* ── Pages ── */
+      .pg {
+        display: none;
+      }
+      .pg.on {
+        display: grid;
+        gap: 20px;
+      }
+      @media (min-width: 1024px) {
+        .pg.on {
+          grid-template-columns: minmax(0, 1fr) 190px;
+        }
+      }
+      .pg article {
+        min-width: 0;
+      }
+      .pg aside {
+        display: none;
+        align-self: start;
+        font-size: 0.8rem;
+      }
+      @media (min-width: 1024px) {
+        .pg aside {
+          display: block;
+          position: sticky;
+          top: 96px;
+        }
+      }
+      .on2 {
+        border: 1px solid rgba(55, 48, 163, 0.12);
+        border-radius: 14px;
+        background: #eef0ff;
+        padding: 10px 12px;
+        font-weight: 700;
+        line-height: 1.7;
+      }
+      .on2 b {
+        color: #3730a3;
+        font-weight: 900;
+      }
 
-    // Si c'est le chapitre sur les suites numériques, on affiche le cours complet des documents fournis
-    if (chapitreTrouve && chapitreTrouve.toLowerCase().includes('suite')) {
-      container.innerHTML = `
-        <nav class="text-sm font-bold text-primary/60 mb-4" aria-label="Fil d'Ariane">
-          <a href="classe.html" class="hover:text-primary">Programmes</a>
-          <span class="mx-1">›</span>
-          <a href="classe.html#${classeKey}" class="hover:text-primary">${classeObj.nom}</a>
-          <span class="mx-1">›</span>
-          <span class="text-primary font-black">Chapitre ${chapIndex}</span>
+      .ttl {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 4px solid #ff5a36;
+        font-weight: 900;
+        font-size: 1.3rem;
+        line-height: 1.25;
+        color: #272275;
+        scroll-margin-top: 96px;
+      }
+      .ttl i {
+        font-style: normal;
+        background: #ff5a36;
+        color: #fff;
+        border-radius: 10px;
+        padding: 0 10px;
+        flex-shrink: 0;
+      }
+      .sec + .sec {
+        margin-top: 38px;
+      }
+
+      /* ── Encadrés ── */
+      .bx {
+        position: relative;
+        margin: 28px 0 12px;
+        border: 1px solid;
+        border-left-width: 5px;
+        border-radius: 14px;
+        padding: 24px 14px 12px;
+      }
+      .bx p {
+        margin: 6px 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .bx ul {
+        list-style: disc;
+        padding-left: 22px;
+        margin: 6px 0;
+      }
+      .tg {
+        position: absolute;
+        left: -1px;
+        top: 0;
+        transform: translateY(-50%);
+        border-radius: 8px;
+        padding: 2px 12px;
+        font:
+          900 12px "Nunito",
+          sans-serif;
+        color: #fff;
+      }
+      .or {
+        border-color: #ff5a36;
+        background: #fff1ed;
+      }
+      .or .tg {
+        background: #ff5a36;
+      }
+      .bl {
+        border-color: #3730a3;
+        background: #eef0ff;
+      }
+      .bl .tg {
+        background: #3730a3;
+      }
+      .gr {
+        border-color: #24ae86;
+        background: #e9fbf5;
+      }
+      .gr .tg {
+        background: #2fd9a8;
+        color: #272275;
+      }
+      .pu {
+        border-color: #4f46e5;
+        background: #f4f3ff;
+      }
+      .pu .tg {
+        background: #4f46e5;
+      }
+      mjx-container {
+        max-width: 100%;
+        font-size: 88%;
+      }
+      @media (min-width: 640px) {
+        mjx-container {
+          font-size: 98%;
+        }
+      }
+      mjx-container svg {
+        display: inline-block;
+      }
+
+      .ov {
+        overflow-x: auto;
+      }
+      .tb {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        border: 1px solid rgba(55, 48, 163, 0.15);
+        border-radius: 14px;
+        font-size: 0.9rem;
+        background: #fff;
+      }
+      .tb th {
+        background: #eef0ff;
+        color: #272275;
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        text-align: left;
+        padding: 8px 12px;
+      }
+      .tb td {
+        padding: 8px 12px;
+        border-top: 1px solid rgba(55, 48, 163, 0.1);
+        vertical-align: middle;
+      }
+      .ex {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 32px;
+      }
+
+      /* ── Réponses / indices / corrections ── */
+      .corr {
+        margin-top: 12px;
+        border: 2px dashed #4f46e5;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.75);
+        padding: 12px;
+      }
+      .corr label {
+        font-size: 0.75rem;
+        font-weight: 900;
+        color: #3730a3;
+      }
+      .ta {
+        display: block;
+        width: 100%;
+        min-height: 90px;
+        margin-top: 4px;
+        border: 1px solid rgba(55, 48, 163, 0.25);
+        border-radius: 10px;
+        background: #fff;
+        padding: 8px;
+        font-size: 0.9rem;
+      }
+      .ta.tall {
+        min-height: 170px;
+      }
+      .bt {
+        border-radius: 10px;
+        padding: 6px 14px;
+        font-weight: 900;
+        font-size: 0.85rem;
+      }
+      .msg {
+        margin-top: 8px;
+        border-radius: 10px;
+        background: #fff1ed;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        overflow-x: auto;
+      }
+      .hidden {
+        display: none;
+      }
+
+      .pn {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .pn button {
+        background: #3730a3;
+        color: #fff;
+        font-weight: 900;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        padding: 9px 18px;
+        transition: background 0.15s;
+      }
+      .pn button:hover {
+        background: #272275;
+      }
+      .pn button:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+
+      .opt {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 8px 0;
+      }
+      .o {
+        border: 2px solid rgba(55, 48, 163, 0.2);
+        border-radius: 12px;
+        background: #fff;
+        padding: 9px 16px;
+        font-weight: 800;
+        text-align: left;
+      }
+      .o:hover {
+        border-color: #3730a3;
+        background: #eef0ff;
+      }
+      .o.ok {
+        border-color: #24ae86;
+        background: rgba(47, 217, 168, 0.2);
+      }
+      .o.ko {
+        border-color: #ff5a36;
+        background: #ffe9e3;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin: 8px 0;
+      }
+      .bx select {
+        border: 2px solid rgba(55, 48, 163, 0.2);
+        border-radius: 12px;
+        background: #fff;
+        padding: 6px 8px;
+        font-weight: 700;
+        max-width: 100%;
+      }
+      .bx select.ok {
+        border-color: #24ae86;
+        background: rgba(47, 217, 168, 0.2);
+      }
+      .bx select.ko {
+        border-color: #ff5a36;
+        background: #ffe9e3;
+      }
+      .go {
+        margin-top: 8px;
+        background: #ff5a36;
+        color: #fff;
+        font-weight: 900;
+        border-radius: 12px;
+        padding: 8px 20px;
+      }
+      .sg {
+        margin-top: 10px;
+        border: 2px dashed #24ae86;
+        background: #e9fbf5;
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      .vid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        aspect-ratio: 16/9;
+        border: 2px dashed rgba(55, 48, 163, 0.25);
+        border-radius: 16px;
+        background: #eef0ff;
+      }
+      .vid .play {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: #3730a3;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        margin-bottom: 10px;
+      }
+
+      /* ── Activité KFC : couleurs propres à l'activité ── */
+      .kfc {
+        background: #ed1c24;
+        border-radius: 20px;
+        padding: 14px;
+        color: #333;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .kfc h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        padding-bottom: 6px;
+        border-bottom: 4px solid #facc15;
+        color: #fff;
+        font-weight: 900;
+        font-size: 1.25rem;
+        scroll-margin-top: 96px;
+      }
+      .kfc h2 i {
+        font-style: normal;
+        background: #facc15;
+        color: #b91c1c;
+        border-radius: 10px;
+        padding: 0 10px;
+      }
+      .kp {
+        background: #fff;
+        border-radius: 12px;
+        border-bottom: 6px solid #b91c1c;
+        padding: 14px;
+        margin-bottom: 12px;
+        font-size: 0.92rem;
+      }
+      .kp h3 {
+        color: #ed1c24;
+        font-weight: 900;
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+      }
+      .kn {
+        background: #fefce8;
+        border-left: 8px solid #facc15;
+        border-radius: 8px;
+        padding: 10px 14px;
+        color: #854d0e;
+        font-size: 0.88rem;
+        margin-bottom: 12px;
+      }
+      .kfc input[type="number"],
+      .kfc select {
+        width: 100%;
+        border: 2px solid #ed1c24;
+        color: #b91c1c;
+        font-weight: 800;
+        border-radius: 8px;
+        padding: 7px;
+        background: #fff;
+        text-align: center;
+      }
+      .kfc select {
+        text-align: left;
+      }
+      .kfc table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      .kfc th {
+        background: #ed1c24;
+        color: #fff;
+        padding: 8px;
+        border: 2px solid #fff;
+      }
+      .kfc td {
+        padding: 6px;
+        border-bottom: 1px solid #e5e7eb;
+        font-weight: 700;
+      }
+      .kb {
+        background: #ed1c24;
+        color: #fff;
+        font-weight: 900;
+        border-radius: 999px;
+        padding: 9px 28px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
+      .kb:hover {
+        background: #b91c1c;
+      }
+      .kfc .correct {
+        border: 3px solid #22c55e !important;
+        background: #dcfce7 !important;
+        color: #166534 !important;
+      }
+      .kfc .incorrect {
+        border: 3px solid #b91c1c !important;
+        background: #fee2e2 !important;
+        color: #b91c1c !important;
+      }
+      .kdark {
+        background: #1f2937;
+        color: #fff;
+        border: 4px solid #facc15;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 6px;
+      }
+      .kdark h3 {
+        color: #facc15;
+        font-weight: 900;
+      }
+      .kfb {
+        margin-top: 10px;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 800;
+        text-align: center;
+      }
+      .kfb.good {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .kfb.bad {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .kfc .kopt {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #eef0ff;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #ff5a36;
+        border-radius: 99px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header
+      id="main-header"
+      class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md"
+    >
+      <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
+        <a
+          href="index.html"
+          class="flex items-center flex-shrink-0"
+          aria-label="MATEMATIKUP — Accueil"
+        >
+          <img src="logo_mate.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+        </a>
+
+        <ul
+          class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark"
+        >
+          <li class="group relative">
+            <button class="flex items-center gap-1 text-secondary py-2">
+              Classe
+              <svg
+                class="w-3.5 h-3.5 opacity-60 group-hover:rotate-180 transition-transform"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div
+              class="hidden group-hover:block group-focus-within:block absolute left-0 top-full pt-3 z-50"
+            >
+              <div
+                class="flex gap-8 rounded-2xl border border-primary/10 shadow-2xl p-8 w-[760px]"
+                style="background: #eef0ff"
+              >
+                <div class="w-[190px] flex-shrink-0">
+                  <p class="font-black text-primary-dark text-sm mb-4">
+                    Collège
+                  </p>
+                  <div class="flex flex-wrap gap-3">
+                    <a href="classe.html#6e" class="pill">6<sup>e</sup></a
+                    ><a href="classe.html#5e" class="pill">5<sup>e</sup></a>
+                    <a href="classe.html#4e" class="pill">4<sup>e</sup></a
+                    ><a href="classe.html#3e" class="pill">3<sup>e</sup></a>
+                  </div>
+                </div>
+                <div class="w-px bg-primary/15"></div>
+                <div class="flex-1">
+                  <p class="font-black text-primary-dark text-sm mb-4">Lycée</p>
+                  <div class="flex flex-wrap gap-3">
+                    <a href="classe.html#seconde" class="pill">Seconde</a>
+                    <a href="classe.html#premiere-l" class="pill"
+                      >1<sup>re</sup> L</a
+                    ><a href="classe.html#premiere-s" class="pill"
+                      >1<sup>re</sup> S</a
+                    ><a href="classe.html#premiere-ose" class="pill"
+                      >1<sup>re</sup> OSE</a
+                    >
+                    <a href="classe.html#terminale-l" class="pill"
+                      >Terminale L</a
+                    ><a href="classe.html#terminale-s" class="pill"
+                      >Terminale S</a
+                    ><a href="classe.html#terminale-ose" class="pill"
+                      >Terminale OSE</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <a href="offres.html" class="hover:text-secondary transition-colors"
+              >Nos offres</a
+            >
+          </li>
+          <li>
+            <a href="sujets.html" class="hover:text-secondary transition-colors"
+              >Sujets types</a
+            >
+          </li>
+          <li>
+            <a href="prepa.html" class="hover:text-secondary transition-colors"
+              >Cours prépa</a
+            >
+          </li>
+          <li>
+            <a
+              href="a-propos.html"
+              class="hover:text-secondary transition-colors"
+              >Qui sommes-nous&nbsp;?</a
+            >
+          </li>
+          <li>
+            <a
+              href="parents.html"
+              class="hover:text-secondary transition-colors"
+              >Espace parents</a
+            >
+          </li>
+        </ul>
+
+        <div class="flex items-center gap-2.5">
+          <a
+            href="inscription.html"
+            class="bg-secondary text-white font-black text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-secondary/20 hover:bg-secondary-dark hover:scale-[1.03] active:scale-[.97] transition-all whitespace-nowrap"
+            >S'inscrire</a
+          >
+          <a
+            href="connexion.html"
+            class="hidden sm:inline-block border border-primary/25 text-primary font-black text-sm px-5 py-2.5 rounded-xl hover:border-primary hover:bg-primary/5 transition-all whitespace-nowrap"
+            >Connexion</a
+          >
+          <button
+            id="burger"
+            aria-label="Menu"
+            class="lg:hidden flex flex-col gap-1.5 w-8 h-8 justify-center"
+          >
+            <span class="block h-0.5 bg-primary-dark rounded-full w-full"></span
+            ><span
+              class="block h-0.5 bg-primary-dark rounded-full w-full"
+            ></span
+            ><span
+              class="block h-0.5 bg-primary-dark rounded-full w-4/5"
+            ></span>
+          </button>
+        </div>
+      </nav>
+      <div
+        id="mob-menu"
+        class="lg:hidden mt-3 pb-3 border-t border-primary/10 pt-4 space-y-3 text-sm font-bold text-primary-dark"
+      >
+        <a href="classe.html" class="block text-secondary">Classe</a>
+        <a href="offres.html" class="block hover:text-secondary">Nos offres</a>
+        <a href="sujets.html" class="block hover:text-secondary"
+          >Sujets types</a
+        >
+        <a href="prepa.html" class="block hover:text-secondary">Cours prépa</a>
+        <a href="a-propos.html" class="block hover:text-secondary"
+          >Qui sommes-nous&nbsp;?</a
+        >
+        <a href="parents.html" class="block hover:text-secondary"
+          >Espace parents</a
+        >
+        <hr class="border-primary/10 my-2" />
+        <a href="connexion.html" class="block text-primary hover:text-secondary"
+          >Connexion</a
+        >
+      </div>
+    </header>
+
+    <!-- ═══════════════ CONTENU ═══════════════ -->
+    <main
+      class="relative overflow-hidden pt-[100px] pb-20 px-4 md:px-8 lg:px-12"
+    >
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute -top-24 -left-32 w-[520px] h-[520px] rounded-full opacity-60"
+          style="background: radial-gradient(circle, #eef0ff, transparent 70%)"
+        ></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto" id="page"></div>
+    </main>
+
+    <footer class="bg-primary-dark">
+      <div
+        class="max-w-7xl mx-auto px-5 md:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-3"
+      >
+        <p class="text-white/40 text-xs">
+          © 2026 MATEMATIKUP. Tous droits réservés.
+        </p>
+        <nav class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+          <a
+            href="#"
+            class="text-white/40 text-xs hover:text-white transition-colors"
+            >Mentions légales</a
+          >
+          <a
+            href="#"
+            class="text-white/40 text-xs hover:text-white transition-colors"
+            >CGU</a
+          >
+          <a
+            href="#"
+            class="text-white/40 text-xs hover:text-white transition-colors"
+            >Politique de confidentialité</a
+          >
         </nav>
+      </div>
+    </footer>
 
-        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase mb-4">
-          📊 ${partieTrouvee} — Notions sur les suites numériques
-        </div>
-        
-        <h1 class="font-black text-3xl md:text-4xl text-primary-dark leading-tight mb-8">
-          ${chapitreTrouve}
-        </h1>
+    <script>
+      /* ═══════════════════════════════════════════════════════════════
+   OUTILS DE RÉDACTION
+   Un chapitre = des rubriques (T) → des pages (pg) → 2 titres maximum par page (S).
+   Les liens viennent de classe.html : chapitre.html?classe=1ere-S&n=12
+═══════════════════════════════════════════════════════════════ */
+      const R = String.raw;
+      const NOMS_CLASSES = {
+        "6eme": "6ème",
+        "5eme": "5ème",
+        "4eme": "4ème",
+        "3eme": "3ème",
+        "2nde": "Seconde",
+        "1ere-L": "1ère L",
+        "1ere-S": "1ère S",
+        "1ere-OSE": "1ère OSE",
+        "terminale-L": "Terminale L",
+        "terminale-S": "Terminale S",
+        "terminale-OSE": "Terminale OSE",
+      };
 
-        <!-- 1. Définition -->
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">1</span>
-            Définition
-          </h2>
-          <p class="text-primary-dark/80 leading-relaxed mb-4">
-            Soit $n_{0} \in \mathbb{N}$ et $I = \{n \in \mathbb{N}, n \ge n_{0}\}$. Une suite numérique est une fonction $u: I \rightarrow \mathbb{R}$, qui, à chaque entier $n \in I$ associe un réel noté $u_{n}$[cite: 4].
-          </p>
-          <div class="math-box">
-            <p class="font-bold text-primary-dark">Autrement dit :</p>
-            <p class="text-primary-dark/80 mt-2">
-              C'est une liste de nombres, rangés et numérotés : à l'entier $0$ correspond le nombre noté $u_{0}$, à l'entier $1$ correspond le nombre noté $u_{1}$, ..., à l'entier $n$ correspond le nombre noté $u_{n}$ (appelé <strong>terme de la suite de rang $n$</strong>). La suite est notée $(u_{n})$[cite: 4].
-            </p>
-          </div>
-        </section>
+      const P = (...a) =>
+        a
+          .map((s) => (/^<(div|ul|ol|table|svg)/.test(s) ? s : `<p>${s}</p>`))
+          .join("");
+      const B = (c, t, ...a) =>
+        `<div class="bx ${c}"><span class="tg">${t}</span>${P(...a)}</div>`;
+      const S = (n, t, ...a) => ({ n, t, h: a.join("") }); // une section (= un titre)
+      const SK = (n, t, ...a) => ({ n, t, h: a.join(""), kfc: true }); // section de l'activité KFC
+      const pg = (...s) => {
+        if (s.length > 2)
+          throw new Error("Plus de 2 titres sur une page : " + s[0].t);
+        return s;
+      };
+      const T = (titre, ...pages) => ({ titre, pages });
+      const TB = (head, rows) =>
+        `<div class="ov"><table class="tb"><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`;
+      const UL = (...a) => `<ul>${a.map((x) => `<li>${x}</li>`).join("")}</ul>`;
+      const VID = (src) =>
+        src
+          ? `<div class="ov"><iframe class="w-full aspect-video rounded-2xl" src="${src}" title="Vidéo" allowfullscreen></iframe></div>`
+          : `<div class="vid"><div class="play">▶</div><b class="font-display text-lg">Vidéo bientôt disponible</b><small>La vidéo explicative arrive.</small></div>`;
 
-        <!-- 2. Vocabulaire et notation -->
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">2</span>
-            Vocabulaire et notation
-          </h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b-2 border-primary/15 text-primary font-black text-sm">
-                  <th class="py-3 px-4">Mot</th>
-                  <th class="py-3 px-4">Sens</th>
-                  <th class="py-3 px-4">Notation</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-primary/10 text-sm font-semibold text-primary-dark/80">
-                <tr><td class="py-3 px-4 font-black text-primary">Suite</td><td class="py-3 px-4">La liste complète</td><td class="py-3 px-4 font-mono font-bold text-secondary">$(u_{n})$</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Terme</td><td class="py-3 px-4">Un nombre de la liste</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n}$</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Rang ou indice</td><td class="py-3 px-4">Le numéro du terme</td><td class="py-3 px-4 font-mono font-bold text-secondary">$n$</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Premier terme</td><td class="py-3 px-4">Le début de la liste</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{0}$ (ou $u_{1}$)</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Terme général</td><td class="py-3 px-4">La formule de $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n} = \dots$</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Terme suivant</td><td class="py-3 px-4">Celui qui vient juste après $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n+1}$</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Terme précédent</td><td class="py-3 px-4">Celui qui vient juste avant $u_{n}$</td><td class="py-3 px-4 font-mono font-bold text-secondary">$u_{n-1}$</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+      const CORR = [],
+        QZ = [];
+      const corr = (sol, hint, tall) => {
+        CORR.push({ sol, hint });
+        return `<div class="corr${tall ? " tall" : ""}" data-k="${CORR.length - 1}"></div>`;
+      };
+      const qz = (num, q, opts, ans, expl) => {
+        QZ.push({ ans, expl });
+        return `<div class="bx pu"><span class="tg">Question ${num}</span>${P(q)}<div class="opt" data-k="${QZ.length - 1}">${opts.map((o) => `<button type="button" class="o">${o}</button>`).join("")}</div><div class="sg hidden"></div></div>`;
+      };
 
-        <!-- 3. Deux façons de définir une suite -->
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">3</span>
-            Deux façons de définir une suite
-          </h2>
-          <div class="space-y-4">
-            <div class="p-5 rounded-2xl bg-primary/5 border border-primary/10">
-              <h3 class="font-black text-primary text-lg mb-1">A. Forme explicite</h3>
-              <p class="text-primary-dark/80 text-sm mb-2">On donne $u_{n}$ en fonction de $n$[cite: 4].</p>
-              <p class="font-mono text-sm font-bold text-secondary bg-white p-3 rounded-xl border border-primary/10 inline-block">
-                Exemple : $u_{n} = 2n + 3 \implies u_{0} = 3,\; u_{1} = 5,\; u_{2} = 7, \dots$[cite: 4]
-              </p>
-            </div>
-            <div class="p-5 rounded-2xl bg-primary/5 border border-primary/10">
-              <h3 class="font-black text-primary text-lg mb-1">B. Forme récurrente</h3>
-              <p class="text-primary-dark/80 text-sm mb-2">On donne le premier terme et une règle pour passer d'un terme au suivant[cite: 4].</p>
-              <p class="font-mono text-sm font-bold text-secondary bg-white p-3 rounded-xl border border-primary/10 inline-block">
-                Exemple : $u_{0} = 2$ et $u_{n+1} = 3u_{n} - 1 \implies u_{1} = 5,\; u_{2} = 14, \dots$[cite: 4]
-              </p>
-            </div>
-          </div>
-        </section>
+      /* ═══════════════════════════════════════════════════════════════
+   CHAPITRE 1 — Fonction numérique d'une variable réelle
+═══════════════════════════════════════════════════════════════ */
+      const fonctions = () => ({
+        titre: "Fonction numérique d’une variable réelle",
+        partie: "Analyse",
+        resume:
+          "Ensemble de définition, parité, limites, continuité, dérivabilité, variations, tangente et traçage d’une courbe.",
+        topics: [
+          T(
+            "Ensemble de définition",
+            pg(
+              S(
+                "1",
+                "Ensemble d’existence d’une fonction",
+                B(
+                  "or",
+                  "Définition",
+                  R`Une fonction numérique d’une variable réelle associe à chaque réel \(x\), au plus un réel, noté \(f(x)\).`,
+                  R`Le domaine de définition de \(f\) est : \(\;\boxed{D_f=\{x\in\mathbb{R}\ ;\ f(x)\ \text{existe}\}}\)`,
+                  R`\(x\) est la variable et \(f(x)\) est l’image de \(x\).`,
+                ),
+                B(
+                  "or",
+                  "Définition · Antécédent",
+                  R`Soit \(f\) une fonction définie sur un ensemble \(D_f\) et \(y\) un réel. On appelle antécédent de \(y\) par \(f\), tout réel \(x\) de \(D_f\) dont l’image par \(f\) est \(y\), c’est-à-dire tout réel \(x\) vérifiant \(f(x)=y\).`,
+                  R`Si \(f\) est donnée par une formule, \(D_f\) est l’ensemble des \(x\) dans lesquels le calcul de \(f(x)\) est possible.`,
+                ),
+              ),
+              S(
+                "2",
+                "Fonction polynomiale",
+                B(
+                  "or",
+                  "Définition",
+                  R`On appelle fonction polynomiale toute fonction \(f(x)\) de la forme \(a_nx^n+a_{n-1}x^{n-1}+\cdots+a_0\) où \(a_i\in\mathbb{R}\) et \(n\neq0\). Les \(a_i\) sont les coefficients de \(f(x)\) et \(n\) est son degré.`,
+                  R`\(D_f=\{\forall x\in\mathbb{R}\ ;\ f(x)\ \text{est définie}\}=\boxed{]-\infty;+\infty[}\)`,
+                ),
+                B("bl", "Exemple", R`\(f(x)=x^3+2x^2-x+1\)`),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Fonction rationnelle",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soient \(P(x)\) et \(Q(x)\) deux polynômes. On appelle fonction rationnelle toute fonction de la forme \(R(x)=\dfrac{P(x)}{Q(x)}\).`,
+                  R`\(R(x)\) est défini si et seulement si \(Q(x)\neq0\).`,
+                  R`\(\boxed{D_f=\{\forall x\in\mathbb{R}\ ;\ Q(x)\neq0\}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(f(x)=\dfrac{x^2+2x-3}{x-2}\)`,
+                  R`\(f(x)\) est définie si \(x-2\neq0\Leftrightarrow x\neq2\)`,
+                  R`\(D_f=\{\forall x\in\mathbb{R}\ ;\ x\neq2\}=\boxed{]-\infty;2[\,\cup\,]2;+\infty[}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "4",
+                "Fonction irrationnelle",
+                B(
+                  "or",
+                  "Définition",
+                  R`On appelle fonction irrationnelle toute fonction où les termes radicalisés contiennent \(x\).`,
+                  R`\(I(x)=\sqrt{P(x)}\quad\text{ou}\quad\dfrac{\sqrt{P(x)}}{Q(x)}\quad\text{ou}\quad\dfrac{P(x)}{\sqrt{Q(x)}}\)`,
+                ),
+                B(
+                  "or",
+                  "Cas 1",
+                  R`Si \(I(x)=\sqrt{P(x)}\), \(\;\boxed{D_f=\{\forall x\in\mathbb{R}\ ;\ P(x)\geq0\}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(I(x)=\sqrt{x-1}\)`,
+                  R`\(D_f=\{x\in\mathbb{R}\ ;\ x-1\geq0\}=\{x\in\mathbb{R}\ ;\ x\geq1\}=\boxed{[1;+\infty[}\)`,
+                ),
+                B(
+                  "or",
+                  "Cas 2",
+                  R`Si \(I(x)=\dfrac{\sqrt{P(x)}}{Q(x)}\), \(\;\boxed{D_f=\{\forall x\in\mathbb{R}\ ;\ P(x)\geq0\ \text{et}\ Q(x)\neq0\}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(I(x)=\dfrac{\sqrt{2x-1}}{x-2}\)`,
+                  R`\(D_f=\{x\in\mathbb{R}\ ;\ 2x-1\geq0\ \text{et}\ x-2\neq0\}=\{x\in\mathbb{R}\ ;\ x\geq\tfrac12\ \text{et}\ x\neq2\}=\boxed{\left[\tfrac12;2\right[\,\cup\,]2;+\infty[}\)`,
+                ),
+                B(
+                  "or",
+                  "Cas 3",
+                  R`Si \(I(x)=\dfrac{P(x)}{\sqrt{Q(x)}}\), \(\;\boxed{D_f=\{\forall x\in\mathbb{R}\ ;\ Q(x)>0\}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(I(x)=\dfrac{x^2+2x-1}{\sqrt{x-2}}\)`,
+                  R`\(D_f=\{x\in\mathbb{R}\ ;\ x-2>0\}=\{x\in\mathbb{R}\ ;\ x>2\}=\boxed{]2;+\infty[}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "★",
+                "Quiz",
+                qz(
+                  1,
+                  R`Le \(D_f\) d’une fonction est toujours écrit sous forme d’un intervalle.`,
+                  ["Oui", "Non"],
+                  1,
+                  R`Non : \(D_f\) est souvent une réunion d’intervalles, par exemple \(]-\infty;2[\,\cup\,]2;+\infty[\).`,
+                ),
+                `<div class="bx pu"><span class="tg">Question 2 · Associer chaque formule à son type</span>
+            <div class="row"><span>\(f(x)=\dfrac{\sqrt{2x-1}}{x-2}\)</span><select data-ans="3"><option value="">Fonction…</option><option value="1">Fonction polynôme</option><option value="2">Fonction rationnelle</option><option value="3">Fonction irrationnelle</option></select></div>
+            <div class="row"><span>\(f(x)=\dfrac{x^2+2x-3}{x-2}\)</span><select data-ans="2"><option value="">Fonction…</option><option value="1">Fonction polynôme</option><option value="2">Fonction rationnelle</option><option value="3">Fonction irrationnelle</option></select></div>
+            <div class="row"><span>\(f(x)=x^3+2x^2-x+1\)</span><select data-ans="1"><option value="">Fonction…</option><option value="1">Fonction polynôme</option><option value="2">Fonction rationnelle</option><option value="3">Fonction irrationnelle</option></select></div>
+            <button type="button" class="go chk">Vérifier</button></div>`,
+                qz(
+                  3,
+                  R`Le domaine de définition de \(f(x)=\dfrac{x^3+x-1}{x+2}\) est :`,
+                  [
+                    R`\(]-\infty;2[\,\cup\,]2;+\infty[\)`,
+                    R`\(]2;+\infty[\)`,
+                    R`\(]-\infty;-2[\,\cup\,]-2;+\infty[\)`,
+                  ],
+                  2,
+                  R`Le dénominateur s’annule en \(x=-2\) : \(D_f=\mathbb{R}\setminus\{-2\}\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "✎",
+                "Exercices",
+                P(
+                  R`Trouver le domaine de définition de chaque fonction suivante :`,
+                ),
+                B(
+                  "gr",
+                  "Exercice 1",
+                  R`\(x^2+3x-5\)`,
+                  corr(
+                    R`Fonction polynomiale : \(D_f=\mathbb{R}=]-\infty;+\infty[\).`,
+                    "Quel type de fonction est-ce ?",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 2",
+                  R`\(\dfrac{x^3+3x-2}{3x+2}\)`,
+                  corr(
+                    R`Fonction rationnelle : \(3x+2\neq0\Leftrightarrow x\neq-\tfrac23\).<br>\(D_f=\left]-\infty;-\tfrac23\right[\,\cup\,\left]-\tfrac23;+\infty\right[\).`,
+                    "Le dénominateur doit être différent de 0.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 3",
+                  R`\(\dfrac{x-2}{x^2+2x+1}\)`,
+                  corr(
+                    R`\(x^2+2x+1=(x+1)^2\neq0\Leftrightarrow x\neq-1\).<br>\(D_f=\mathbb{R}\setminus\{-1\}=]-\infty;-1[\,\cup\,]-1;+\infty[\).`,
+                    "Reconnaître une identité remarquable au dénominateur.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 4",
+                  R`\(\sqrt{x^2-2x-3}\)`,
+                  corr(
+                    R`Il faut \(x^2-2x-3\geq0\). \(\Delta=16\), racines \(-1\) et \(3\).<br>\(x^2-2x-3=(x+1)(x-3)\geq0\) pour \(x\leq-1\) ou \(x\geq3\).<br>\(D_f=]-\infty;-1]\,\cup\,[3;+\infty[\).`,
+                    "Cas 1 : le radicande doit être positif ou nul. Étudier le signe du trinôme.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 5",
+                  R`\(\dfrac{\sqrt{x^2+2x-3}}{x-2}\)`,
+                  corr(
+                    R`Il faut \(x^2+2x-3\geq0\) et \(x\neq2\). \(\Delta=16\), racines \(-3\) et \(1\) : \(x\leq-3\) ou \(x\geq1\).<br>\(D_f=]-\infty;-3]\,\cup\,[1;2[\,\cup\,]2;+\infty[\).`,
+                    "Cas 2 : deux conditions à combiner.",
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-        <!-- 4. Variation d'une suite -->
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-sm">4</span>
-            Variation d'une suite
-          </h2>
-          <ul class="space-y-2 mb-6 text-primary-dark/80 text-sm font-semibold">
-            <li class="flex items-center gap-2">🟢 <strong>$(u_{n})$ est croissante</strong> si $u_{n+1} \ge u_{n}$ pour tout $n$ (elle monte ou reste pareille)[cite: 4].</li>
-            <li class="flex items-center gap-2">🔴 <strong>$(u_{n})$ est décroissante</strong> si $u_{n+1} \le u_{n}$ pour tout $n$ (elle descend ou reste pareille)[cite: 4].</li>
-            <li class="flex items-center gap-2">🔵 <strong>$(u_{n})$ est constante</strong> si $u_{n+1} = u_{n}$ pour tout $n$[cite: 4].</li>
-          </ul>
-          <p class="text-sm font-bold text-primary mb-4">Si elle est croissante ou décroissante, on dit qu'elle est <strong>monotone</strong>[cite: 4].</p>
+          T(
+            "Parité",
+            pg(
+              S(
+                "1",
+                "Fonction paire",
+                P(
+                  R`La parité d’une fonction est nécessaire si nous voulons construire la courbe d’une fonction \(f(-x)\) à partir d’une courbe de la fonction \(f(x)\).`,
+                ),
+                B(
+                  "or",
+                  "Définition",
+                  R`\(f\) est paire si et seulement si \(\boxed{\forall x\in D_f,\ f(-x)=f(x)}\)`,
+                ),
+                B("bl", "Exemple", R`\(f(x)=x^2+1\)`),
+              ),
+              S(
+                "2",
+                "Fonction impaire",
+                B(
+                  "or",
+                  "Définition",
+                  R`\(f\) est impaire si et seulement si \(\boxed{\forall x\in D_f,\ f(-x)=-f(x)}\)`,
+                ),
+                B("bl", "Exemple", R`\(f(x)=x^3\)`),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Fonction ni paire ni impaire",
+                B(
+                  "or",
+                  "Définition",
+                  R`\(f\) est ni paire ni impaire si \(\exists x\in D_f\) et \(-x\notin D_f\) : \(f\) n’est ni paire ni impaire.`,
+                  R`Autrement dit, \(\boxed{f(-x)\neq f(x)}\) et \(\boxed{f(-x)\neq -f(x)}\).`,
+                ),
+              ),
+              S(
+                "4",
+                "Interprétation graphique",
+                P(
+                  R`Soit \(\mathcal{C}_f\) la courbe représentative de \(f\) dans un repère orthogonal.`,
+                ),
+                B(
+                  "or",
+                  "Fonction paire",
+                  R`\(f\) paire \(\Longleftrightarrow\) \(\mathcal{C}_f\) symétrique par rapport à l’axe des ordonnées.`,
+                ),
+                B(
+                  "or",
+                  "Fonction impaire",
+                  R`\(f\) impaire \(\Longleftrightarrow\) \(\mathcal{C}_f\) symétrique par rapport à l’origine \(O\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "5",
+                "Axe et centre de symétrie",
+                P(
+                  R`Soit \(\mathcal{C}_f\) la courbe représentative de \(f\) dans un repère orthogonal.`,
+                ),
+                B(
+                  "or",
+                  "Axe de symétrie",
+                  R`La droite \(x=a\) est un axe de symétrie de \(\mathcal{C}_f\) \(\Longleftrightarrow\)`,
+                  R`\(\boxed{\forall x\in D_f,\ \big(2a-x\in D_f\ \text{et}\ f(2a-x)=f(x)\big)}\)`,
+                ),
+                B(
+                  "or",
+                  "Centre de symétrie",
+                  R`Le point \(\Omega(a\,;\,b)\) est un centre de symétrie de \(\mathcal{C}_f\) \(\Longleftrightarrow\)`,
+                  R`\(\boxed{\forall x\in D_f,\ \big(2a-x\in D_f\ \text{et}\ f(2a-x)+f(x)=2b\big)}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "★",
+                "Quiz",
+                qz(
+                  1,
+                  R`\(f\) est paire si \(f(-x)=f(x)\).`,
+                  ["Vrai", "Faux"],
+                  0,
+                  R`C’est la définition d’une fonction paire (sur un ensemble \(D_f\) symétrique par rapport à 0).`,
+                ),
+                qz(
+                  2,
+                  "La courbe représentative d’une fonction impaire est :",
+                  [
+                    "Symétrique par rapport à l’axe des abscisses",
+                    "Symétrique par rapport à l’axe des ordonnées",
+                    "Symétrique par rapport à l’origine",
+                    "Asymétrique",
+                  ],
+                  2,
+                  R`Une fonction impaire vérifie \(f(-x)=-f(x)\) : sa courbe est symétrique par rapport à l’origine \(O\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "✎",
+                "Exercices (1)",
+                B(
+                  "gr",
+                  "Exercice 1",
+                  R`Étudier les parités des fonctions suivantes :`,
+                  `<div class="ex"><p>\\(f(x)=1-x^2\\)</p><p>\\(h(x)=x-1\\)</p><p>\\(T(x)=x(x^2-1)\\)</p><p>\\(G(x)=x^3+x\\)</p><p>\\(Q(x)=|x|+1\\)</p><p>\\(w(x)=\\dfrac{x\\sqrt{2}}{2}\\)</p></div>`,
+                  corr(
+                    R`Toutes ces fonctions sont définies sur \(\mathbb{R}\) (ensemble symétrique).<br>
+              • \(f(-x)=1-x^2=f(x)\) : <b>paire</b>.<br>
+              • \(h(-x)=-x-1\) est différent de \(h(x)\) et de \(-h(x)=-x+1\) : <b>ni paire ni impaire</b>.<br>
+              • \(T(x)=x^3-x\), \(T(-x)=-x^3+x=-T(x)\) : <b>impaire</b>.<br>
+              • \(G(-x)=-x^3-x=-G(x)\) : <b>impaire</b>.<br>
+              • \(Q(-x)=|-x|+1=Q(x)\) : <b>paire</b>.<br>
+              • \(w(-x)=-w(x)\) : <b>impaire</b>.`,
+                    "Calculer \\(f(-x)\\) puis comparer à \\(f(x)\\) et à \\(-f(x)\\).",
+                    true,
+                  ),
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "✎",
+                "Exercices (2 et 3)",
+                B(
+                  "gr",
+                  "Exercice 2",
+                  R`Le plan est muni d’un repère orthonormé \((O,\vec{i},\vec{j})\).`,
+                  R`Pour chaque fonction, montrons que \((\triangle)\) est un axe de symétrie :`,
+                  `<div class="ex"><p>\\(f(x)=x^2-4x-1\\), \\((\\triangle):x=2\\)</p><p>\\(h(x)=x^2-2x+1\\), \\((\\triangle):x=1\\)</p><p>\\(g(x)=\\dfrac{1}{x^2+1}\\), \\((\\triangle):x=0\\)</p></div>`,
+                  corr(
+                    R`Les trois fonctions sont définies sur \(\mathbb{R}\) : \(2a-x\in D_f\) pour tout \(x\).<br>
+              • \(f(4-x)=(4-x)^2-4(4-x)-1=x^2-4x-1=f(x)\) ✔<br>
+              • \(h(2-x)=(2-x)^2-2(2-x)+1=x^2-2x+1=h(x)\) ✔<br>
+              • \(g(-x)=\dfrac{1}{x^2+1}=g(x)\) ✔`,
+                    R`Calculer \(f(2a-x)\) et vérifier que c’est \(f(x)\).`,
+                    true,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 3",
+                  R`Le plan est muni d’un repère orthonormé \((O,\vec{i},\vec{j})\).`,
+                  R`Pour chaque fonction, montrons que \(\Omega\) est un centre de symétrie :`,
+                  `<div class="ex"><p>\\(f(x)=x^3+3x^2+3x+2\\) \\(\\mid\\) \\(\\Omega(-1\\,;\\,1)\\)</p><p>\\(h(x)=\\dfrac{x^2}{x-2}\\) \\(\\mid\\) \\(\\Omega(2\\,;\\,4)\\)</p><p>\\(g(x)=\\dfrac{-1}{1-x}\\) \\(\\mid\\) \\(\\Omega(1\\,;\\,0)\\)</p></div>`,
+                  corr(
+                    R`• \(f(x)=(x+1)^3+1\), \(D_f=\mathbb{R}\). \(f(-2-x)=(-1-x)^3+1=-(x+1)^3+1\), donc \(f(x)+f(-2-x)=2=2\times1\) ✔<br>
+              • \(D_h=\mathbb{R}\setminus\{2\}\) et \(4-x\neq2\Leftrightarrow x\neq2\) ✔. \(h(x)+h(4-x)=\dfrac{x^2-(4-x)^2}{x-2}=\dfrac{8x-16}{x-2}=8=2\times4\) ✔<br>
+              • \(D_g=\mathbb{R}\setminus\{1\}\), \(2-x\neq1\Leftrightarrow x\neq1\) ✔. \(g(2-x)=\dfrac{-1}{x-1}=\dfrac{1}{1-x}\), donc \(g(x)+g(2-x)=0=2\times0\) ✔`,
+                    R`Vérifier \(2a-x\in D_f\), puis calculer \(f(2a-x)+f(x)\) et le comparer à \(2b\).`,
+                    true,
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-          <h3 class="font-black text-primary-dark text-lg mb-3">Méthodes pour trouver la variation</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b-2 border-primary/15 text-primary font-black text-sm">
-                  <th class="py-3 px-4">Méthode</th>
-                  <th class="py-3 px-4">Comment faire</th>
-                  <th class="py-3 px-4">Conclusion</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-primary/10 text-sm font-semibold text-primary-dark/80">
-                <tr><td class="py-3 px-4 font-black text-primary">La différence</td><td class="py-3 px-4">Calculer $u_{n+1} - u_{n}$</td><td class="py-3 px-4">Si $> 0$ : croissante. Si $< 0$ : décroissante[cite: 4].</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">Le quotient <span class="text-xs font-normal">(termes positifs)</span></td><td class="py-3 px-4">Calculer $\frac{u_{n+1}}{u_{n}}$</td><td class="py-3 px-4">Si $> 1$ : croissante. Si $< 1$ : décroissante[cite: 4].</td></tr>
-                <tr><td class="py-3 px-4 font-black text-primary">La fonction <span class="text-xs font-normal">(si $u_{n} = f(n)$)</span></td><td class="py-3 px-4">Étudier $f$</td><td class="py-3 px-4">$f$ croissante $\implies$ suite croissante[cite: 4].</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+          T(
+            "Limites et branches infinies",
+            pg(
+              S(
+                "✦",
+                "Activité",
+                B(
+                  "pu",
+                  "Situation",
+                  R`Aina utilise son téléphone pendant une journée. Après plusieurs heures d’utilisation, elle remarque que le niveau de sa batterie diminue.`,
+                  R`Pour étudier cette évolution, on considère un modèle simplifié dans lequel le niveau de la batterie dépend du temps d’utilisation. On suppose que le niveau de batterie est donné par : \(\boxed{f(t)=\dfrac{100}{t+1}}\)`,
+                  R`où \(t\) représente le temps d’utilisation en heures ; \(f(t)\) représente le niveau de batterie en pourcentage.`,
+                ),
+                B(
+                  "gr",
+                  "Question 1",
+                  "Quel est le niveau de batterie au début de l’utilisation ?",
+                  corr(
+                    R`\(f(0)=\dfrac{100}{0+1}=100\) : la batterie est à 100 %.`,
+                    R`Au début, \(t=0\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 2",
+                  "Calculer le niveau de batterie après 1 h, 2 h, 4 h et 9 h d’utilisation.",
+                  corr(
+                    R`\(f(1)=50\ \%\) ; \(f(2)=\dfrac{100}{3}\approx33{,}3\ \%\) ; \(f(4)=20\ \%\) ; \(f(9)=10\ \%\).`,
+                    R`Remplacer \(t\) dans \(\dfrac{100}{t+1}\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 3",
+                  "Compléter le tableau suivant :",
+                  `<div class="ov"><table class="tb"><tr><th>Temps \\(t\\) en h</th><th>0</th><th>1</th><th>2</th><th>4</th><th>9</th><th>12</th></tr><tr><th>Batterie \\(f(t)\\) %</th><td style="height:40px"></td><td></td><td></td><td></td><td></td><td></td></tr></table></div>`,
+                  corr(
+                    R`\(100\ ;\ 50\ ;\ 33{,}3\ ;\ 20\ ;\ 10\ ;\ 7{,}7\) (car \(f(12)=\dfrac{100}{13}\)).`,
+                    "Utiliser les résultats de la question 2.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 4",
+                  "Que remarquez-vous concernant le niveau de batterie lorsque le temps d’utilisation augmente ?",
+                  corr(
+                    "Le niveau de batterie diminue, de plus en plus lentement.",
+                    "Regarder comment les valeurs du tableau évoluent.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 5",
+                  "Le niveau de batterie peut-il atteindre 0 % dans ce modèle ?",
+                  corr(
+                    R`Non : \(\dfrac{100}{t+1}>0\) pour tout \(t\geq0\), la batterie n’atteint jamais 0 %.`,
+                    "Une fraction de numérateur 100 peut-elle être nulle ?",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 6",
+                  "Vers quelle valeur le niveau de batterie semble-t-il se rapprocher lorsque le temps augmente indéfiniment ?",
+                  corr(
+                    R`Vers \(0\) : on écrira \(\lim\limits_{t\to+\infty}f(t)=0\).`,
+                    "Regarder les dernières valeurs du tableau.",
+                  ),
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "1",
+                "Définition",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f(x)\) une fonction définie sur son ensemble \(D_f\) et \(x_0\in D_f\).`,
+                  R`La limite d’une fonction \(f\) est la valeur vers laquelle les images \(f(x)\) se rapprochent lorsque \(x\) se rapproche d’un nombre donné ou tend vers l’infini. Autrement dit, étudier la limite d’une fonction consiste à observer le comportement de ses images lorsque la variable se rapproche d’une valeur.`,
+                  R`On écrit \(\lim\limits_{x\to x_0}f(x)=l\) ou \(\lim\limits_{x\to x_0}f(x)=\infty\) et on lit « limite de \(f(x)\) quand \(x\) tend vers \(x_0\) ».`,
+                ),
+              ),
+              S(
+                "2",
+                "Limite à gauche et limite à droite",
+                P(
+                  R`Pour étudier le comportement d’une fonction au voisinage d’un réel \(a\), on peut distinguer deux directions :`,
+                ),
+                B(
+                  "or",
+                  "Limite à gauche",
+                  R`\(x\) se rapproche de \(a\) en prenant des valeurs inférieures à \(a\) (\(x<a\)). On écrit \(\boxed{\lim\limits_{x\to a^-}f(x)}\)`,
+                ),
+                B(
+                  "or",
+                  "Limite à droite",
+                  R`\(x\) se rapproche de \(a\) en prenant des valeurs supérieures à \(a\) (\(x>a\)). On écrit \(\boxed{\lim\limits_{x\to a^+}f(x)}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Limite finie en ∞",
+                B(
+                  "or",
+                  "Définition",
+                  R`On dit que \(f(x)\) tend vers un réel \(l\) lorsque \(x\) tend vers \(\infty\) si les valeurs de \(f(x)\) se rapprochent de \(l\) lorsque \(x\) devient de plus en plus grand.`,
+                  R`On écrit : \(\boxed{\lim\limits_{x\to\infty}f(x)=l}\)`,
+                ),
+                B(
+                  "gr",
+                  "Interprétation graphique",
+                  R`Soit \(f\) une fonction et \(\mathcal{C}_f\) sa courbe représentative. Si \(\lim\limits_{x\to\infty}f(x)=l\), on dit que la droite \(\Delta\) d’équation \(y=l\) est une asymptote horizontale à \(\mathcal{C}_f\) en \(\infty\).`,
+                ),
+              ),
+              S(
+                "4",
+                "Limite infinie en \\(a\\)",
+                B(
+                  "or",
+                  "Définition",
+                  R`On dit que \(f\) tend vers \(\infty\) si les valeurs de \(f(x)\) deviennent aussi grandes que l’on veut lorsque \(x\) se rapproche de \(a\). On écrit : \(\boxed{\lim\limits_{x\to a}f(x)=\infty}\)`,
+                ),
+                B(
+                  "gr",
+                  "Interprétation graphique",
+                  R`Soit \(f\) une fonction et \(\mathcal{C}_f\) sa courbe représentative. Si \(\lim\limits_{x\to a}f(x)=\infty\), on dit que la droite \(\Delta\) d’équation \(x=a\) est une asymptote verticale à \(\mathcal{C}_f\) en \(a\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "5",
+                "Limite infinie en ∞",
+                B(
+                  "or",
+                  "Définition",
+                  R`Lorsque les valeurs de \(f(x)\) deviennent arbitrairement grandes (ou très petites) lorsque \(x\) tend vers \(\infty\), on écrit : \(\boxed{\lim\limits_{x\to\infty}f(x)=\infty}\)`,
+                ),
+                B(
+                  "gr",
+                  "Interprétation graphique",
+                  R`\(\lim\limits_{x\to\infty}f(x)=\infty\) et \(\lim\limits_{x\to\infty}\big(f(x)-(ax+b)\big)=0\ \Longleftrightarrow\) la droite d’équation \(y=ax+b\) est une asymptote oblique pour \((\mathcal{C})\).`,
+                ),
+              ),
+              S(
+                "6",
+                "Limites usuelles à connaître",
+                TB(
+                  ["Limite", "Résultat"],
+                  [
+                    [
+                      R`\(\lim\limits_{x\to+\infty}x,\ x^2,\ x^3\)`,
+                      R`\(+\infty\)`,
+                    ],
+                    [
+                      R`\(\lim\limits_{x\to-\infty}x^2\) (puissance paire)`,
+                      R`\(+\infty\)`,
+                    ],
+                    [
+                      R`\(\lim\limits_{x\to-\infty}x,\ x^3\) (puissance impaire)`,
+                      R`\(-\infty\)`,
+                    ],
+                    [
+                      R`\(\lim\limits_{x\to+\infty}\frac1x\) et \(\lim\limits_{x\to-\infty}\frac1x\)`,
+                      R`\(0\)`,
+                    ],
+                    [R`\(\lim\limits_{x\to0^+}\frac1x\)`, R`\(+\infty\)`],
+                    [R`\(\lim\limits_{x\to0^-}\frac1x\)`, R`\(-\infty\)`],
+                    [
+                      R`\(\lim\limits_{x\to0}\frac1{x^2}\)`,
+                      R`\(+\infty\) (des deux côtés)`,
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "7",
+                "Les 4 règles pour calculer une limite",
+                TB(
+                  ["Situation", "Règle"],
+                  [
+                    [
+                      R`Polynôme en \(\pm\infty\)`,
+                      "On garde le terme de plus haut degré seulement.",
+                    ],
+                    [
+                      R`Fraction en \(\pm\infty\)`,
+                      "On garde le terme de plus haut degré du numérateur et celui du dénominateur, puis on simplifie.",
+                    ],
+                    [
+                      R`En un point \(a\) de \(D_f\)`,
+                      R`On remplace : \(\lim\limits_{x\to a}f(x)=f(a)\).`,
+                    ],
+                    [
+                      R`En un point \(a\) qui annule le dénominateur (numérateur \(\neq0\))`,
+                      R`Le résultat est \(+\infty\) ou \(-\infty\). On étudie le signe du numérateur et celui du dénominateur à gauche et à droite de \(a\).`,
+                    ],
+                  ],
+                ),
+              ),
+              S(
+                "8",
+                "Exemples",
+                B(
+                  "bl",
+                  "Exemple 1",
+                  R`\(\lim\limits_{x\to+\infty}\big(3x^2-5x+1\big)\). On garde le terme de plus haut degré : \(3x^2\to+\infty\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 2",
+                  R`\(\lim\limits_{x\to-\infty}\big(-2x^3+x\big)\). On garde \(-2x^3\). Quand \(x\to-\infty\), \(x^3\to-\infty\) ; multiplié par \(-2\) (négatif), cela donne \(+\infty\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 3",
+                  R`\(\lim\limits_{x\to+\infty}\dfrac{2x+3}{x-1}\). Termes de plus haut degré : \(2x\) et \(x\). Le quotient est \(\dfrac{2x}{x}=2\). Donc la limite est \(2\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 4",
+                  R`\(\lim\limits_{x\to-\infty}\dfrac{x+1}{x^2+3}\). Termes de plus haut degré : \(x\) et \(x^2\). Le quotient est \(\dfrac{x}{x^2}=\dfrac1x\to0\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "9",
+                "Branche parabolique",
+                B(
+                  "or",
+                  "Direction \\(x'Ox\\)",
+                  R`Si \(\lim\limits_{x\to\pm\infty}f(x)=\pm\infty\) et \(\lim\limits_{x\to\pm\infty}\dfrac{f(x)}{x}=0\), branche parabolique de direction \(x'Ox\).`,
+                ),
+                B(
+                  "or",
+                  "Direction \\(y'Oy\\)",
+                  R`Si \(\lim\limits_{x\to\pm\infty}f(x)=\pm\infty\) et \(\lim\limits_{x\to\pm\infty}\dfrac{f(x)}{x}=\pm\infty\), branche parabolique de direction \(y'Oy\).`,
+                ),
+                B(
+                  "or",
+                  "Direction de la droite \\(y=ax\\)",
+                  R`Si \(\lim\limits_{x\to\pm\infty}f(x)=\pm\infty\), \(\lim\limits_{x\to\pm\infty}\dfrac{f(x)}{x}=a\) et \(\lim\limits_{x\to\pm\infty}\big(f(x)-ax\big)=\pm\infty\), branche parabolique de direction la droite \(y=ax\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "★",
+                "Quiz",
+                qz(
+                  1,
+                  R`Soit une fonction \(f\) telle que \(\lim\limits_{x\to+\infty}f(x)=3\). Quelle est l’interprétation géométrique ?`,
+                  [
+                    R`La droite \(x=3\) est une asymptote verticale.`,
+                    R`La droite \(y=3\) est une asymptote horizontale.`,
+                    R`La droite \(y=x+3\) est une asymptote oblique.`,
+                  ],
+                  1,
+                  R`Une limite finie \(l\) en l’infini donne l’asymptote horizontale \(y=l\).`,
+                ),
+              ),
+            ),
+          ),
 
-        <!-- Exercices d'application -->
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4 flex items-center gap-3">
-            <span class="w-8 h-8 rounded-xl bg-secondary text-white flex items-center justify-center text-sm">✍️</span>
-            Exercices d'entraînement
-          </h2>
-          <div class="space-y-6">
-            <div class="ex-box">
-              <p class="font-black text-primary-dark mb-2">Exercice a)</p>
-              <p class="text-sm text-primary-dark/80 mb-2">
-                Soit la suite $u_{n}$ définie pour tout entier $n \in \mathbb{N}$ par la formule explicite : $u_{n} = 3n^{2} - 5n + 2$[cite: 5].
-              </p>
-              <ul class="list-disc list-inside text-sm font-semibold text-primary-dark/70 space-y-1">
-                <li>Calculer les termes $u_{0}$, $u_{1}$ et $u_{4}$[cite: 5].</li>
-                <li>Calculer $u_{10}$[cite: 5].</li>
-              </ul>
-            </div>
-            <div class="ex-box">
-              <p class="font-black text-primary-dark mb-2">Exercice b)</p>
-              <p class="text-sm text-primary-dark/80 mb-2">
-                On considère la suite $v_{n}$ définie par son premier terme $v_{0} = 1$ et par la relation de récurrence : $v_{n+1} = 2v_{n} + 3$[cite: 5].
-              </p>
-              <p class="text-sm font-semibold text-primary-dark/70">Calculer $v_{0}$, $v_{1}$ et $v_{3}$[cite: 5].</p>
-            </div>
-            <div class="ex-box">
-              <p class="font-black text-primary-dark mb-2">Exercice c)</p>
-              <p class="text-sm text-primary-dark/80 mb-2">
-                Soit la suite $w_{n}$ définie pour tout $n \in \mathbb{N}$ par : $w_{n} = \frac{2n+1}{n+2}$[cite: 5].
-              </p>
-              <ul class="list-disc list-inside text-sm font-semibold text-primary-dark/70 space-y-1">
-                <li>Calculer $w_{0}$ et $w_{1}$[cite: 5].</li>
-                <li>Étudier le sens de variation de $w_{n}$ en calculant la différence $w_{n+1} - w_{n}$[cite: 5].</li>
-              </ul>
-            </div>
-          </div>
-        </section>
+          T(
+            "Continuité",
+            pg(
+              S(
+                "1",
+                "Continuité d’une fonction",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f\) une fonction définie sur l’ensemble d’existence \(D_f\) et \(x_0\) un réel tel que \(x_0\in D_f\).`,
+                ),
+                B(
+                  "or",
+                  "Continuité à droite",
+                  R`\(f\) est continue à droite en \(x_0\) si \(f(x_0)\) existe et \(\boxed{\lim\limits_{x\to x_0^+}f(x)=f(x_0)}\)`,
+                ),
+                B(
+                  "or",
+                  "Continuité à gauche",
+                  R`\(f\) est continue à gauche en \(x_0\) si \(f(x_0)\) existe et \(\boxed{\lim\limits_{x\to x_0^-}f(x)=f(x_0)}\)`,
+                ),
+                B(
+                  "gr",
+                  "Continuité en \\(x_0\\)",
+                  R`\(f\) continue en \(x_0\ \Longleftrightarrow\ f\) est continue à gauche et à droite`,
+                ),
+              ),
+              S(
+                "2",
+                "Continuité sur un intervalle \\(I\\)",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f\) une fonction définie sur un intervalle \(I\) et \(x_0\in I\). Dire que \(f\) continue en \(x_0\) sur l’intervalle \(I\) signifie que \(f\) est continue en tout nombre de \(I\).`,
+                  R`\(\boxed{f\ \text{continue dans}\ I\ \Longleftrightarrow\ \forall x_0\in I,\ f\ \text{continue en}\ x_0}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Propriétés",
+                B(
+                  "or",
+                  "Propriétés",
+                  R`La somme de deux fonctions continues sur \(I\) est continue sur \(I\).`,
+                  R`Le produit de deux fonctions continues sur \(I\) est continu sur \(I\).`,
+                  R`Le quotient de deux fonctions continues sur \(I\) est continu sur \(I\).`,
+                  R`\(f\) continue en \(I\) et \(g\) continue en \(I\), la composée de deux fonctions \(f\circ g\) est continue dans \(I\).`,
+                ),
+              ),
+              S(
+                "4",
+                "Prolongement par continuité",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f\) une fonction continue sur \(I\) sauf en \(x_0\) mais la limite de \(f\) en \(x_0\) est égale à \(\alpha\in\mathbb{R}\), alors la fonction \(\overline{f}\) telle que \(\overline{f}(x)=f(x)\) si \(x\neq x_0\) et \(\overline{f}(x_0)=\alpha\), définie et continue sur \(I\), est appelée prolongement par continuité de \(f\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "5",
+                "Théorème de valeur intermédiaire",
+                B(
+                  "or",
+                  "Théorème",
+                  R`Soit \(f\) une fonction continue dans l’intervalle \([a\,;b]\) vérifiant \(f(a)\leq0\) et \(f(b)\geq0\), alors il existe \(c\in[a\,;b]\) vérifiant \(\boxed{f(c)=0}\).`,
+                ),
+              ),
+            ),
+          ),
 
-        <div class="flex items-center justify-between mt-10">
-          <a href="classe.html#${classeKey}" class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-5 py-3 rounded-xl hover:bg-primary hover:text-white transition-colors">
-            ← Retour au programme
-          </a>
-          <a href="inscription.html" class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary-dark text-white font-black text-sm px-6 py-3 rounded-xl shadow-lg transition-all">
-            Lancer le Quiz du chapitre →
-          </a>
-        </div>
-      `;
-    } else {
-      // Affichage standard pour les autres chapitres
-      container.innerHTML = `
-        <nav class="text-sm font-bold text-primary/60 mb-4" aria-label="Fil d'Ariane">
-          <a href="classe.html" class="hover:text-primary">Programmes</a>
-          <span class="mx-1">›</span>
-          <a href="classe.html#${classeKey}" class="hover:text-primary">${classeObj.nom}</a>
-          <span class="mx-1">›</span>
-          <span class="text-primary font-black">Chapitre ${chapIndex}</span>
-        </nav>
-        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/15 rounded-full px-5 py-2 text-xs font-black text-primary tracking-widest uppercase mb-4">
-          📚 ${partieTrouvee}
-        </div>
-        <h1 class="font-black text-3xl md:text-4xl text-primary-dark leading-tight mb-6">
-          ${chapitreTrouve}
-        </h1>
-        <section class="bg-white border border-primary/10 rounded-3xl shadow-xl shadow-primary/5 p-6 sm:p-8 mb-8">
-          <h2 class="text-2xl font-black text-primary-dark mb-4">Introduction au chapitre</h2>
-          <p class="text-primary-dark/80 leading-relaxed">
-            Le cours détaillé et les exercices pour le chapitre <strong>${chapitreTrouve}</strong> seront bientôt disponibles en ligne.
-          </p>
-        </section>
-        <div class="mt-10">
-          <a href="classe.html#${classeKey}" class="inline-flex items-center gap-2 border-2 border-primary text-primary font-black text-sm px-5 py-3 rounded-xl hover:bg-primary hover:text-white transition-colors">
-            ← Retour au programme
-          </a>
-        </div>
-      `;
-    }
+          T(
+            "Dérivabilité",
+            pg(
+              S(
+                "✦",
+                "Activité",
+                B(
+                  "pu",
+                  "Situation",
+                  "Peut-on connaître la vitesse exacte du véhicule à un instant précis, et non sur un intervalle de temps ?",
+                  R`Un véhicule se déplace sur une route dont la position, en fonction du temps, est modélisée par : \(\boxed{f(t)=t^2}\) où \(t\) représente le temps en secondes et \(f(t)\) la distance parcourue en mètres.`,
+                  R`On souhaite étudier l’évolution de la position du véhicule à l’instant \(t=2\).`,
+                ),
+                B(
+                  "pu",
+                  "Partie A – Observer les variations",
+                  "Les questions suivantes préparent la notion de nombre dérivé.",
+                ),
+                B(
+                  "gr",
+                  "Question 1",
+                  R`Calculer la position du véhicule aux instants suivants : \(t=1\), \(t=2\), \(t=3\).`,
+                  corr(
+                    R`\(f(1)=1\) m ; \(f(2)=4\) m ; \(f(3)=9\) m.`,
+                    R`Calculer \(t^2\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 2",
+                  R`Calculer la variation de position entre \(t=2\) et \(t=3\). (La variation de position est la différence entre la position finale et la position initiale.)`,
+                  corr(
+                    R`\(f(3)-f(2)=9-4=5\) m.`,
+                    "Position finale − position initiale.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 3",
+                  R`Calculer la vitesse moyenne entre \(t=2\) et \(t=3\), sachant que : \(v_m=\dfrac{\text{variation de position}}{\text{variation de temps}}\)`,
+                  corr(
+                    R`\(v_m=\dfrac{5}{1}=5\) m/s.`,
+                    R`La variation de temps vaut \(3-2=1\) s.`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 4",
+                  R`Refaire le calcul entre \(t=2\) et \(t=2{,}5\) puis entre \(t=2\) et \(t=2{,}1\).`,
+                  corr(
+                    R`• \([2\,;2{,}5]\) : \(\dfrac{6{,}25-4}{0{,}5}=4{,}5\) m/s.<br>• \([2\,;2{,}1]\) : \(\dfrac{4{,}41-4}{0{,}1}=4{,}1\) m/s.`,
+                    R`\(f(2{,}5)=6{,}25\) et \(f(2{,}1)=4{,}41\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Question 5",
+                  R`Que remarquez-vous lorsque le deuxième instant se rapproche de \(2\) ?`,
+                  corr(
+                    R`Les vitesses moyennes (\(5\ ;\ 4{,}5\ ;\ 4{,}1\)) se rapprochent de \(4\) m/s : c’est la vitesse à l’instant \(t=2\), c’est-à-dire le nombre dérivé \(f'(2)=4\).`,
+                    "Regarder la suite des vitesses moyennes calculées.",
+                  ),
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "1",
+                "Nombre dérivé d’une fonction en un point",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f\) une fonction définie sur un intervalle \(I\) contenant \(a\).`,
+                  R`Pour un réel \(h\neq0\), on appelle taux d’accroissement de \(f\) entre \(a\) et \(a+h\) le nombre : \(\boxed{\dfrac{f(a+h)-f(a)}{h}}\)`,
+                  R`Si la limite suivante existe et est finie : \(\lim\limits_{h\to0}\dfrac{f(a+h)-f(a)}{h}\), alors on dit que \(f\) est dérivable en \(a\). Cette limite est appelée nombre dérivé de \(f\) en \(a\) et se note \(f'(a)\).`,
+                  R`Ainsi : \(\boxed{f'(a)=\lim\limits_{h\to0}\dfrac{f(a+h)-f(a)}{h}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Soit \(f(x)=x^2\). Calculons son nombre dérivé en \(a=2\).`,
+                  R`\(f'(2)=\lim\limits_{h\to0}\dfrac{(2+h)^2-2^2}{h}=\lim\limits_{h\to0}\dfrac{4+4h+h^2-4}{h}=\lim\limits_{h\to0}(4+h)=4\)`,
+                  R`Donc \(\boxed{f'(2)=4}\)`,
+                ),
+              ),
+              S(
+                "2",
+                "Interprétation géométrique",
+                B(
+                  "gr",
+                  "Interprétation géométrique",
+                  R`Si \(f\) est dérivable en \(a\), alors :`,
+                  R`• \(f'(a)\) représente le coefficient directeur de la tangente à la courbe de \(f\) au point d’abscisse \(a\).`,
+                  R`• L’équation de cette tangente est : \(\boxed{y=f'(x_0)(x-x_0)+f(x_0)}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Dérivabilité à gauche et à droite",
+                B(
+                  "or",
+                  "À gauche",
+                  R`\(f\) est dérivable à gauche en \(x_0\ \Longleftrightarrow\ \lim\limits_{x\to x_0^-}\dfrac{f(x)-f(x_0)}{x-x_0}=f'(x_0)\in\mathbb{R}\)`,
+                ),
+                B(
+                  "or",
+                  "À droite",
+                  R`\(f\) est dérivable à droite en \(x_0\ \Longleftrightarrow\ \lim\limits_{x\to x_0^+}\dfrac{f(x)-f(x_0)}{x-x_0}=f'(x_0)\in\mathbb{R}\)`,
+                ),
+                B(
+                  "gr",
+                  "En \\(x_0\\)",
+                  R`\(f\) est dérivable en \(x_0\ \Longleftrightarrow\ f\) est dérivable à gauche et à droite.`,
+                ),
+              ),
+              S(
+                "4",
+                "Interprétation graphique",
+                B(
+                  "gr",
+                  "Cas 1",
+                  R`Si \(\lim\limits_{x\to x_0^-}\dfrac{f(x)-f(x_0)}{x-x_0}=l\in\mathbb{R}\ \neq\ \lim\limits_{x\to x_0^+}\dfrac{f(x)-f(x_0)}{x-x_0}=l'\in\mathbb{R}\), alors la courbe \((\mathcal{C}_f)\) représentative de \(f\) admet deux demi-tangentes à gauche et à droite au point d’abscisse \(x_0\).`,
+                ),
+                B(
+                  "gr",
+                  "Cas 2",
+                  R`Si \(\lim\limits_{x\to x_0^-}\dfrac{f(x)-f(x_0)}{x-x_0}=+\infty\), alors la courbe \((\mathcal{C}_f)\) représentative de \(f\) admet une demi-tangente verticale dirigée vers le bas.`,
+                ),
+                B(
+                  "gr",
+                  "Cas 3",
+                  R`Si \(\lim\limits_{x\to x_0^+}\dfrac{f(x)-f(x_0)}{x-x_0}=+\infty\), alors la courbe \((\mathcal{C}_f)\) représentative de \(f\) admet une demi-tangente verticale dirigée vers le haut.`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "5",
+                "Théorèmes",
+                B(
+                  "or",
+                  "Théorème 1",
+                  R`Si \(f\) est dérivable en \(a\), alors \(f\) est continue en \(a\).`,
+                ),
+                B(
+                  "or",
+                  "Théorème 2",
+                  R`\(f\) est dérivable sur un intervalle ouvert \(I\) si elle est dérivable en tout point de \(I\).`,
+                ),
+                B(
+                  "or",
+                  "Théorème 3",
+                  R`\(f\) est dérivable sur \([a\,;b]\) si elle est dérivable sur \(]a\,;b[\).`,
+                ),
+              ),
+            ),
+          ),
 
-    if (window.MathJax) {
-      MathJax.typesetPromise();
-    }
-  }
+          T(
+            "Fonction dérivée",
+            pg(
+              S(
+                "1",
+                "Fonction dérivée",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(f\) une fonction dérivable en tout point d’un intervalle \(I\).`,
+                  R`La fonction qui, à chaque réel \(x\) de \(I\), associe le nombre dérivé \(f'(x)\) est appelée fonction dérivée de \(f\).`,
+                  R`Elle est notée \(f'\) et définie par : \(\boxed{f':x\mapsto f'(x)}\)`,
+                ),
+              ),
+              S(
+                "2",
+                "Dérivées usuelles",
+                TB(
+                  [R`\(f(x)\)`, R`\(f'(x)\)`, "Dérivable sur"],
+                  [
+                    [R`\(k\) (constante)`, R`\(0\)`, R`\(\mathbb{R}\)`],
+                    [R`\(ax+b\)`, R`\(a\)`, R`\(\mathbb{R}\)`],
+                    [
+                      R`\(x^n\ (n\in\mathbb{N}^*)\)`,
+                      R`\(nx^{n-1}\)`,
+                      R`\(\mathbb{R}\)`,
+                    ],
+                    [
+                      R`\(\dfrac1x\)`,
+                      R`\(-\dfrac{1}{x^2}\)`,
+                      R`\(\mathbb{R}^*\)`,
+                    ],
+                    [
+                      R`\(\dfrac{1}{x^n}\)`,
+                      R`\(-\dfrac{n}{x^{n+1}}\)`,
+                      R`\(\mathbb{R}^*\)`,
+                    ],
+                    [
+                      R`\(\sqrt{x}\)`,
+                      R`\(\dfrac{1}{2\sqrt{x}}\)`,
+                      R`\(]0\,;+\infty[\)`,
+                    ],
+                    [R`\(\sin x\)`, R`\(\cos x\)`, R`\(\mathbb{R}\)`],
+                    [R`\(\cos x\)`, R`\(-\sin x\)`, R`\(\mathbb{R}\)`],
+                    [
+                      R`\(\tan x\)`,
+                      R`\(1+\tan^2x=\dfrac{1}{\cos^2x}\)`,
+                      R`\(x\neq\dfrac{\pi}{2}+k\pi\)`,
+                    ],
+                    [
+                      R`\(\sqrt[n]{x}\ (n\geq2)\)`,
+                      R`\(\dfrac{1}{n\sqrt[n]{x^{n-1}}}\)`,
+                      R`\(]0\,;+\infty[\)`,
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
 
-  chargerChapitre();
+          T(
+            "Opérations sur les dérivées",
+            pg(
+              S(
+                "3",
+                "Opérations sur les dérivées",
+                P(
+                  R`Soient \(u\) et \(v\) deux fonctions dérivables sur \(I\), \(k\in\mathbb{R}\) et \(n\in\mathbb{N}^*\).`,
+                ),
+                B("or", "Somme", R`\(\boxed{(u+v)'=u'+v'}\)`),
+                B("or", "Produit", R`\(\boxed{(u\times v)'=u'v+v'u}\)`),
+                B(
+                  "or",
+                  "Inverse",
+                  R`\(\boxed{\left(\dfrac1v\right)'=-\dfrac{v'}{v^2}}\quad(v\neq0)\)`,
+                ),
+                B(
+                  "or",
+                  "Quotient",
+                  R`\(\boxed{\left(\dfrac uv\right)'=\dfrac{u'v-v'u}{v^2}}\quad(v\neq0)\)`,
+                ),
+                B("or", "Puissance", R`\(\boxed{(u^n)'=nu'u^{n-1}}\)`),
+                B(
+                  "or",
+                  "Racine",
+                  R`\(\boxed{\left(\sqrt{u}\right)'=\dfrac{u'}{2\sqrt{u}}}\)`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "4",
+                "Exemples",
+                B(
+                  "bl",
+                  "Exemple 1",
+                  R`\(f(x)=3x^2-5x+1\).`,
+                  R`\(f'(x)=3\times2x-5=6x-5\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 2",
+                  R`\(g(x)=x^3-3x^2+2\).`,
+                  R`\(g'(x)=3x^2-3\times2x=3x^2-6x=3x(x-2)\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 3",
+                  R`\(h(x)=\dfrac{2x-1}{x-1}\).`,
+                  R`On pose \(u=2x-1\) (\(u'=2\)) et \(v=x-1\) (\(v'=1\)).`,
+                  R`\(h'(x)=\dfrac{u'v-uv'}{v^2}=\dfrac{2(x-1)-(2x-1)\times1}{(x-1)^2}=\dfrac{2x-2-2x+1}{(x-1)^2}=\boxed{\dfrac{-1}{(x-1)^2}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 4",
+                  R`\(k(x)=(x^2+1)(x-3)\).`,
+                  R`\(u=x^2+1\) (\(u'=2x\)), \(v=x-3\) (\(v'=1\)).`,
+                  R`\(k'(x)=u'v+uv'=2x(x-3)+(x^2+1)=2x^2-6x+x^2+1=\boxed{3x^2-6x+1}\)`,
+                ),
+              ),
+            ),
+          ),
 
-  const burger = document.getElementById('burger');
-  const mobMenu = document.getElementById('mob-menu');
-  if (burger && mobMenu) {
-    burger.addEventListener('click', () => mobMenu.classList.toggle('open'));
-  }
-  window.addEventListener('scroll', () => {
-    const header = document.getElementById('main-header');
-    if (header) {
-      header.style.boxShadow = scrollY > 8 ? '0 4px 24px rgba(39,34,117,.12)' : 'none';
-    }
-  }, { passive: true });
-</script>
-</body>
+          T(
+            "Variation d’une fonction",
+            pg(
+              S(
+                "1",
+                "Variation d’une fonction",
+                P(R`Soit \(f\) une fonction définie sur un intervalle \(I\).`),
+                B(
+                  "or",
+                  "Strictement croissante",
+                  R`\(f\) est strictement croissante sur \(I\) lorsque, pour tous réels \(a\) et \(b\) de \(I\), si \(a<b\), alors \(f(a)<f(b)\).`,
+                ),
+                B(
+                  "or",
+                  "Strictement décroissante",
+                  R`\(f\) est strictement décroissante sur \(I\) lorsque, pour tous réels \(a\) et \(b\) de \(I\), si \(a<b\), alors \(f(a)>f(b)\).`,
+                ),
+                B(
+                  "gr",
+                  "Sur un intervalle \\(I\\)",
+                  R`• si \(f'(x)>0\) sur \(I\), alors \(f\) est croissante sur \(I\) ;`,
+                  R`• si \(f'(x)<0\) sur \(I\), alors \(f\) est décroissante sur \(I\) ;`,
+                  R`• si \(f'(x)=0\) en \(x_0\) et change de signe, alors \(f(x_0)\) est un extremum local (maximum ou minimum) et la tangente y est horizontale.`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "2",
+                "Tableau de variation",
+                B(
+                  "or",
+                  "Définition",
+                  "Un tableau de variation permet de résumer le sens de variation d’une fonction sur un intervalle donné.",
+                ),
+                B(
+                  "gr",
+                  "Pour construire un tableau de variation",
+                  "1. Déterminer l’ensemble de définition de la fonction.",
+                  R`2. Calculer sa fonction dérivée \(f'(x)\).`,
+                  R`3. Étudier le signe de \(f'(x)\).`,
+                  R`4. Déduire le sens de variation de \(f\).`,
+                  "5. Calculer les valeurs de la fonction aux bornes et aux points importants.",
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Équation de la tangente",
+            pg(
+              S(
+                "1",
+                "Équation de la tangente",
+                B(
+                  "or",
+                  "Définition",
+                  R`La tangente à la courbe de \(f\) au point d’abscisse \(a\) est la droite qui « touche » la courbe en ce point avec la même pente que la courbe. Sa pente est le nombre dérivé \(f'(a)\).`,
+                  R`Équation de la tangente : \(\boxed{y=f'(a)(x-a)+f(a)}\)`,
+                ),
+              ),
+              S(
+                "2",
+                "Méthode en 3 étapes",
+                B(
+                  "gr",
+                  "Méthode",
+                  R`1. Calculer \(f(a)\).`,
+                  R`2. Calculer \(f'(x)\), puis \(f'(a)\).`,
+                  "3. Remplacer dans la formule et simplifier.",
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Soit \(f(x)=x^2-3x+2\), au point d’abscisse \(a=2\).`,
+                  R`1. \(f(2)=4-6+2=0\)`,
+                  R`2. \(f'(x)=2x-3\), donc \(f'(2)=1\)`,
+                  R`3. \(y=1\cdot(x-2)+0\), soit \(\boxed{y=x-2}\)`,
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Positions relatives de deux courbes",
+            pg(
+              S(
+                "1",
+                "Position relative par rapport à une droite",
+                B(
+                  "or",
+                  "Principe",
+                  R`Pour savoir si la courbe de \(f\) est au-dessus ou en dessous d’une droite d’équation \(y=ax+b\), on étudie le signe de : \(\boxed{f(x)-(ax+b)}\)`,
+                ),
+                B(
+                  "or",
+                  "Si c’est positif",
+                  "la courbe est au-dessus de la droite ;",
+                ),
+                B("or", "Si c’est négatif", "la courbe est en dessous ;"),
+                B(
+                  "or",
+                  "Si c’est nul",
+                  "la courbe et la droite se coupent (ou se touchent) en ce point.",
+                ),
+              ),
+              S(
+                "2",
+                "Méthode en 3 étapes",
+                B(
+                  "gr",
+                  "Méthode",
+                  R`1. Écrire la différence \(f(x)-(ax+b)\) et la simplifier.`,
+                  "2. La factoriser, puis faire un tableau de signes.",
+                  "3. Conclure sur chaque intervalle.",
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Exemples",
+                B(
+                  "bl",
+                  "Exemple 1",
+                  R`Soit \(f(x)=x^2-3x+2\) et sa tangente en \(a=2\), d’équation \(y=x-2\).`,
+                  R`\(f(x)-(x-2)=x^2-3x+2-x+2=x^2-4x+4=\boxed{(x-2)^2}\)`,
+                  "Un carré est toujours positif ou nul.",
+                  R`Conclusion : la courbe est au-dessus de sa tangente pour tout \(x\), et elle la touche seulement en \(x=2\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple 2",
+                  R`Soit \(f(x)=x^3\) et sa tangente en \(a=1\), d’équation \(y=3x-2\).`,
+                  R`\(f(x)-(3x-2)=x^3-3x+2=\boxed{(x-1)^2(x+2)}\)`,
+                  R`\((x-1)^2\) est positif ou nul, donc le signe dépend de \((x+2)\).`,
+                  R`Conclusion : la courbe est au-dessus de la tangente pour \(x>-2\), en dessous pour \(x<-2\), et elle la coupe en \(x=-2\) et la touche en \(x=1\).`,
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Points particuliers",
+            pg(
+              S(
+                "★",
+                "Points particuliers dans une courbe",
+                TB(
+                  ["Point", "Comment le trouver"],
+                  [
+                    [
+                      "Intersection avec l’axe des ordonnées",
+                      R`Si \(0\in D_f\) : le point \((0\,;f(0))\)`,
+                    ],
+                    [
+                      "Intersection avec l’axe des abscisses",
+                      R`On résout \(f(x)=0\) : les points \((x\,;0)\)`,
+                    ],
+                    [
+                      "Extremums locaux",
+                      R`Points \((x_0\,;f(x_0))\) où \(f'(x_0)=0\) avec changement de signe (tangente horizontale)`,
+                    ],
+                    [
+                      "Autres points utiles",
+                      "Quelques valeurs calculées avec un tableau de valeurs",
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Traçage d’une courbe",
+            pg(
+              S(
+                "1",
+                "Méthode de traçage",
+                B(
+                  "gr",
+                  "Pour tracer la courbe de \\(f\\)",
+                  R`1. Déterminer l’ensemble de définition \(D_f\).`,
+                  "2. Étudier la parité de \\(f\\) (symétrie de la courbe).".replace(
+                    /\\\\/g,
+                    "\\",
+                  ),
+                  "3. Calculer les limites aux bornes de \\(D_f\\) (asymptotes, branches infinies).",
+                  R`4. Calculer \(f'(x)\) et étudier son signe.`,
+                  "5. Dresser le tableau de variation.",
+                  "6. Déterminer les points particuliers : intersections avec les axes, extremums locaux.",
+                  "7. Placer les points, puis tracer la courbe.",
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "2",
+                "Exemple",
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Tracer la courbe de \(f(x)=x^3-3x\).`,
+                  R`1. \(D_f=\mathbb{R}\) (fonction polynomiale).`,
+                  R`2. \(f(-x)=-x^3+3x=-f(x)\) : \(f\) est impaire, la courbe est symétrique par rapport à l’origine \(O\).`,
+                  R`3. \(\lim\limits_{x\to+\infty}f(x)=+\infty\) et \(\lim\limits_{x\to-\infty}f(x)=-\infty\) (terme de plus haut degré : \(x^3\)).`,
+                  R`4. \(f'(x)=3x^2-3=3(x-1)(x+1)\).`,
+                ),
+                B(
+                  "bl",
+                  "Tableau de variation",
+                  TB(
+                    [
+                      R`\(x\)`,
+                      R`\(]-\infty\,;-1[\)`,
+                      R`\(]-1\,;1[\)`,
+                      R`\(]1\,;+\infty[\)`,
+                    ],
+                    [
+                      [R`\(f'(x)\)`, R`\(+\)`, R`\(-\)`, R`\(+\)`],
+                      [
+                        R`\(f\)`,
+                        R`\(\nearrow\)`,
+                        R`\(\searrow\)`,
+                        R`\(\nearrow\)`,
+                      ],
+                    ],
+                  ),
+                  R`\(f(-1)=2\) : maximum local. \(f(1)=-2\) : minimum local.`,
+                ),
+                B(
+                  "bl",
+                  "Points particuliers",
+                  R`Axe des ordonnées : \(f(0)=0\), le point \((0\,;0)\).`,
+                  R`Axe des abscisses : \(x^3-3x=x(x^2-3)=0\), donc \(x=0\) ou \(x=\pm\sqrt{3}\).`,
+                  R`Extremums locaux : \((-1\,;2)\) et \((1\,;-2)\), tangente horizontale.`,
+                ),
+                B(
+                  "bl",
+                  "Courbe",
+                  `<div class="ov"><svg viewBox="0 0 320 280" style="display:block;margin:8px auto;width:100%;max-width:24rem;color:#272275" role="img" aria-label="Courbe de f(x)=x³−3x"><line x1="0" y1="140" x2="320" y2="140" stroke="currentColor"/><line x1="160" y1="0" x2="160" y2="280" stroke="currentColor"/><polyline points="20.0,269.5 23.3,247.8 26.7,227.5 30.0,208.5 33.3,190.7 36.7,174.2 40.0,158.9 43.3,144.8 46.7,131.8 50.0,120.0 53.3,109.2 56.7,99.5 60.0,90.8 63.3,83.1 66.7,76.3 70.0,70.5 73.3,65.5 76.7,61.4 80.0,58.1 83.3,55.6 86.7,53.9 90.0,52.8 93.3,52.5 96.7,52.8 100.0,53.8 103.3,55.3 106.7,57.4 110.0,60.0 113.3,63.1 116.7,66.7 120.0,70.7 123.3,75.1 126.7,79.8 130.0,84.9 133.3,90.3 136.7,95.9 140.0,101.8 143.3,107.9 146.7,114.1 150.0,120.5 153.3,126.9 156.7,133.4 160.0,140.0 163.3,146.6 166.7,153.1 170.0,159.5 173.3,165.9 176.7,172.1 180.0,178.2 183.3,184.1 186.7,189.7 190.0,195.1 193.3,200.2 196.7,204.9 200.0,209.3 203.3,213.3 206.7,216.9 210.0,220.0 213.3,222.6 216.7,224.7 220.0,226.2 223.3,227.2 226.7,227.5 230.0,227.2 233.3,226.1 236.7,224.4 240.0,221.9 243.3,218.6 246.7,214.5 250.0,209.5 253.3,203.7 256.7,196.9 260.0,189.2 263.3,180.5 266.7,170.8 270.0,160.0 273.3,148.2 276.7,135.2 280.0,121.1 283.3,105.8 286.7,89.3 290.0,71.5 293.3,52.5 296.7,32.2 300.0,10.5" fill="none" stroke="#FF5A36" stroke-width="3"/><circle cx="44.5" cy="140.0" r="4" fill="#FF5A36"/><circle cx="160.0" cy="140.0" r="4" fill="#FF5A36"/><circle cx="275.5" cy="140.0" r="4" fill="#FF5A36"/><circle cx="93.3" cy="52.5" r="4" fill="#3730A3"/><circle cx="226.7" cy="227.5" r="4" fill="#3730A3"/><g fill="currentColor" font-size="12"><text x="31" y="44">(−1 ; 2)</text><text x="233" y="244">(1 ; −2)</text><text x="308" y="134">x</text><text x="166" y="12">y</text><text x="148" y="154">O</text></g></svg></div>`,
+                ),
+              ),
+            ),
+          ),
+        ],
+      });
+
+      /* ═══════════════════════════════════════════════════════════════
+   CHAPITRE 2 — Généralités sur les suites numériques
+═══════════════════════════════════════════════════════════════ */
+      const suitesGeneralites = () => ({
+        titre: "Notions sur les suites numériques",
+        partie: "Algèbre",
+        resume:
+          "Définition, vocabulaire et notation, façons de définir une suite, variation d’une suite.",
+        topics: [
+          T(
+            "Leçon",
+            pg(
+              S(
+                "1",
+                "Définition",
+                B(
+                  "or",
+                  "Définition",
+                  R`Soit \(n_0\in\mathbb{N}\) et \(I=\{n\in\mathbb{N},\ n\geq n_0\}\). Une <strong>suite numérique</strong> est une fonction \(u : I\to\mathbb{R}\) qui, à chaque entier \(n\in I\), associe un réel noté \(u_n\).`,
+                  R`Autrement dit, c’est une liste de nombres, rangés et numérotés : à l’entier 0 correspond le nombre noté \(u_0\), à l’entier 1 correspond le nombre noté \(u_1\), …, à l’entier \(n\) correspond le nombre noté \(u_n\) (appelé <em>terme de la suite de rang \(n\)</em>). La suite est notée \((u_n)\).`,
+                ),
+              ),
+              S(
+                "2",
+                "Vocabulaire et notation",
+                TB(
+                  ["Mot", "Sens", "Notation"],
+                  [
+                    ["Suite", "La liste complète", R`\((u_n)\)`],
+                    ["Terme", "Un nombre de la liste", R`\(u_n\)`],
+                    ["Rang ou indice", "Le numéro du terme", R`\(n\)`],
+                    [
+                      "Premier terme",
+                      "Le début de la liste",
+                      R`\(u_0\) (ou \(u_1\))`,
+                    ],
+                    [
+                      "Terme général",
+                      R`La formule de \(u_n\)`,
+                      R`\(u_n=\dots\)`,
+                    ],
+                    [
+                      "Terme suivant",
+                      R`Celui qui vient juste après \(u_n\)`,
+                      R`\(u_{n+1}\)`,
+                    ],
+                    [
+                      "Terme précédent",
+                      R`Celui qui vient juste avant \(u_n\)`,
+                      R`\(u_{n-1}\)`,
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "3",
+                "Deux façons de définir une suite",
+                B(
+                  "or",
+                  "Forme explicite",
+                  R`On donne \(u_n\) en fonction de \(n\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(u_n=2n+3\). Alors \(u_0=3\), \(u_1=5\), \(u_2=7\)…`,
+                ),
+                B(
+                  "or",
+                  "Forme récurrente",
+                  "On donne le premier terme et une règle pour passer d’un terme au suivant.",
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(u_0=2\) et \(u_{n+1}=3u_n-1\). Alors \(u_1=5\), \(u_2=14\)…`,
+                ),
+              ),
+              S(
+                "4",
+                "Variation d’une suite",
+                B(
+                  "or",
+                  "Croissante",
+                  R`\((u_n)\) est <strong>croissante</strong> si \(u_{n+1}\geq u_n\) pour tout \(n\) (elle monte ou reste pareille).`,
+                ),
+                B(
+                  "or",
+                  "Décroissante",
+                  R`\((u_n)\) est <strong>décroissante</strong> si \(u_{n+1}\leq u_n\) pour tout \(n\) (elle descend ou reste pareille).`,
+                ),
+                B(
+                  "or",
+                  "Constante",
+                  R`\((u_n)\) est <strong>constante</strong> si \(u_{n+1}=u_n\) pour tout \(n\). Si elle est croissante ou décroissante, on dit qu’elle est <strong>monotone</strong>.`,
+                ),
+                B(
+                  "gr",
+                  "Méthodes pour trouver la variation",
+                  TB(
+                    ["Méthode", "Comment faire", "Conclusion"],
+                    [
+                      [
+                        "La différence",
+                        R`Calculer \(u_{n+1}-u_n\)`,
+                        "Si &gt; 0 : croissante. Si &lt; 0 : décroissante.",
+                      ],
+                      [
+                        "Le quotient (termes tous positifs)",
+                        R`Calculer \(u_{n+1}\div u_n\)`,
+                        "Si &gt; 1 : croissante. Si &lt; 1 : décroissante.",
+                      ],
+                      [
+                        R`La fonction (si \(u_n=f(n)\))`,
+                        R`Étudier \(f\) sur \([0\,;+\infty[\)`,
+                        R`\(f\) croissante ⇒ suite croissante.`,
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          T("Vidéo", pg(S("▶", "Vidéo", VID("")))),
+
+          T(
+            "Exercices",
+            pg(
+              S(
+                "a",
+                "Exercice a) — forme explicite",
+                B(
+                  "gr",
+                  "Énoncé",
+                  R`Soit la suite \((u_n)\) définie pour tout entier \(n\in\mathbb{N}\) par la formule explicite : \(u_n=3n^2-5n+2\).`,
+                  UL(
+                    R`Calculer les termes \(u_0,\ u_1\) et \(u_4\).`,
+                    R`Calculer \(u_{10}\).`,
+                  ),
+                  corr(
+                    R`• \(u_0=3\times0^2-5\times0+2=2\)<br>• \(u_1=3-5+2=0\)<br>• \(u_4=3\times16-20+2=30\)<br>• \(u_{10}=3\times100-50+2=252\)`,
+                    R`Remplacer \(n\) par la valeur demandée dans la formule.`,
+                  ),
+                ),
+              ),
+              S(
+                "b",
+                "Exercice b) — forme récurrente",
+                B(
+                  "gr",
+                  "Énoncé",
+                  R`On considère la suite \((v_n)\) définie par son premier terme \(v_0=1\) et par la relation de récurrence valable pour tout entier \(n\geq0\) : \(v_{n+1}=2v_n+3\).`,
+                  UL(R`Calculer \(v_0,\ v_1\) et \(v_3\).`),
+                  corr(
+                    R`• \(v_0=1\)<br>• \(v_1=2\times1+3=5\)<br>• \(v_2=2\times5+3=13\), puis \(v_3=2\times13+3=29\)`,
+                    R`Il faut calculer \(v_1\), puis \(v_2\), pour obtenir \(v_3\).`,
+                  ),
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "c",
+                "Exercice c) — sens de variation",
+                B(
+                  "gr",
+                  "Énoncé",
+                  R`Soit la suite \((w_n)\) définie pour tout \(n\in\mathbb{N}\) par : \(w_n=\dfrac{2n+1}{n+2}\).`,
+                  UL(
+                    R`Calculer \(w_0\) et \(w_1\).`,
+                    R`Étudier le sens de variation de la suite \((w_n)\) en calculant la différence \(w_{n-1}-w_n\).`,
+                  ),
+                  corr(
+                    R`• \(w_0=\dfrac12\) et \(w_1=\dfrac33=1\).<br>
+              Pour \(n\geq1\) : \(w_{n-1}=\dfrac{2n-1}{n+1}\), donc<br>
+              \(w_{n-1}-w_n=\dfrac{(2n-1)(n+2)-(2n+1)(n+1)}{(n+1)(n+2)}=\dfrac{-3}{(n+1)(n+2)}\).<br>
+              Cette différence est <b>négative</b> : \(w_{n-1}<w_n\) pour tout \(n\geq1\). La suite \((w_n)\) est donc <b>croissante</b>.`,
+                    R`Réduire au même dénominateur, puis étudier le signe du numérateur et du dénominateur.`,
+                    true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Quiz",
+            pg(
+              S(
+                "★",
+                "Quiz",
+                qz(
+                  1,
+                  R`Pour \(u_n=2n+3\), que vaut \(u_2\) ?`,
+                  ["5", "7", "9"],
+                  1,
+                  R`\(u_2=2\times2+3=7\).`,
+                ),
+                qz(
+                  2,
+                  R`\(u_0=2\) et \(u_{n+1}=3u_n-1\). Que vaut \(u_1\) ?`,
+                  ["5", "6", "−1"],
+                  0,
+                  R`\(u_1=3\times2-1=5\).`,
+                ),
+                qz(
+                  3,
+                  R`Si \(u_{n+1}-u_n>0\) pour tout \(n\), la suite est…`,
+                  ["décroissante", "constante", "croissante"],
+                  2,
+                  "Une différence positive signifie que chaque terme est plus grand que le précédent.",
+                ),
+                qz(
+                  4,
+                  "Dans quelle méthode faut-il que tous les termes soient positifs ?",
+                  [
+                    "La différence",
+                    R`Le quotient \(u_{n+1}\div u_n\)`,
+                    R`L’étude de la fonction \(f\)`,
+                  ],
+                  1,
+                  "On compare le quotient à 1 : cela suppose des termes positifs.",
+                ),
+              ),
+            ),
+          ),
+        ],
+      });
+
+      /* ═══════════════════════════════════════════════════════════════
+   CHAPITRE 3 — Suites arithmétiques et suites géométriques
+═══════════════════════════════════════════════════════════════ */
+      const suitesArithGeo = () => ({
+        titre: "Suites arithmétiques et suites géométriques",
+        partie: "Algèbre",
+        resume:
+          "Activité KFC, suites arithmétiques, suites géométriques, convergence et exercices.",
+        topics: [
+          T(
+            "Activité KFC",
+            pg(
+              SK(
+                "✦",
+                "Rendez-vous au KFC !",
+                `<div class="kp" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+             <div style="display:flex;align-items:center;gap:10px"><img src="KFC_logo.png" alt="Logo KFC" onerror="this.style.display='none'" style="height:54px"><div><div style="font-weight:900;font-size:2rem;color:#ed1c24;font-style:italic;line-height:1">KFC</div><small style="font-weight:700;color:#6b7280">Bucket &amp; Maths · Problème de financement – 1ère S</small></div></div>
+             <img src="KFC.jpg" alt="Menu KFC" onerror="this.style.display='none'" style="height:64px;border-radius:10px;border:2px solid #ed1c24;object-fit:cover">
+           </div>
+           <div class="kn"><b>💡 Le saviez-vous ?</b> Le sigle <strong>KFC</strong> signifie <em>Kentucky Fried Chicken</em>. Cette chaîne de restauration rapide est originaire des <strong>États-Unis</strong> 🇺🇸. Elle a été fondée au milieu du XXe siècle par le Colonel Harland Sanders, célèbre pour sa recette secrète aux 11 herbes et aromates !</div>
+           <div class="kp"><h3>Le contexte</h3>
+             <p>À chaque vacance, les élèves de la classe de première S organisent un grand goûter. Pour Pâques, direction le <strong>KFC</strong> !</p>
+             <p style="margin-top:6px">Vu les tarifs, les chefs de classe lancent une cotisation mensuelle à la caisse d’épargne. La cotisation initiale en Janvier est de <strong>20 000 Ar</strong>.</p>
+             <p style="margin-top:6px;font-weight:800">Deux options d’augmentation sont proposées pour les mois suivants :</p>
+             <ul style="list-style:none;padding:10px;margin-top:6px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px">
+               <li><span style="background:#ed1c24;color:#fff;padding:2px 8px;border-radius:6px;font-weight:900;font-size:.75rem">A</span> <strong>Proposition A :</strong> Augmentation fixe de 1 500 Ar par mois.</li>
+               <li style="margin-top:6px"><span style="background:#ed1c24;color:#fff;padding:2px 8px;border-radius:6px;font-weight:900;font-size:.75rem">B</span> <strong>Proposition B :</strong> Augmentation de 15 % par mois.</li>
+             </ul></div>`,
+              ),
+              SK(
+                "1",
+                "Calcul des cotisations",
+                `<div class="kp"><p style="font-style:italic;color:#6b7280;margin-bottom:10px">Calculez les montants pour Février, Mars et Avril (arrondir à l’entier le plus proche pour la proposition B).</p>
+           <form onsubmit="event.preventDefault();checkTable();"><div class="ov"><table>
+             <thead><tr><th>Mois</th><th>Proposition A<br><small>(+1500 Ar)</small></th><th>Proposition B<br><small>(+15%)</small></th></tr></thead>
+             <tbody>
+               <tr style="background:#f3f4f6"><td>Janvier (Initial)</td><td style="color:#ed1c24">20 000</td><td style="color:#ed1c24">20 000</td></tr>
+               <tr><td>Février</td><td><input type="number" id="val_A_fev" placeholder="?"></td><td><input type="number" id="val_B_fev" placeholder="?"></td></tr>
+               <tr><td>Mars</td><td><input type="number" id="val_A_mars" placeholder="?"></td><td><input type="number" id="val_B_mars" placeholder="?"></td></tr>
+               <tr><td>Avril</td><td><input type="number" id="val_A_avril" placeholder="?"></td><td><input type="number" id="val_B_avril" placeholder="?"></td></tr>
+             </tbody></table></div>
+           <div style="text-align:center;margin-top:12px"><button type="submit" class="kb">Vérifier mes calculs</button><div id="tableFeedback" class="kfb hidden"></div></div></form></div>`,
+              ),
+            ),
+            pg(
+              SK(
+                "2",
+                "Observation & comparaison",
+                `<div class="kp"><form onsubmit="event.preventDefault();checkAnalysis();">
+             <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px;margin-bottom:12px">
+               <h3 style="color:#b91c1c">Mode d’évolution</h3>
+               <p style="font-weight:800;margin:6px 0 4px">Pour la Proposition A, on passe d’un mois à l’autre par une…</p>
+               <select id="q2_evolA"><option value="">-- Choisir --</option><option value="add">Addition (Suite Arithmétique)</option><option value="mult">Multiplication (Suite Géométrique)</option></select>
+               <p style="font-weight:800;margin:10px 0 4px">Pour la Proposition B, on passe d’un mois à l’autre par une…</p>
+               <select id="q2_evolB"><option value="">-- Choisir --</option><option value="add">Addition (Suite Arithmétique)</option><option value="mult">Multiplication (Suite Géométrique)</option></select>
+             </div>
+             <h3 style="color:#b91c1c">Le choix stratégique</h3>
+             <p style="margin:6px 0">Regardez les montants au bout de 4 mois. Si les élèves arrêtent de cotiser <strong>avant 4 mois</strong> (court terme), quelle proposition leur coûte le moins cher (montants plus faibles) ?</p>
+             <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:10px 0">
+               <label class="kopt"><input type="radio" name="strategy" value="A" style="width:auto"> Proposition A</label>
+               <label class="kopt"><input type="radio" name="strategy" value="B" style="width:auto"> Proposition B</label>
+             </div>
+             <button type="submit" class="kb" style="width:100%;border-radius:12px">Valider l’analyse</button><div id="analysisFeedback" class="kfb hidden"></div>
+           </form></div>`,
+              ),
+              SK(
+                "3",
+                "Prévision long terme (10 mois)",
+                `<div class="kdark"><span style="float:right;background:#facc15;color:#000;font-weight:900;padding:2px 10px;border-radius:6px;transform:rotate(6deg)">Niveau Expert</span>
+             <h3>Prévision long terme (10 mois)</h3>
+             <p style="margin:6px 0 10px;color:#d1d5db;font-size:.9rem">Peut-on prévoir la cotisation du 10ème mois sans tout calculer ?</p>
+             <p style="font-weight:800;margin-bottom:4px;font-size:.9rem">Quelle formule utiliseriez-vous pour la Proposition A (Arithmétique) ?</p>
+             <select id="q4_formula" style="color:#000;border:none"><option value="">-- Choisir la formule --</option><option value="geo">Un = U0 × q^n</option><option value="ari">Un = U0 + n × r</option><option value="sum">S = (n+1) × (U0+Un)/2</option></select>
+             <button type="button" onclick="checkBonus()" style="margin-top:10px;width:100%;background:#facc15;color:#000;font-weight:900;border-radius:8px;padding:8px">Vérifier le concept</button>
+             <div id="bonusFeedback" class="hidden" style="margin-top:8px;text-align:center;font-weight:800"></div></div>`,
+              ),
+            ),
+          ),
+
+          T(
+            "Suites arithmétiques",
+            pg(
+              S(
+                "1.1",
+                "Définition",
+                B(
+                  "or",
+                  "Définition",
+                  R`On dit qu’une suite \((u_n)\) est arithmétique si on passe d’un terme au suivant en ajoutant toujours le même nombre réel \(r\).`,
+                  R`\(\boxed{u_{n+1}=u_n+r}\)`,
+                  R`Le réel \(r\) est alors appelé raison de la suite.`,
+                ),
+                B(
+                  "bl",
+                  "Exemples",
+                  R`1. La suite \(1,\ 6,\ 11,\ 16,\ 21,\dots\) est arithmétique de raison \(5\).`,
+                  R`2. La suite des entiers naturels \(0,\ 1,\ 2,\ 3,\ 4,\ 5,\dots\) est arithmétique de raison \(1\).`,
+                  R`3. La suite des entiers naturels impairs est arithmétique de raison \(2\).`,
+                ),
+                B(
+                  "or",
+                  "Propriété",
+                  R`Une suite \((u_n)\) est arithmétique si et seulement si la différence \(u_{n+1}-u_n\) est une constante pour tout entier \(n\). Dans ce cas, la constante trouvée est la raison de la suite.`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(u_n=5n-2\) : \(u_{n+1}-u_n=5(n+1)-2-(5n-2)=5\) (constante).`,
+                  R`Suite arithmétique de raison \(r=5\) et \(u_0=-2\).`,
+                ),
+                B(
+                  "or",
+                  "Termes consécutifs",
+                  R`Trois termes consécutifs \(u_{n-1},\ u_n,\ u_{n+1}\) d’une suite arithmétique vérifient \(\boxed{2u_n=u_{n-1}+u_{n+1}}\).`,
+                ),
+              ),
+              S(
+                "1.2",
+                "Variations d’une suite arithmétique",
+                P(R`Soit \((u_n)\) une suite arithmétique de raison \(r\).`),
+                B(
+                  "gr",
+                  "Variation",
+                  R`– Si \(r>0\), alors la suite \((u_n)\) est croissante.`,
+                  R`– Si \(r<0\), alors la suite \((u_n)\) est décroissante.`,
+                  R`– Si \(r=0\), alors la suite \((u_n)\) est constante.`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "1.3",
+                "Expression en fonction de \\(n\\)",
+                P(
+                  R`Soit \((u_n)\) une suite arithmétique de raison \(r\). On a :`,
+                ),
+                B(
+                  "bl",
+                  "Calcul des premiers termes",
+                  R`\(u_1=u_0+r\)`,
+                  R`\(u_2=u_1+r=(u_0+r)+r=u_0+2r\)`,
+                  R`\(u_3=u_2+r=(u_0+2r)+r=u_0+3r\)`,
+                ),
+                B(
+                  "or",
+                  "Théorème",
+                  R`Généralement : \(\boxed{u_n=u_0+nr}\).`,
+                  R`Si \((u_n)\) est une suite arithmétique de raison \(r\) et si \(n\) et \(p\) sont deux entiers naturels : \(\boxed{u_n=u_p+(n-p)\,r}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Soit \((u_n)\) la suite arithmétique de premier terme \(u_0=5\) et de raison \((-1)\).`,
+                  R`On a : \(u_n=u_0+nr=5+n\times(-1)=5-n\). En particulier : \(u_{50}=5-50=-45\).`,
+                ),
+                B("pu", "Vidéo", VID("")),
+              ),
+              S(
+                "1.4",
+                "Somme des termes consécutifs",
+                P(
+                  R`Soit \((u_n)\) une suite arithmétique de raison \(r\). On note \(S_n\) la somme des \((n+1)\) premiers termes de la suite \((u_n)\), c’est-à-dire : \(S_n=u_0+u_1+\cdots+u_n\)`,
+                ),
+                B(
+                  "or",
+                  "Formule",
+                  R`\(S_n=\text{nombre de termes}\times\dfrac{\text{premier terme}+\text{dernier terme}}{2}\)`,
+                  R`\(\boxed{S_n=(n+1)\times\dfrac{u_0+u_n}{2}}\)`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Somme des entiers de \(0\) à \(100\) : \(u_n=n\), \(S_{100}=101\times\dfrac{0+100}{2}=5050\).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "✎",
+                "Exercices",
+                B(
+                  "gr",
+                  "Exercice 1",
+                  R`Soit \(u_n=3n-5\).`,
+                  UL(
+                    R`Calcule \(u_0,\ u_1,\ u_2\).`,
+                    R`Écris \(u_{n+1}\) en remplaçant \(n\) par \(n+1\).`,
+                    R`Calcule \(u_{n+1}-u_n\).`,
+                    "Conclus : nature, raison, variation.",
+                  ),
+                  corr(
+                    R`1. \(u_0=-5\), \(u_1=-2\), \(u_2=1\).<br>2. \(u_{n+1}=3(n+1)-5=3n-2\).<br>3. \(u_{n+1}-u_n=(3n-2)-(3n-5)=3\) (constante).<br>4. La suite est <b>arithmétique</b> de raison \(r=3\) ; comme \(r>0\), elle est <b>croissante</b>.`,
+                    R`Pour la question 3, la différence ne doit plus dépendre de \(n\).`,
+                    true,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 2",
+                  R`\(u_0=1\) et \(u_{n+1}=2u_n+3\). Calculer \(u_1,\ u_2,\ u_3\). La suite est-elle arithmétique ?`,
+                  corr(
+                    R`\(u_1=5\), \(u_2=13\), \(u_3=29\).<br>\(u_1-u_0=4\) et \(u_2-u_1=8\) : les différences ne sont pas égales, la suite n’est <b>pas arithmétique</b>.`,
+                    "Comparer les différences successives.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 3",
+                  "Trois nombres sont en progression arithmétique. Leur somme est 15 et leur produit est 105. Trouver ces nombres.",
+                  corr(
+                    R`On note \(a-r,\ a,\ a+r\). La somme donne \(3a=15\), donc \(a=5\).<br>Le produit donne \(5(25-r^2)=105\), donc \(r^2=4\), \(r=\pm2\).<br>Les nombres sont <b>3, 5 et 7</b>.`,
+                    R`Poser les trois nombres sous la forme \(a-r,\ a,\ a+r\).`,
+                  ),
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "★",
+                "Quiz",
+                qz(
+                  1,
+                  R`La suite \(4,\ 9,\ 14,\ 19,\dots\) est arithmétique de raison :`,
+                  ["4", "5", "9"],
+                  1,
+                  "On passe d’un terme au suivant en ajoutant 5.",
+                ),
+                qz(
+                  2,
+                  R`La suite \(u_n=7-2n\) est :`,
+                  ["croissante", "décroissante", "constante"],
+                  1,
+                  R`C’est une suite arithmétique de raison \(r=-2<0\) : elle est décroissante.`,
+                ),
+                qz(
+                  3,
+                  R`\((u_n)\) est arithmétique avec \(u_0=3\) et \(r=2\). Que vaut \(u_{10}\) ?`,
+                  ["23", "21", "32"],
+                  0,
+                  R`\(u_{10}=u_0+10r=3+20=23\).`,
+                ),
+                qz(
+                  4,
+                  R`Avec \(u_n=n\), que vaut \(S_4=u_0+u_1+u_2+u_3+u_4\) ?`,
+                  ["10", "15", "20"],
+                  0,
+                  R`\(S_4=(4+1)\times\dfrac{0+4}{2}=10\).`,
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Suites géométriques",
+            pg(
+              S(
+                "2.1",
+                "Définition",
+                B(
+                  "or",
+                  "Définition",
+                  R`On dit qu’une suite \((u_n)\) est géométrique si on passe d’un terme au suivant en multipliant toujours par le même nombre réel \(q\).`,
+                  R`\(\boxed{u_{n+1}=q\times u_n}\)`,
+                  R`Le réel \(q\) est alors appelé raison de la suite.`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`La suite \(1,\ 2,\ 4,\ 8,\ 16,\dots\) est géométrique de raison \(2\).`,
+                ),
+                B(
+                  "or",
+                  "Propriété",
+                  R`Une suite \((u_n)\) est géométrique si et seulement si le quotient \(\dfrac{u_{n+1}}{u_n}\) est constant pour tout entier \(n\). Dans ce cas, la constante trouvée est la raison de la suite.`,
+                ),
+              ),
+              S(
+                "2.2",
+                "Variation d’une suite géométrique",
+                P(
+                  R`Soit \((u_n)\) une suite géométrique de raison \(q\) et de premier terme \(u_0>0\).`,
+                ),
+                B(
+                  "gr",
+                  "Variation",
+                  R`– Si \(q>1\), alors la suite \((u_n)\) est croissante.`,
+                  R`– Si \(q=1\), la suite \((u_n)\) est constante.`,
+                  R`– Si \(0<q<1\), alors la suite \((u_n)\) est décroissante.`,
+                  R`<small>(Si \(u_0<0\), les sens de variation sont inversés ; si \(q<0\), la suite n’est pas monotone.)</small>`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Soit \(u\) une suite géométrique de premier terme \(u_0=2\) et \(q=0{,}2\). Quel est son sens de variation ?`,
+                  R`Comme \(0<0{,}2<1\), la suite est strictement décroissante.`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "2.3",
+                "Expression en fonction de \\(n\\)",
+                P(
+                  R`Soit \((u_n)\) une suite géométrique de raison \(q\). On a :`,
+                ),
+                B(
+                  "bl",
+                  "Calcul des premiers termes",
+                  R`\(u_1=u_0\times q\)`,
+                  R`\(u_2=u_1\times q=u_0\times q^2\)`,
+                  R`\(u_3=u_2\times q=u_0\times q^3\)`,
+                ),
+                B(
+                  "or",
+                  "Théorème",
+                  R`Soit \((u_n)\) une suite géométrique de raison \(q\). Alors : \(\boxed{u_n=u_0\times q^n}\)`,
+                  R`Plus généralement, si \(n\) et \(p\) sont deux entiers naturels : \(\boxed{u_n=u_p\times q^{n-p}}\).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`Soit \((u_n)\) la suite géométrique de premier terme \(u_0=3\) et de raison \(2\).`,
+                  R`On a : \(u_n=u_0\times q^n=3\times2^n\). En particulier : \(u_5=3\times2^5=96\).`,
+                ),
+              ),
+              S(
+                "2.4",
+                "Somme de termes consécutifs",
+                P(
+                  R`Soit \((u_n)\) une suite géométrique de raison \(q\) (avec \(q\neq1\)). On note \(S_n\) la somme des \((n+1)\) premiers termes : \(S_n=u_0+u_1+\cdots+u_n\)`,
+                ),
+                B(
+                  "or",
+                  "Formule",
+                  R`\(S=(\text{premier terme})\times\dfrac{1-q^{\,\text{nombre de termes}}}{1-q}\)`,
+                  R`\(\boxed{S_n=u_0\times\dfrac{1-q^{\,n+1}}{1-q}}\)`,
+                  R`Plus généralement : \(S=u_p\times\dfrac{1-q^{\,n-p+1}}{1-q}\), où le nombre de termes est \(n-p+1\) (indice du dernier terme − indice du premier terme + 1).`,
+                ),
+                B(
+                  "bl",
+                  "Exemple",
+                  R`\(1+2+4+\cdots+2^{10}\) : \(u_0=1\), \(q=2\), \(n=10\).`,
+                  R`\(S_{10}=1\times\dfrac{1-2^{11}}{1-2}=2047\).`,
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Convergence d’une suite",
+            pg(
+              S(
+                "3",
+                "Comportement quand \\(n\\) devient très grand",
+                TB(
+                  ["Suite", "Cas", "Ce qui se passe"],
+                  [
+                    [
+                      "Arithmétique",
+                      R`\(r>0\)`,
+                      R`\(u_n\) devient énorme : \(u_n\to+\infty\)`,
+                    ],
+                    [
+                      "Arithmétique",
+                      R`\(r<0\)`,
+                      R`\(u_n\) devient très négatif : \(u_n\to-\infty\)`,
+                    ],
+                    ["Arithmétique", R`\(r=0\)`, R`\(u_n\) ne bouge pas`],
+                    [
+                      R`Géométrique (\(u_0>0\))`,
+                      R`\(q>1\)`,
+                      R`\(u_n\to+\infty\)`,
+                    ],
+                    [
+                      R`Géométrique (\(u_0>0\))`,
+                      R`\(-1<q<1\)`,
+                      R`\(u_n\) se rapproche de 0 : \(u_n\to0\)`,
+                    ],
+                    [
+                      R`Géométrique (\(u_0>0\))`,
+                      R`\(q=1\)`,
+                      R`\(u_n\) ne bouge pas`,
+                    ],
+                    [
+                      R`Géométrique (\(u_0>0\))`,
+                      R`\(q\leq-1\)`,
+                      R`\(u_n\) saute de plus en plus fort entre positif et négatif : pas de limite`,
+                    ],
+                  ],
+                ),
+                P(
+                  R`On regarde où va \(u_n\) quand \(n\) devient de plus en plus grand (on écrit \(n\to+\infty\)).`,
+                ),
+              ),
+              S(
+                "3.1",
+                "Suite convergente, suite divergente",
+                B(
+                  "or",
+                  "Suite convergente",
+                  R`Si \(u_n\) se rapproche d’un nombre réel \(\ell\) (aussi près qu’on veut) quand \(n\) devient très grand, on dit que \((u_n)\) converge vers \(\ell\).`,
+                  R`On écrit : \(\boxed{\lim\limits_{n\to+\infty}u_n=\ell}\). Le nombre \(\ell\) s’appelle la limite.`,
+                ),
+                B(
+                  "or",
+                  "Limite infinie",
+                  R`Si \(u_n\) devient plus grand que n’importe quel nombre, on écrit \(\lim u_n=+\infty\). Si \(u_n\) devient plus petit que n’importe quel nombre (très négatif), on écrit \(\lim u_n=-\infty\).`,
+                ),
+                B(
+                  "or",
+                  "Suite divergente",
+                  R`Une suite qui ne converge pas est divergente : soit sa limite est \(+\infty\) ou \(-\infty\), soit elle n’a pas de limite (comme \((-1)^n\)).`,
+                ),
+              ),
+            ),
+            pg(
+              S(
+                "★",
+                "À retenir",
+                B(
+                  "gr",
+                  "À retenir",
+                  "• La limite, si elle existe, est unique.",
+                  R`• Converger vers \(\ell\) ne veut pas dire atteindre \(\ell\) : par exemple \(\dfrac1n\) se rapproche de \(0\) sans jamais l’atteindre.`,
+                  R`• Une suite convergente a une limite finie ; une limite égale à \(+\infty\) ou \(-\infty\) est une suite divergente.`,
+                ),
+              ),
+            ),
+          ),
+
+          T(
+            "Exercices de synthèse",
+            pg(
+              S(
+                "✎",
+                "Exercices",
+                B(
+                  "gr",
+                  "Exercice 1",
+                  R`Soit \(v_0=4\) et \(v_{n+1}=\tfrac12v_n\).`,
+                  UL(
+                    R`Calcule \(v_1,\ v_2,\ v_3\).`,
+                    "Quelle est la nature de la suite ? Quelle est sa raison ?",
+                    R`Écris \(v_n\) en fonction de \(n\), puis calcule \(v_{10}\).`,
+                    R`Variation ? Que devient \(v_n\) quand \(n\) devient très grand ?`,
+                  ),
+                  corr(
+                    R`1. \(v_1=2\), \(v_2=1\), \(v_3=0{,}5\).<br>2. On multiplie toujours par \(\tfrac12\) : suite <b>géométrique</b> de raison \(q=\tfrac12\).<br>3. \(v_n=4\times\left(\tfrac12\right)^n\) ; \(v_{10}=\dfrac{4}{1024}=\dfrac1{256}\).<br>4. \(0<q<1\) et \(v_0>0\) : la suite est décroissante, et \(v_n\to0\) (elle converge vers 0).`,
+                    R`Chaque terme est la moitié du précédent.`,
+                    true,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 2",
+                  R`\(u_n=2n^2-1\). Calculer \(u_0,\ u_1,\ u_2,\ u_3\), puis \(u_{n+1}\).`,
+                  corr(
+                    R`\(u_0=-1\), \(u_1=1\), \(u_2=7\), \(u_3=17\).<br>\(u_{n+1}=2(n+1)^2-1=2n^2+4n+1\).`,
+                    R`Développer \((n+1)^2\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 3",
+                  R`Déterminer la nature de chaque suite : a) \(u_n=4n+1\) ; b) \(v_n=7-2n\) ; c) \(w_n=5\times3^n\) ; d) \(t_n=n^2\).`,
+                  corr(
+                    R`a) arithmétique, \(r=4\) ; b) arithmétique, \(r=-2\) ; c) géométrique, \(q=3\) ;<br>d) \(t_0=0,\ t_1=1,\ t_2=4,\ t_3=9\) : différences \(1,3,5\) non constantes, et pas de quotient constant : <b>ni arithmétique ni géométrique</b>.`,
+                    "Une formule en \\(an+b\\) est arithmétique, une formule en \\(a\\times q^n\\) est géométrique.",
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 4",
+                  R`\((u_n)\) est arithmétique avec \(u_2=7\) et \(u_5=19\). Trouver \(r\), \(u_0\), \(u_n\), puis \(u_{20}\).`,
+                  corr(
+                    R`\(u_5=u_2+3r\Rightarrow19=7+3r\Rightarrow r=4\).<br>\(u_0=u_2-2r=7-8=-1\).<br>\(u_n=-1+4n\) et \(u_{20}=-1+80=79\).`,
+                    R`Utiliser \(u_n=u_p+(n-p)r\).`,
+                  ),
+                ),
+                B(
+                  "gr",
+                  "Exercice 5",
+                  R`\((v_n)\) est géométrique de raison positive avec \(v_1=6\) et \(v_3=54\). Trouver \(q\), \(v_0\), \(v_n\), puis \(v_5\).`,
+                  corr(
+                    R`\(v_3=v_1\times q^2\Rightarrow q^2=9\), et \(q>0\) donc \(q=3\).<br>\(v_0=\dfrac{v_1}{q}=2\).<br>\(v_n=2\times3^n\) et \(v_5=2\times243=486\).`,
+                    R`Utiliser \(v_n=v_p\times q^{n-p}\).`,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      });
+
+      /* ═══════════════ ROUTES : "classe:n" (lien de classe.html) → chapitre ═══════════════ */
+      const ROUTES = {
+        "1ere-S:1": fonctions, // 1ère S   › Analyse › Fonction numérique d'une variable réelle
+        "1ere-S:11": suitesGeneralites, // 1ère S   › Algèbre › Généralités sur les suites numériques
+        "1ere-L:5": suitesGeneralites, // 1ère L   › Algèbre › Suites numériques
+        "1ere-OSE:6": suitesGeneralites, // 1ère OSE › Algèbre › Généralités sur les suites numériques
+        "1ere-S:12": suitesArithGeo, // 1ère S   › Algèbre › Suites arithmétiques et géométriques
+        "1ere-L:6": suitesArithGeo, // 1ère L   › Algèbre › Suites arithmétiques et suites géométriques
+        "1ere-OSE:7": suitesArithGeo, // 1ère OSE › Algèbre › Suites arithmétiques/Suites géométriques
+      };
+
+      /* ═══════════════ ACTIVITÉ KFC : vérifications ═══════════════ */
+      function validateInput(id, expected) {
+        const el = document.getElementById(id);
+        const val = parseInt(String(el.value).replace(/\s/g, ""));
+        const ok = val === expected;
+        el.classList.toggle("correct", ok);
+        el.classList.toggle("incorrect", !ok);
+        return ok;
+      }
+      function kfcMsg(id, ok, html) {
+        const fb = document.getElementById(id);
+        fb.classList.remove("hidden", "good", "bad");
+        fb.classList.add(ok ? "good" : "bad");
+        fb.innerHTML = html;
+      }
+      function checkTable() {
+        let ok = true;
+        [
+          ["val_A_fev", 21500],
+          ["val_A_mars", 23000],
+          ["val_A_avril", 24500],
+          ["val_B_fev", 23000],
+          ["val_B_mars", 26450],
+        ].forEach(([id, v]) => {
+          if (!validateInput(id, v)) ok = false;
+        });
+        const el = document.getElementById("val_B_avril"),
+          v = parseInt(el.value);
+        const okB = v >= 30417 && v <= 30418;
+        el.classList.toggle("correct", okB);
+        el.classList.toggle("incorrect", !okB);
+        if (!okB) ok = false;
+        kfcMsg(
+          "tableFeedback",
+          ok,
+          ok
+            ? "Parfait ! Les calculs sont exacts. On voit déjà une différence se creuser…"
+            : "Il y a des erreurs. Vérifiez : A (+1500) et B (×1,15).",
+        );
+      }
+      function checkAnalysis() {
+        let good = true;
+        const a = document.getElementById("q2_evolA"),
+          b = document.getElementById("q2_evolB");
+        const okA = a.value === "add",
+          okB = b.value === "mult";
+        a.classList.toggle("correct", okA);
+        a.classList.toggle("incorrect", !okA);
+        b.classList.toggle("correct", okB);
+        b.classList.toggle("incorrect", !okB);
+        if (!okA || !okB) good = false;
+        const r = document.querySelector('input[name="strategy"]:checked'),
+          s = r ? r.value : "";
+        if (good && s === "A")
+          kfcMsg(
+            "analysisFeedback",
+            true,
+            "Excellent !<br>La proposition A est une suite <strong>arithmétique</strong> (addition).<br>La proposition B est une suite <strong>géométrique</strong> (multiplication).<br>Sur le court terme, la A monte moins vite !",
+          );
+        else if (s === "B")
+          kfcMsg(
+            "analysisFeedback",
+            false,
+            "Attention à la stratégie : regardez les chiffres. La proposition B monte beaucoup plus vite (exponentielle). Pour payer moins cher au début, il vaut mieux choisir la A.",
+          );
+        else
+          kfcMsg(
+            "analysisFeedback",
+            false,
+            "Vérifiez vos réponses sur le type d’évolution (addition ou multiplication) et choisissez une proposition.",
+          );
+      }
+      function checkBonus() {
+        const fb = document.getElementById("bonusFeedback"),
+          ok = document.getElementById("q4_formula").value === "ari";
+        fb.classList.remove("hidden");
+        fb.style.color = ok ? "#4ade80" : "#f87171";
+        fb.textContent = ok
+          ? "Exactement ! Pour une suite arithmétique : Un = U0 + n × r."
+          : "Pas tout à fait. La proposition A ajoute une constante : c’est une suite arithmétique.";
+      }
+
+      /* ═══════════════ RENDU ═══════════════ */
+      const $ = (id) => document.getElementById(id);
+      const tex = (el) => {
+        try {
+          if (window.MathJax && MathJax.typesetPromise)
+            MathJax.typesetPromise(el ? [el] : undefined).catch(() => {});
+        } catch (e) {}
+      };
+      const params = new URLSearchParams(location.search);
+      const classe = params.get("classe") || "";
+      const n = Number(params.get("n")) || 0;
+      const nomClasse = NOMS_CLASSES[classe] || "Mathématiques";
+      const retour = `classe.html#${encodeURIComponent(classe)}`;
+      const builder = ROUTES[classe + ":" + n];
+
+      const fil = (dernier) => `
+  <nav class="text-sm font-bold text-primary/60 mb-6" aria-label="Fil d'Ariane">
+    <a href="index.html" class="hover:text-primary">Accueil</a><span class="mx-1">›</span>
+    <a href="${retour}" class="hover:text-primary">${nomClasse}</a><span class="mx-1">›</span>
+    <span class="text-primary">${dernier}</span>
+  </nav>`;
+
+      if (!builder) {
+        document.title = "Chapitre bientôt disponible — MATEMATIKUP";
+        $("page").innerHTML =
+          `<div class="max-w-4xl mx-auto">${fil("Chapitre " + (n || ""))}
+    <div class="rounded-3xl border border-primary/10 bg-white p-10 text-center shadow-xl shadow-primary/5">
+      <p class="text-5xl mb-4">🛠️</p>
+      <h1 class="font-black text-3xl"> Les contenus arrivent bientôt</h1>
+      <p class="mt-3 text-primary-dark/65">Le contenu du chapitre ${n || ""} de la ${nomClasse} est en cours de mise à jour.</p>
+      <a href="${retour}" class="mt-6 inline-block rounded-xl bg-secondary hover:bg-secondary-dark px-6 py-3 font-black text-white transition-colors">← Retour au programme</a>
+    </div></div>`;
+      } else {
+        const fiche = builder();
+        document.title = fiche.titre + " — " + nomClasse + " — MATEMATIKUP";
+
+        // Aplatit : rubriques → pages → sections (avec identifiants)
+        const pages = [],
+          topics = [];
+        let cnt = 0;
+        fiche.topics.forEach((t, ti) => {
+          topics.push({ titre: t.titre, first: pages.length, subs: [] });
+          t.pages.forEach((sections) => {
+            const pi = pages.length;
+            sections.forEach((s) => {
+              s.id = "s" + ++cnt;
+              topics[ti].subs.push({ id: s.id, t: s.t, pi });
+            });
+            pages.push({ ti, sections });
+          });
+        });
+
+        const sectionHtml = (s) =>
+          s.kfc
+            ? `<div class="sec kfc"><h2 id="${s.id}"><i>${s.n}</i>${s.t}</h2>${s.h}</div>`
+            : `<div class="sec"><h2 id="${s.id}" class="ttl"><i>${s.n}</i><span>${s.t}</span></h2>${s.h}</div>`;
+
+        const pagesHtml = pages
+          .map(
+            (p, i) => `
+    <section class="pg${i === 0 ? " on" : ""}" data-t="${p.ti}">
+      <article>${p.sections.map(sectionHtml).join("")}
+        <div class="pn"><button type="button" data-go="-1"${i === 0 ? " disabled" : ""}>‹ Précédent</button><button type="button" data-go="1"${i === pages.length - 1 ? " disabled" : ""}>Suivant ›</button></div>
+      </article>
+      <aside><div class="on2"><b>Sur cette page</b>${p.sections.map((s) => `<br>${s.n} · ${s.t}`).join("")}</div></aside>
+    </section>`,
+          )
+          .join("");
+
+        const navHtml =
+          `<h4>Contenus</h4>` +
+          topics
+            .map(
+              (t, ti) =>
+                `<button type="button" class="t${ti === 0 ? " on" : ""}" data-t="${ti}" data-p="${t.first}">► ${t.titre}</button>
+     <div class="sub">${t.subs.map((s) => `<a data-p="${s.pi}" data-h="${s.id}">${s.t}</a>`).join("")}</div>`,
+            )
+            .join("");
+
+        $("page").innerHTML = `
+    ${fil(fiche.titre)}
+    <section>
+      <p class="text-sm font-black uppercase tracking-widest text-secondary">${nomClasse} · ${fiche.partie}</p>
+      <h1 class="mt-2 font-black text-3xl md:text-4xl leading-tight">${fiche.titre}</h1>
+      <p class="mt-3 text-primary-dark/65">${fiche.resume}</p>
+    </section>
+    <div id="grid" class="mt-6 grid gap-5 md:grid-cols-[260px_minmax(0,1fr)] md:items-start">
+      <nav id="nav" class="sbn" aria-label="Sous-chapitres">${navHtml}</nav>
+      <div class="min-w-0">${pagesHtml}</div>
+    </div>
+    <div class="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-primary/10 pt-6">
+      <a href="chapitre.html?classe=${encodeURIComponent(classe)}&n=${n - 1}" class="${n > 1 ? "" : "pointer-events-none opacity-30"} rounded-xl border-2 border-primary px-5 py-2.5 text-sm font-black text-primary hover:bg-primary/5 transition-colors">← Chapitre précédent</a>
+      <a href="${retour}" class="text-sm font-black text-primary/70 hover:text-primary">Retour au programme</a>
+      <a href="chapitre.html?classe=${encodeURIComponent(classe)}&n=${n + 1}" class="rounded-xl bg-secondary hover:bg-secondary-dark px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-secondary/25 transition-colors">Chapitre suivant →</a>
+    </div>`;
+
+        // Zones « réponse / indice / correction »
+        document.querySelectorAll(".corr").forEach((c) => {
+          c.innerHTML = `<label>Ma réponse</label><textarea class="ta${c.classList.contains("tall") ? " tall" : ""}" placeholder="Écris ta réponse ici…"></textarea>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <button type="button" class="bt" style="background:#2FD9A8;color:#272275" data-a="v">Valider la réponse</button>
+        <button type="button" class="bt" style="background:#FF5A36;color:#fff" data-a="i">Indice</button>
+        <button type="button" class="bt" style="background:#3730A3;color:#fff" data-a="c">Correction</button></div>
+      <div class="msg hidden" role="status"></div>`;
+        });
+
+        let cur = 0;
+        const pgs = [...document.querySelectorAll(".pg")],
+          links = [...document.querySelectorAll("#nav a")],
+          nav = $("nav");
+        const follow = (a) => {
+          const t =
+            a.getBoundingClientRect().top - nav.getBoundingClientRect().top;
+          nav.scrollTo({
+            top: nav.scrollTop + t - nav.clientHeight / 3,
+            behavior: "smooth",
+          });
+        };
+        const mark = (h) => {
+          links.forEach((a) => a.classList.toggle("act", a.dataset.h === h));
+          const a = links.find((x) => x.dataset.h === h);
+          if (a) follow(a);
+        };
+        function show(i, h) {
+          if (i < 0 || i >= pgs.length) return;
+          cur = i;
+          const t = pages[i].ti;
+          document
+            .querySelectorAll("#nav .t")
+            .forEach((b) => b.classList.toggle("on", +b.dataset.t === t));
+          pgs.forEach((p, k) => p.classList.toggle("on", k === i));
+          const top = $("grid").getBoundingClientRect().top + scrollY - 84;
+          if (scrollY > top) scrollTo(0, Math.max(0, top));
+          const first = pages[i].sections[0].id;
+          mark(h || first);
+          if (h && h !== first)
+            setTimeout(
+              () => $(h).scrollIntoView({ behavior: "smooth", block: "start" }),
+              60,
+            );
+        }
+        links.forEach((a) =>
+          a.addEventListener("click", () => show(+a.dataset.p, a.dataset.h)),
+        );
+        document
+          .querySelectorAll("#nav .t")
+          .forEach((b) =>
+            b.addEventListener("click", () => show(+b.dataset.p)),
+          );
+        document
+          .querySelectorAll("[data-go]")
+          .forEach((b) =>
+            b.addEventListener("click", () => show(cur + +b.dataset.go)),
+          );
+        addEventListener(
+          "scroll",
+          () => {
+            let id = null;
+            pgs[cur].querySelectorAll("h2").forEach((h) => {
+              if (h.getBoundingClientRect().top < 170) id = h.id;
+            });
+            if (
+              id &&
+              !links.find(
+                (a) => a.dataset.h === id && a.classList.contains("act"),
+              )
+            )
+              mark(id);
+          },
+          { passive: true },
+        );
+        mark(pages[0].sections[0].id);
+
+        // Quiz (délégation)
+        document.addEventListener("click", (e) => {
+          const b = e.target.closest(".o");
+          if (b) {
+            const g = b.parentElement,
+              q = QZ[+g.dataset.k],
+              btns = [...g.children],
+              i = btns.indexOf(b),
+              ok = i === q.ans;
+            btns.forEach((x) => x.classList.remove("ok", "ko"));
+            b.classList.add(ok ? "ok" : "ko");
+            const ex = g.nextElementSibling;
+            ex.classList.remove("hidden");
+            ex.innerHTML =
+              (ok ? "✅ Bravo ! " : "❌ Pas tout à fait. ") + q.expl;
+            tex(ex);
+            return;
+          }
+          const k = e.target.closest(".chk");
+          if (k) {
+            k.closest(".bx")
+              .querySelectorAll("select")
+              .forEach((s) => {
+                s.classList.remove("ok", "ko");
+                if (s.value)
+                  s.classList.add(s.value === s.dataset.ans ? "ok" : "ko");
+              });
+            return;
+          }
+          const a = e.target.dataset && e.target.dataset.a;
+          if (!a) return;
+          const c = e.target.closest(".corr"),
+            d = CORR[+c.dataset.k],
+            m = c.querySelector(".msg"),
+            t = c.querySelector("textarea");
+          m.innerHTML = {
+            v: t.value.trim()
+              ? "✅ Réponse validée. Bravo pour ton effort !"
+              : "Écris d’abord ta réponse.",
+            i: "💡 " + (d.hint || "Relis le cours."),
+            c: "📘 " + d.sol,
+          }[a];
+          m.classList.remove("hidden");
+          tex(m);
+        });
+      }
+
+      /* Header */
+      $("burger").addEventListener("click", () =>
+        $("mob-menu").classList.toggle("open"),
+      );
+      addEventListener(
+        "scroll",
+        () => {
+          $("main-header").style.boxShadow =
+            scrollY > 8 ? "0 4px 24px rgba(39,34,117,.12)" : "none";
+        },
+        { passive: true },
+      );
+    </script>
+  </body>
 </html>
