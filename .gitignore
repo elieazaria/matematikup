@@ -1,0 +1,37 @@
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env.keys
+.env.local
+.env.*.local
+.env.test.local
+
+
+cat >> .gitignore <<'EOF'
+
+# Node.js dependencies
+node_modules/
+**/node_modules/
+
+# Next.js builds
+.next/
+**/.next/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Supabase local files
+.branches/
+.temp/
+**/.temp/
+
+# Logs
+*.log
+
+# System files
+.DS_Store
+EOF
