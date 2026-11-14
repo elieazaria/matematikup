@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Qui ira à la soirée ? – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--pu:#6C4DF6;--pk:#FF5C8D;--mi:#1FBF9B;--ye:#FFC933;--dk:#2A2150}
+body{background:linear-gradient(160deg,#6C4DF6,#B04DF6 45%,#FF5C8D);color:var(--dk);font-family:Poppins,system-ui,sans-serif;min-height:100vh}
+.card{background:#fff;border-radius:26px;box-shadow:0 12px 32px rgba(42,33,80,.3)}
+.btn{background:var(--pu);color:#fff;border-radius:14px;padding:.6rem 1rem;font-weight:700}
+.btn2{background:#fff;border:3px solid var(--pu);color:var(--dk);border-radius:14px;padding:.55rem .8rem;font-weight:700;font-size:.9rem}
+.chip{border-radius:16px;padding:.45rem .5rem;text-align:center;font-size:.78rem;font-weight:600;background:#F4F1FF}
+.yes{color:#0E8A6C}.no{color:#D6336C}
+.ok{background:#DDF8EF;border-radius:12px;padding:.55rem}.ko{background:#FFE8EE;border-radius:12px;padding:.55rem}
+.tb td,.tb th{padding:.3rem .2rem;border-top:1px solid #E6E0FA}.cell{width:100%;border-radius:10px;padding:.35rem .1rem;font-weight:700;font-size:.72rem;background:#F4F1FF;border:2px dashed #B7A9F5}.cell.s1{background:#DDF8EF;border:2px solid #1FBF9B}.cell.s0{background:#FFE8EE;border:2px solid #FF5C8D}.cell.good{outline:3px solid #1FBF9B}.cell.bad{outline:3px solid #D6336C}.ico{width:40px;height:40px;border-radius:12px;background:#fff;border:2px solid #B7A9F5;font-size:1.1rem}.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.93)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<main class="max-w-2xl mx-auto p-3 sm:p-5">
+  <header class="flex items-center justify-between gap-2 mb-2 text-white">
+    <h1 class="text-xl sm:text-3xl font-bold">🎉 La soirée entre amis</h1>
+    <div class="font-bold text-sm whitespace-nowrap">⭐ <span id="xp">0</span> XP</div>
+  </header>
+  <div class="h-3 rounded-full bg-white/30 mb-3"><div id="bar" class="h-3 rounded-full" style="background:var(--ye);width:0%;transition:width .4s"></div></div>
+  <section id="app" class="card p-4 sm:p-5"></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const yn=x=>x?'Oui':'Non';
+const mk=(n,e,c,a,v)=>({n,e,c,a,v});
+const SER=[
+ {P:[mk("Léa","👩🏽",1,1,0),mk("Tojo","👦🏾",1,0,0),mk("Fara","👩🏾",0,1,1),mk("Nomena","🧒🏾",0,0,0)],
+  R:[{l:"A",k:"ET",col:"#6C4DF6",bg:"#EFEAFF",t:"Tu entres si tu as ta carte d’invitation <b>ET</b> si tu as plus de 16 ans.",f:p=>p.c&&p.a,
+      x:p=>`Carte : <b>${yn(p.c)}</b> ET plus de 16 ans : <b>${yn(p.a)}</b> → ${p.c&&p.a?'les <b>deux</b> sont vraies : il entre':'il en manque une : refusé'}`},
+     {l:"B",k:"OU",col:"#FF5C8D",bg:"#FFE8F0",t:"Tu entres si tu as ta carte d’invitation <b>OU</b> si tu es sur la liste VIP.",f:p=>p.c||p.v,
+      x:p=>`Carte : <b>${yn(p.c)}</b> OU liste VIP : <b>${yn(p.v)}</b> → ${p.c||p.v?'<b>au moins une</b> est vraie : il entre':'aucune n’est vraie : refusé'}`}]},
+ {P:[mk("Hery","🧑🏽",1,1,1),mk("Miora","👩🏿",0,1,0),mk("Rado","👦🏽",1,0,0),mk("Soa","👧🏾",0,0,1)],
+  R:[{l:"C",k:"OU",col:"#0E9F83",bg:"#DDF8EF",t:"Tu entres si tu as plus de 16 ans <b>OU</b> si tu es sur la liste VIP.",f:p=>p.a||p.v,
+      x:p=>`Plus de 16 ans : <b>${yn(p.a)}</b> OU liste VIP : <b>${yn(p.v)}</b> → ${p.a||p.v?'<b>au moins une</b> est vraie : il entre':'aucune n’est vraie : refusé'}`},
+     {l:"D",k:"ET",col:"#E8741C",bg:"#FFEBD8",t:"Tu entres si tu es sur la liste VIP <b>ET</b> si tu as ta carte d’invitation.",f:p=>p.v&&p.c,
+      x:p=>`Liste VIP : <b>${yn(p.v)}</b> ET carte : <b>${yn(p.c)}</b> → ${p.v&&p.c?'les <b>deux</b> sont vraies : il entre':'il en manque une : refusé'}`}]}
+];
+const QS=[
+ {q:"Avec la Règle A (ET), on entre quand…",o:["au moins une condition est vraie","les deux conditions sont vraies"],g:1,e:"Avec <b>ET</b>, il faut <b>les deux</b>. Regarde Tojo : il a la carte, mais pas plus de 16 ans → refusé."},
+ {q:"Avec la Règle B (OU), on est refusé quand…",o:["une seule condition est fausse","aucune condition n’est vraie"],g:1,e:"Avec <b>OU</b>, une seule condition vraie suffit. On n’est refusé que si <b>les deux sont fausses</b>, comme Nomena."},
+ {q:"Si quelqu’un entre avec la Règle A, entre-t-il toujours avec la Règle B ?",o:["Oui, toujours","Non, pas toujours"],g:0,e:"Pour entrer avec A, il faut la carte (et +16 ans). Avec la carte, la Règle B est vérifiée aussi. L’inverse est faux : Tojo entre avec B, pas avec A."}
+];
+let st,cells,checked,hint,qa,xp;
+const init=()=>{st=1;cells=SER.map(S=>S.P.map(()=>[null,null]));checked=[false,false];hint=false;qa=[null,null,null];xp=0};init();
+const T=(s,r,k)=>SER[s].R[k].f(SER[s].P[r])?1:0;
+const ck=x=>x?'<span class="yes">✅</span>':'<span class="no">❌</span>';
+
+function rules(s){
+ return `<div class="grid sm:grid-cols-2 gap-2 mb-3 text-sm">${SER[s].R.map(r=>`<div class="rounded-2xl p-2.5" style="background:${r.bg};border:3px solid ${r.col}"><b style="color:${r.col}">🚪 Règle ${r.l}</b> : « ${r.t} »</div>`).join('')}</div>`;
+}
+function cell(s,r,k){
+ const v=cells[s][r][k],t=T(s,r,k);
+ if(!checked[s])return `<button class="cell ${v===null?'':'s'+v}" data-r="${r}" data-k="${k}">${v===null?'?':v?'✅ Oui':'⛔ Non'}</button>`;
+ const good=v===t;
+ return `<div class="cell s${v} ${good?'good':'bad'}">${v?'✅ Oui':'⛔ Non'}${good?'':`<br><span style="font-weight:600">→ ${t?'✅':'⛔'}</span>`}</div>`;
+}
+function table(s){
+ const S=SER[s],filled=cells[s].flat().every(x=>x!==null);
+ let h=`<div class="overflow-x-auto"><table class="tb w-full text-center text-xs sm:text-sm"><tr style="background:#F4F1FF"><th class="text-left p-1">Ami</th><th>🎟️<br>Carte</th><th>🔞<br>+16 ans</th><th>⭐<br>VIP</th>${S.R.map(r=>`<th style="color:${r.col}">Règle ${r.l}<br>(${r.k})</th>`).join('')}</tr>
+ ${S.P.map((p,r)=>`<tr><td class="text-left font-semibold">${p.e} ${p.n}</td><td>${ck(p.c)}</td><td>${ck(p.a)}</td><td>${ck(p.v)}</td><td class="px-1">${cell(s,r,0)}</td><td class="px-1">${cell(s,r,1)}</td></tr>`).join('')}</table></div>`;
+ if(!checked[s]){
+  h+=`<div class="flex items-center justify-between gap-2 mt-2"><div class="text-xs rounded-xl px-2 py-1.5" style="background:#F4F1FF">👆 <b>1 clic</b> = ✅ Oui · <b>2 clics</b> = ⛔ Non · 3 clics = effacer la case</div><button id="clr" class="ico" title="Vider le tableau" aria-label="Vider le tableau">🗑️</button></div>
+  <div class="flex flex-wrap gap-2 mt-3"><button id="ck" class="btn" ${filled?'':'disabled style="opacity:.4"'}>✔ Vérifier mon tableau</button>${s===0?'<button id="hn" class="btn2">💡 Indice</button>':''}</div>`;
+  if(hint&&s===0)h+=`<div class="rounded-xl p-2 mt-2 text-sm" style="background:#E8F1FF">💡 <b>ET</b> : il faut que les <b>deux</b> conditions soient vraies. <b>OU</b> : il suffit qu’<b>une</b> soit vraie.</div>`;
+  if(!filled)h+=`<div class="text-xs mt-1 opacity-70">Remplis les 8 cases (même si tu hésites).</div>`;
+ }else{
+  let sc=0;const bad=[];
+  cells[s].forEach((row,r)=>[0,1].forEach(k=>{if(row[k]===T(s,r,k))sc++;else bad.push(`<li><b>${S.P[r].n}</b>, Règle ${S.R[k].l} : ${S.R[k].x(S.P[r])}</li>`)}));
+  h+=`<div class="${bad.length?'ko':'ok pop'} mt-3 text-sm"><b>${sc}/8 cases justes</b> ${bad.length?'— voici la correction :':'🎯 Parfait !'}${bad.length?`<ul class="list-disc pl-5 mt-1">${bad.join('')}</ul>`:''}</div>`;
+ }
+ return h;
+}
+function render(){
+ const qd=qa.filter(x=>x!==null).length,fl=s=>cells[s].flat().filter(x=>x!==null).length/8*30;
+ $('bar').style.width=(st===1?(checked[0]?33:fl(0)):st===2?33+qd/3*33:(checked[1]?100:66+fl(1)))+'%';
+ $('xp').textContent=xp;
+ let h='';
+ if(st===1){
+  h+=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:var(--pu)">❓ Qui ira à la soirée ?</h2>
+  <p class="text-sm mb-2">L’organisateur d’une soirée entre amis hésite entre <b>deux règles d’entrée</b>. Tu es le <b>videur</b> : 4 amis se présentent à la porte. Selon la règle choisie, lesquels pourront entrer ?</p>`+rules(0)+table(0);
+  if(checked[0])h+=`<div class="text-right mt-3"><button id="go" class="btn pop">Que remarques-tu ? ➜</button></div>`;
+ }else if(st===2){
+  const L=k=>SER[0].P.filter((p,r)=>T(0,r,k)).map(p=>p.e+' '+p.n).join(' · ')||'personne';
+  h+=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:var(--pu)">🔎 Que remarques-tu ?</h2>
+  <div class="rounded-2xl p-3 text-sm mb-3" style="background:#F4F1FF"><div><b style="color:#6C4DF6">Entrent avec A (ET) :</b> ${L(0)}</div><div class="mt-1"><b style="color:#FF5C8D">Entrent avec B (OU) :</b> ${L(1)}</div></div>`;
+  QS.forEach((x,i)=>{
+   if(i>0&&qa[i-1]===null)return;
+   h+=`<div class="rounded-2xl p-3 mb-2" style="border:3px solid var(--mi)"><div class="font-bold text-sm mb-2">${i+1}) ${x.q}</div>`;
+   h+=qa[i]===null?`<div class="grid sm:grid-cols-2 gap-2">${x.o.map((o,j)=>`<button class="btn2" data-q="${i}" data-j="${j}">${o}</button>`).join('')}</div>`:`<div class="${qa[i]===x.g?'ok pop':'ko'} text-sm">${qa[i]===x.g?'🏆 Exact !':'❌ Pas tout à fait.'} ${x.e}</div>`;
+   h+=`</div>`;
+  });
+  if(qd===3)h+=`<div class="rounded-2xl p-3 mt-3 text-sm" style="background:#FFF6D6;border-left:6px solid var(--ye)"><b>🔑 À retenir</b>
+   <table class="tb w-full text-center mt-2 bg-white rounded-xl"><tr><th>p</th><th>q</th><th style="color:#6C4DF6">p ET q</th><th style="color:#FF5C8D">p OU q</th></tr>
+   ${[[1,1],[1,0],[0,1],[0,0]].map(([a,b])=>`<tr><td>${a?'Vrai':'Faux'}</td><td>${b?'Vrai':'Faux'}</td><td class="font-bold">${a&&b?'✅ Vrai':'❌ Faux'}</td><td class="font-bold">${a||b?'✅ Vrai':'❌ Faux'}</td></tr>`).join('')}</table>
+   <div class="mt-2"><b>ET</b> : vrai seulement si <b>tout</b> est vrai. <b>OU</b> : faux seulement si <b>tout</b> est faux.</div></div>
+   <div class="text-right mt-3"><button id="go2" class="btn pop">Entraîne-toi ➜</button></div>`;
+ }else{
+  h+=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:var(--pu)">🎯 À toi de jouer !</h2>
+  <p class="text-sm mb-2">L’organisateur change de règles. Même mission : <b>qui ira à la soirée ?</b> Utilise ce que tu as appris sur ET et OU.</p>`+rules(1)+table(1);
+  if(checked[1])h+=`<div class="rounded-2xl p-3 mt-3 text-center pop" style="background:#FFF6D6"><div class="text-4xl">${xp>=110?'🏅':'🎖️'}</div><div class="font-bold">${xp>=110?'Videur expert !':'Videur en formation'} · ${xp} XP</div></div><div class="mt-3"><button id="rp" class="btn2">↺ Rejouer</button></div>`;
+ }
+ $('app').innerHTML=h;
+}
+const cur=()=>st===3?1:0;
+$('app').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;const s=cur();
+ if(t.dataset.r!==undefined){const r=+t.dataset.r,k=+t.dataset.k,v=cells[s][r][k];cells[s][r][k]=v===null?1:v===1?0:null;render()}
+ else if(t.id==='clr'){cells[s]=SER[s].P.map(()=>[null,null]);render()}
+ else if(t.id==='hn'){hint=true;render()}
+ else if(t.id==='ck'){checked[s]=true;cells[s].forEach((row,r)=>[0,1].forEach(k=>{if(row[k]===T(s,r,k))xp+=5}));render()}
+ else if(t.id==='go'){st=2;render();window.scrollTo(0,0)}
+ else if(t.id==='go2'){st=3;render();window.scrollTo(0,0)}
+ else if(t.dataset.q!==undefined){const i=+t.dataset.q,j=+t.dataset.j;qa[i]=j;if(j===QS[i].g)xp+=20;render()}
+ else if(t.id==='rp'){init();render();window.scrollTo(0,0)}
+};
+render();
+</script>
+</body>
+</html>

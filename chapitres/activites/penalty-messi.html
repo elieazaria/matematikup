@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le penalty de Messi – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--sk:#5C9DFF;--gr:#2E8B1E;--ye:#FAF59A;--dk:#12335B;--bl:#1E6FD9}
+body{background:linear-gradient(180deg,#5C9DFF,#B8D8F3 45%,#E9F0FB);color:var(--dk);font-family:Poppins,system-ui,sans-serif;min-height:100vh}
+.card{background:#fff;border-radius:22px;box-shadow:0 10px 28px rgba(18,51,91,.22)}
+.btn{background:var(--bl);color:#fff;border-radius:14px;padding:.55rem 1rem;font-weight:700}
+.btn:disabled{opacity:.4}
+.btn2{background:#fff;border:3px solid var(--bl);color:var(--dk);border-radius:14px;padding:.45rem .8rem;font-weight:600;font-size:.9rem;text-align:left}
+.btn2.on{background:#E3EFFF}
+.ok{background:#DDF6E6;border-radius:12px;padding:.55rem}.ko{background:#FFE9DE;border-radius:12px;padding:.55rem}.tip{background:#E8F1FF;border-radius:12px;padding:.55rem}
+.inp{border:3px solid var(--bl);border-radius:12px;padding:.4rem .6rem;width:7.5rem;font-weight:600}
+input[type=range]{width:100%;accent-color:#1E6FD9;height:28px}
+.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.93)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.dot{width:12px;height:12px;border-radius:50%;background:#B8D0EE}.dot.on{background:#FFD93D;transform:scale(1.3)}.dot.dn{background:#2FA84F}
+</style>
+</head>
+<body>
+<main class="max-w-3xl mx-auto p-3 sm:p-5">
+  <header class="flex items-center justify-between gap-2 mb-2">
+    <h1 class="text-xl sm:text-3xl font-bold" style="color:#fff;text-shadow:0 2px 6px rgba(18,51,91,.5)">⚽ Le penalty de Messi</h1>
+    <div class="font-bold text-sm whitespace-nowrap" style="color:#fff;text-shadow:0 1px 4px rgba(18,51,91,.6)">⭐ <span id="xp">0</span> XP</div>
+  </header>
+  <div id="dots" class="flex gap-1.5 mb-2 flex-wrap"></div>
+  <section class="card p-2 sm:p-3 mb-3">
+    <svg id="scene" viewBox="0 0 900 400" class="w-full rounded-2xl"></svg>
+    <div id="ctl" class="px-2 pt-2"></div>
+  </section>
+  <section id="app" class="card p-4 sm:p-5"></section>
+</main>
+<script>
+/* ===== Modèle : h(x) = a x² + b x  (modifiable) ===== */
+const A=-0.1,B=1.2,GOAL=2.44,DIST=11,KEEP=7,REACH=2.4;
+const $=id=>document.getElementById(id);
+const f=n=>String(+n.toFixed(3)).replace('.',',').replace('-','−');
+const h=x=>A*x*x+B*x;
+const Hg=h(DIST),Hk=h(KEEP);
+const C0=-GOAL,D=B*B-4*A*C0;
+const roots=D>=0?[(-B+Math.sqrt(D))/(2*A),(-B-Math.sqrt(D))/(2*A)].sort((p,q)=>p-q):[];
+const sgn=n=>n<0?`− ${f(-n)}`:`+ ${f(n)}`;
+const EQ=`h(x) = ${f(A)}x² ${sgn(B)}x`;
+const num=s=>parseFloat(String(s).replace(',','.').replace('−','-'));
+
+/* ===== Scène SVG ===== */
+const sx=x=>60+x*66, sy=y=>340-y*52, G0=340;
+let x=0,show=false,marks=false,anim=false,res='';
+function scene(){
+ const pts=[];for(let t=0;t<=DIST+0.01;t+=.25)pts.push(`${sx(t).toFixed(1)},${sy(h(t)).toFixed(1)}`);
+ const hb=h(x),bx=sx(x),by=sy(Math.max(hb,0))-8;
+ let s=`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5C9DFF"/><stop offset="1" stop-color="#B8D8F3"/></linearGradient><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E8B1E"/><stop offset="1" stop-color="#BFD0EA"/></linearGradient><pattern id="net" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 0H9M0 0V9" stroke="#1b1b1b" stroke-width="1" opacity=".75"/></pattern><pattern id="str" width="14" height="10" patternUnits="userSpaceOnUse"><rect width="7" height="10" fill="#75AADB"/><rect x="7" width="7" height="10" fill="#fff"/></pattern></defs>
+ <rect width="900" height="400" fill="url(#sk)"/><rect y="${G0}" width="900" height="60" fill="url(#gr)"/>`;
+ // règle graduée
+ for(let m=0;m<=11;m+=1)s+=`<line x1="${sx(m)}" y1="${G0}" x2="${sx(m)}" y2="${G0+6}" stroke="#fff" stroke-width="2"/><text x="${sx(m)}" y="${G0+22}" font-size="12" fill="#fff" text-anchor="middle" font-weight="600">${m}</text>`;
+ s+=`<text x="860" y="${G0+22}" font-size="12" fill="#fff" font-weight="700">m</text>`;
+ // but
+ const gx=sx(DIST),gy=sy(GOAL);
+ s+=`<polygon points="${gx},${gy} ${gx+50},${gy+18} ${gx+50},${G0} ${gx},${G0}" fill="url(#net)"/><line x1="${gx}" y1="${gy}" x2="${gx+50}" y2="${gy+18}" stroke="#C9A196" stroke-width="5"/><line x1="${gx+50}" y1="${gy+18}" x2="${gx+50}" y2="${G0}" stroke="#C9A196" stroke-width="3"/><line x1="${gx}" y1="${gy}" x2="${gx}" y2="${G0}" stroke="#D9AFA3" stroke-width="7" stroke-linecap="round"/>`;
+ if(show)s+=`<line x1="${sx(0)}" y1="${gy}" x2="${gx}" y2="${gy}" stroke="#fff" stroke-width="1.5" stroke-dasharray="5 5" opacity=".8"/><text x="${sx(0)+4}" y="${gy-5}" font-size="12" fill="#fff" font-weight="700">barre : ${f(GOAL)} m</text>`;
+ // gardien (x = 7 m)
+ const kx=sx(KEEP),kt=G0-1.9*52;
+ s+=`<g><rect x="${kx-9}" y="${G0-34}" width="7" height="34" fill="#222"/><rect x="${kx+2}" y="${G0-34}" width="7" height="34" fill="#222"/><rect x="${kx-13}" y="${kt+22}" width="26" height="44" rx="6" fill="#FF8A3D"/><circle cx="${kx}" cy="${kt+10}" r="11" fill="#C99568"/><path d="M${kx-11} ${kt+8}Q${kx} ${kt-6} ${kx+11} ${kt+8}Z" fill="#2b1b12"/><path d="M${kx-13} ${kt+28}L${kx-24} ${kt-6}" stroke="#FF8A3D" stroke-width="8" stroke-linecap="round"/><path d="M${kx+13} ${kt+28}L${kx+24} ${kt-6}" stroke="#FF8A3D" stroke-width="8" stroke-linecap="round"/><circle cx="${kx-24}" cy="${kt-8}" r="6" fill="#fff"/><circle cx="${kx+24}" cy="${kt-8}" r="6" fill="#fff"/></g><text x="${kx}" y="${G0+38}" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">gardien (7 m)</text>`;
+ // tireur (maillot ciel et blanc, numéro 10)
+ const px=sx(0)-30,pt=G0-1.75*52;
+ s+=`<g><rect x="${px-9}" y="${G0-40}" width="8" height="40" fill="#fff"/><rect x="${px+3}" y="${G0-40}" width="8" height="40" fill="#fff"/><rect x="${px-11}" y="${G0-6}" width="12" height="6" fill="#111"/><rect x="${px+3}" y="${G0-6}" width="16" height="6" fill="#111"/><rect x="${px-12}" y="${G0-58}" width="26" height="22" rx="4" fill="#111"/><rect x="${px-12}" y="${pt+22}" width="26" height="36" rx="5" fill="url(#str)"/><text x="${px+1}" y="${pt+46}" font-size="12" font-weight="800" fill="#12335B" text-anchor="middle">10</text><circle cx="${px+1}" cy="${pt+10}" r="11" fill="#E0AC85"/><path d="M${px-10} ${pt+8}Q${px+1} ${pt-6} ${px+12} ${pt+8}Z" fill="#2b1b12"/><path d="M${px+12} ${pt+28}L${px+26} ${pt+50}" stroke="#E0AC85" stroke-width="7" stroke-linecap="round"/><path d="M${px-12} ${pt+28}L${px-20} ${pt+50}" stroke="#E0AC85" stroke-width="7" stroke-linecap="round"/></g>`;
+ // trajectoire
+ if(show){
+  s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="#FAF59A" stroke-width="6" stroke-linecap="round" opacity=".55"/>`;
+  const up=pts.filter((_,i)=>i*.25<=x+.001);
+  if(up.length>1)s+=`<polyline points="${up.join(' ')}" fill="none" stroke="#FFF176" stroke-width="7" stroke-linecap="round"/>`;
+ }
+ if(marks&&roots.length)roots.forEach(r=>{s+=`<line x1="${sx(r)}" y1="${sy(GOAL)}" x2="${sx(r)}" y2="${G0}" stroke="#fff" stroke-dasharray="4 4"/><circle cx="${sx(r)}" cy="${sy(GOAL)}" r="7" fill="#FF5A36" stroke="#fff" stroke-width="2"/><text x="${sx(r)}" y="${G0-8}" font-size="12" fill="#fff" font-weight="700" text-anchor="middle" style="paint-order:stroke" stroke="#12335B" stroke-width="3">x≈${f(r.toFixed?+r.toFixed(2):r)}</text>`});
+ // ballon + hauteur
+ if(x>0.01||anim){
+  s+=`<line x1="${bx}" y1="${by+8}" x2="${bx}" y2="${G0}" stroke="#fff" stroke-width="2" stroke-dasharray="4 4"/>`;
+  const lx=Math.min(Math.max(bx,70),810);
+  s+=`<g><rect x="${lx-62}" y="${Math.max(by-48,4)}" width="124" height="28" rx="10" fill="#12335B" opacity=".92"/><text x="${lx}" y="${Math.max(by-48,4)+19}" font-size="14" fill="#fff" text-anchor="middle" font-weight="700">h = ${f(+hb.toFixed(2))} m</text></g>`;
+ }
+ s+=`<g><circle cx="${bx}" cy="${by}" r="9" fill="#fff" stroke="#111" stroke-width="2"/><path d="M${bx-3} ${by-3}L${bx+3} ${by-3}L${bx+4} ${by+3}L${bx} ${by+5}L${bx-4} ${by+3}Z" fill="#111"/></g>`;
+ if(res)s+=`<text x="450" y="70" font-size="44" font-weight="800" fill="#fff" text-anchor="middle" stroke="#12335B" stroke-width="7" style="paint-order:stroke" class="pop">${res}</text>`;
+ $('scene').innerHTML=s;
+}
+function ctl(){
+ if(step<3){$('ctl').innerHTML=`<div class="text-xs text-center opacity-70 py-1">🔒 Le curseur de distance se débloque à la question 3.</div>`;return}
+ $('ctl').innerHTML=`<div class="flex items-center justify-between text-sm font-semibold"><span>x = <b id="xv">${f(+x.toFixed(1))}</b> m</span><span>h(x) = <b id="hv">${f(+h(x).toFixed(2))}</b> m</span></div>
+ <input id="sl" type="range" min="0" max="${DIST}" step="0.1" value="${x}" aria-label="distance x">
+ <div class="flex flex-wrap gap-2 mt-1"><button class="btn2" data-j="${KEEP}">📍 x = 7 (gardien)</button><button class="btn2" data-j="${DIST}">🥅 x = 11 (but)</button>${step>=4?'<button class="btn" id="shoot">⚽ Tirer !</button>':''}<span class="text-xs self-center opacity-80">${EQ}</span></div>`;
+ $('sl').oninput=e=>{x=+e.target.value;res='';scene();$('xv').textContent=f(+x.toFixed(1));$('hv').textContent=f(+h(x).toFixed(2))};
+}
+
+/* ===== Questions ===== */
+let step=0,done=[],xp=0,sel=new Set(),inp=[],fb='',tries=0;
+const NS=11;
+const Q=[
+/*0*/{t:"Mise en situation"},
+/*1*/{t:"Question 1",
+ q:"À ton avis, quelles sont les informations nécessaires pour déterminer si le ballon entre dans le but ? <span class='text-xs opacity-70'>(plusieurs réponses)</span>",
+ type:'multi',o:[["La distance entre le ballon et le but (11 m)",1],["La hauteur du but (2,44 m)",1],["La hauteur du ballon quand il arrive au but",1],["La couleur du maillot",0],["Le nom du gardien",0],["L’âge de l’arbitre",0]],
+ e:"Il faut connaître <b>où</b> se trouve le but (11 m), <b>sa hauteur</b> (2,44 m) et <b>la hauteur du ballon</b> à cet endroit. Le reste n’a aucun effet sur la trajectoire."},
+/*2*/{t:"Question 2",q:"Le ballon suit une trajectoire qui n’est pas une droite. Quelle forme géométrique pourrait-on utiliser pour la modéliser ?",type:'choice',
+ o:["Une droite","Une parabole","Un cercle","Un carré"],g:1,
+ e:"La trajectoire d’un ballon tiré en cloche ressemble à une <b>parabole</b> : c’est la courbe d’une fonction du <b>second degré</b>, h(x) = ax² + bx + c. Regarde-la apparaître sur la scène !"},
+/*3*/{t:"Question 3",q:`On choisit un repère dans lequel <b>x</b> est la distance horizontale parcourue par le ballon (en m) et <b>h(x)</b> sa hauteur par rapport au sol (en m). La trajectoire est modélisée par :<div class="text-center text-lg font-bold my-2" style="color:#1E6FD9">${EQ}</div>Calcule la hauteur du ballon lorsque <b>x = ${DIST}</b>.`,
+ type:'num',ans:Hg,tol:.011,u:'m',
+ hint:()=>`Remplace x par ${DIST} dans ${EQ}.`,
+ bad:v=>Math.abs(v-A*DIST*DIST)<.02?`Tu as calculé seulement ${f(A)} × ${DIST}². Il faut ajouter ${f(B)} × ${DIST}.`:Math.abs(v-B*DIST)<.02?`Tu as calculé seulement ${f(B)} × ${DIST}. Il faut ajouter ${f(A)} × ${DIST}².`:null,
+ e:()=>`h(${DIST}) = ${f(A)} × ${DIST}² + ${f(B)} × ${DIST} = ${f(+(A*DIST*DIST).toFixed(2))} + ${f(B*DIST)} = <b>${f(+Hg.toFixed(2))} m</b>`},
+/*4*/{t:"Question 4",q:`Compare la hauteur obtenue (${f(+Hg.toFixed(2))} m) à la hauteur du but (${f(GOAL)} m). Que se passe-t-il ?`,type:'choice',
+ o:["Le ballon passe au-dessus de la barre : raté !","Le ballon passe sous la barre : il entre dans la cage !"],g:Hg<GOAL?1:0,
+ e:()=>`${f(+Hg.toFixed(2))} m ${Hg<GOAL?'&lt;':'&gt;'} ${f(GOAL)} m : ${Hg<GOAL?'le ballon est <b>sous la barre</b> et au-dessus du sol (h &gt; 0) : <b>BUT ! ⚽</b>':'le ballon passe <b>au-dessus de la barre</b>.'} Appuie sur « Tirer ! » pour le voir.`},
+/*5*/{t:"Question 5",q:`Le gardien se trouve à environ <b>${KEEP} m</b> du point de tir. À quelle hauteur se trouve le ballon lorsque <b>x = ${KEEP}</b> ?`,
+ type:'num',ans:Hk,tol:.011,u:'m',
+ hint:()=>`Remplace x par ${KEEP} dans ${EQ}.`,
+ bad:v=>Math.abs(v-A*KEEP*KEEP)<.02?`Tu as calculé seulement ${f(A)} × ${KEEP}². Il faut ajouter ${f(B)} × ${KEEP}.`:null,
+ e:()=>`h(${KEEP}) = ${f(A)} × ${KEEP}² + ${f(B)} × ${KEEP} = ${f(+(A*KEEP*KEEP).toFixed(2))} + ${f(B*KEEP)} = <b>${f(+Hk.toFixed(2))} m</b>.<br>${Hk>REACH?`Même bras levés, le gardien atteint environ ${f(REACH)} m : le ballon passe <b>au-dessus du gardien</b> ✅`:`Le gardien peut l’arrêter !`}`},
+/*6*/{t:"Question 6",retry:true,q:`On cherche maintenant les endroits où le ballon est <b>exactement à ${f(GOAL)} m</b> de hauteur. On a :<div class="text-center text-lg font-bold my-2" style="color:#1E6FD9">${f(A)}x² ${sgn(B)}x = ${f(GOAL)}</div><b>Comment résoudre cette équation ?</b><br>Pour commencer, mets-la sous la forme <b>ax² + bx + c = 0</b>. Laquelle est correcte ?`,type:'choice',
+ o:[`${f(A)}x² ${sgn(B)}x − ${f(GOAL)} = 0`,`${f(A)}x² ${sgn(B)}x + ${f(GOAL)} = 0`,`${f(-A)}x² ${sgn(B)}x − ${f(GOAL)} = 0`],g:0,
+ e:`On passe tout dans le même membre : on <b>soustrait ${f(GOAL)}</b> des deux côtés. Donc <b>a = ${f(A)}</b>, <b>b = ${f(B)}</b>, <b>c = ${f(C0)}</b>.<div class="mt-2 p-2 rounded-xl font-semibold" style="background:#FFF6D6">C’est une équation du second degré car il y a une puissance carrée (x²).<br>Comment résoudre cette équation ? Nous trouvons la réponse dans la vidéo suivante. 🎬</div>`},
+/*7*/{t:"Bilan"}
+];
+
+function dots(){$('dots').innerHTML=Q.map((_,i)=>`<span class="dot ${done[i]?'dn':''} ${i===step?'on':''}"></span>`).join('')}
+function review(i){ // renvoie [bon?, html]
+ const q=Q[i],e=typeof q.e==='function'?q.e():q.e;
+ return e;
+}
+function render(){
+ $('xp').textContent=xp;dots();ctl();scene();
+ const q=Q[step];let h=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:#1E6FD9">${step===0?'🏟️ ':step===7?'🏆 ':''}${q.t}</h2>`;
+ if(step===0){
+  h+=`<p class="text-sm mb-2">Lors d’un match de Coupe du monde, Messi s’apprête à tirer un penalty. <b>Le stade retient son souffle…</b></p>
+  <p class="text-sm mb-2">Le ballon est placé à <b>11 m du but</b>. On modélise la trajectoire du ballon par une courbe. Le but mesure <b>2,44 m</b> de hauteur.</p>
+  <div class="tip text-sm mb-3">🎯 <b>Le ballon passera-t-il au-dessus du gardien ?</b> Au moment où il arrive au niveau du but, sa hauteur est-elle suffisante pour entrer dans la cage ?</div>
+  <button class="btn" id="nx">Commencer le défi ⚽</button>`;
+ }else if(step===7){
+  h+=`<div class="ok mb-3 text-sm pop">🏅 Défi terminé ! Tu as obtenu <b>${xp} XP</b>.</div>
+  <div class="tip text-sm"><b>🔑 À retenir</b><ol class="list-decimal pl-5 mt-1 space-y-1">
+   <li>Une trajectoire en cloche se modélise par une <b>parabole</b> : h(x) = ax² + bx + c.</li>
+   <li>Pour <b>trouver une hauteur</b>, on remplace x par la distance.</li>
+   <li>Pour savoir <b>où</b> le ballon atteint une hauteur donnée, on obtient une <b>équation du second degré</b> (il y a un x²).</li></ol></div>
+  <div class="mt-3 p-3 rounded-xl text-sm font-semibold" style="background:#FFF6D6">🎬 Comment la résoudre ? Rendez-vous dans la vidéo suivante !</div>
+  <div class="mt-3"><button class="btn2" id="rp">↺ Rejouer</button></div>`;
+ }else{
+  h+=`<p class="text-sm mb-3">${q.q}</p>`;
+  const a=done[step];
+  if(q.type==='multi'){
+   h+=`<div class="grid gap-2">${q.o.map((o,j)=>`<button class="btn2 ${sel.has(j)?'on':''}" data-m="${j}" ${a?'disabled':''}>${sel.has(j)?'☑':'☐'} ${o[0]}</button>`).join('')}</div>`;
+   if(!a)h+=`<div class="mt-3"><button class="btn" id="chk" ${sel.size?'':'disabled'}>✔ Valider</button></div>`;
+  }else if(q.type==='choice'){
+   h+=`<div class="grid gap-2">${q.o.map((o,j)=>`<button class="btn2 ${inp[0]===j?'on':''}" data-c="${j}" ${a?'disabled':''}>${o}</button>`).join('')}</div>`;
+  }else if(q.type==='num'){
+   h+=`<div class="flex flex-wrap items-center gap-2"><input id="in" class="inp" inputmode="decimal" placeholder="Ta réponse" value="${inp[0]??''}" ${a?'disabled':''}> <span class="font-semibold">${q.u}</span>${a?'':`<button class="btn" id="chk">✔ Vérifier</button><button class="btn2" id="hn">💡 Indice</button>`}</div>`;
+  }else if(q.type==='two'){
+   h+=`<div class="flex flex-wrap items-center gap-2">x₁ ≈ <input id="in0" class="inp" inputmode="decimal" value="${inp[0]??''}" ${a?'disabled':''}> x₂ ≈ <input id="in1" class="inp" inputmode="decimal" value="${inp[1]??''}" ${a?'disabled':''}>${a?'':`<button class="btn" id="chk">✔ Vérifier</button><button class="btn2" id="hn">💡 Indice</button>`}</div>`;
+  }
+  if(fb)h+=`<div class="mt-3 text-sm ${fb[0]==='🏆'?'ok pop':fb[0]==='💡'?'tip':'ko'}">${fb}</div>`;
+  if(a)h+=`<div class="mt-3 text-right"><button class="btn pop" id="nx">${step===6?'Voir le bilan ➜':'Continuer ➜'}</button></div>`;
+ }
+ $('app').innerHTML=h;
+}
+function finish(ok,msg){
+ done[step]=true;if(ok)xp+=15;
+ const e=review(step);
+ fb=`${ok?'🏆 Bravo !':'❌ Pas tout à fait.'} ${msg||''}<div class="mt-1">${e}</div>`;
+ if(step===2){show=true;}
+ if(step===4)x=DIST;
+ 
+ render();
+}
+function go(n){tries=0;step=n;done[step]=done[step]||false;fb='';sel=new Set();inp=[];if(step>=3&&x===0&&step<5)x=0;render();window.scrollTo(0,0)}
+$('app').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;const q=Q[step];
+ if(t.id==='nx'){go(step+1);return}
+ if(t.id==='rp'){x=0;show=false;marks=false;res='';done=[];xp=0;go(0);return}
+ if(t.dataset.m!==undefined){const j=+t.dataset.m;sel.has(j)?sel.delete(j):sel.add(j);render();return}
+ if(t.dataset.c!==undefined){const j=+t.dataset.c;inp=[j];if(q.retry&&j!==q.g){tries++;fb='💡 Pas encore. Pour passer tout dans le même membre, on soustrait '+f(GOAL)+' des deux côtés. Regarde bien les signes !'+(tries>=2?'<div class="mt-1">La bonne forme est : <b>'+q.o[q.g]+'</b></div>':'')+' Essaie encore.';render();return}finish(j===q.g);return}
+ if(t.id==='hn'){fb='💡 '+q.hint();render();return}
+ if(t.id==='chk'){
+  if(q.type==='multi'){const good=q.o.every((o,j)=>!!o[1]===sel.has(j));finish(good,good?'':`Les bonnes réponses sont : ${q.o.filter(o=>o[1]).map(o=>'« '+o[0]+' »').join(', ')}.`)}
+  else if(q.type==='num'){const raw=$('in').value;if(!raw)return;inp=[raw];const v=num(raw),ok=Math.abs(v-q.ans)<=q.tol;finish(ok,ok?'':(q.bad&&q.bad(v))||'Regarde le calcul détaillé ci-dessous.')}
+  else if(q.type==='two'){const r0=$('in0').value,r1=$('in1').value;if(!r0||!r1)return;inp=[r0,r1];const v=[num(r0),num(r1)].sort((a,b)=>a-b),ok=Math.abs(v[0]-roots[0])<.06&&Math.abs(v[1]-roots[1])<.06;finish(ok,ok?'':'Vérifie les signes et le dénominateur 2a.')}
+ }
+};
+$('ctl').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.j){x=+t.dataset.j;res='';ctl();scene()}
+ if(t.id==='shoot'&&!anim){anim=true;res='';x=0;show=true;const t0=performance.now();
+  const tick=n=>{const p=Math.min((n-t0)/2600,1);x=p*DIST;scene();const sl=$('sl');if(sl){sl.value=x;$('xv').textContent=f(+x.toFixed(1));$('hv').textContent=f(+h(x).toFixed(2))}
+   if(p<1)requestAnimationFrame(tick);else{anim=false;res=Hg<GOAL&&Hg>0?'BUT ! ⚽':'RATÉ !';scene()}};
+  requestAnimationFrame(tick)}
+};
+render();
+</script>
+</body>
+</html>

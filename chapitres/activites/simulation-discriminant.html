@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulation du discriminant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    input[type="range"] { accent-color: #1683ff; cursor: pointer; }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+  <main class="bg-white rounded-2xl shadow-lg w-full max-w-5xl overflow-hidden">
+    <div class="grid md:grid-cols-2">
+
+      <!-- PANNEAU DE CONTRÔLE -->
+      <section class="p-6 bg-gray-50">
+        <h1 class="text-xl font-bold text-gray-800 mb-5">
+          Étude du discriminant
+        </h1>
+
+        <div class="text-center bg-white rounded-xl p-4 mb-5 shadow-sm">
+          <p class="text-gray-500 text-sm mb-2">Discriminant</p>
+          <p class="text-2xl font-bold text-blue-700">
+            Δ = b² − 4ac
+          </p>
+          <p id="calculation" class="text-gray-600 mt-3 text-sm">
+            Δ = 2² − 4 × 1 × (−3) = 16
+          </p>
+        </div>
+
+        <!-- COEFFICIENT a -->
+        <div class="mb-5">
+          <div class="flex justify-between mb-2">
+            <label for="a" class="font-semibold text-gray-700">a</label>
+            <span id="aValue" class="font-bold text-blue-600">1,0</span>
+          </div>
+          <input id="a" type="range" min="-3" max="3"
+                 step="0.1" value="1" class="w-full">
+        </div>
+
+        <!-- COEFFICIENT b -->
+        <div class="mb-5">
+          <div class="flex justify-between mb-2">
+            <label for="b" class="font-semibold text-gray-700">b</label>
+            <span id="bValue" class="font-bold text-blue-600">2,0</span>
+          </div>
+          <input id="b" type="range" min="-10" max="10"
+                 step="0.5" value="2" class="w-full">
+        </div>
+
+        <!-- COEFFICIENT c -->
+        <div class="mb-5">
+          <div class="flex justify-between mb-2">
+            <label for="c" class="font-semibold text-gray-700">c</label>
+            <span id="cValue" class="font-bold text-blue-600">-3,0</span>
+          </div>
+          <input id="c" type="range" min="-10" max="10"
+                 step="0.5" value="-3" class="w-full">
+        </div>
+
+        <!-- RÉSULTAT -->
+        <div id="result" class="rounded-xl p-4 bg-blue-50 text-center">
+          <p id="message" class="font-semibold text-blue-800">
+            Le discriminant est positif, donc l'équation admet deux solutions réelles distinctes.
+          </p>
+          <p id="roots" class="text-gray-700 mt-3 text-sm">
+            x₁ = -3 et x₂ = 1
+          </p>
+        </div>
+
+        <button onclick="resetSimulation()"
+          class="mt-5 w-full bg-blue-600 hover:bg-blue-700
+                 text-white font-semibold py-2 rounded-lg transition">
+          Réinitialiser
+        </button>
+      </section>
+
+      <!-- GRAPHIQUE -->
+      <section class="p-4 flex items-center justify-center">
+        <svg id="graph" viewBox="0 0 360 300"
+             class="w-full max-w-lg" role="img"
+             aria-label="Représentation graphique du trinôme">
+          <defs>
+            <clipPath id="plotClip">
+              <rect x="0" y="0" width="360" height="300"/>
+            </clipPath>
+          </defs>
+          <g id="grid"></g>
+          <g id="axes"></g>
+          <g id="curve" clip-path="url(#plotClip)"></g>
+          <g id="points"></g>
+        </svg>
+      </section>
+
+    </div>
+  </main>
+
+<script>
+  const aInput = document.getElementById("a");
+  const bInput = document.getElementById("b");
+  const cInput = document.getElementById("c");
+
+  const XMIN = -10, XMAX = 10;
+  const YMIN = -15, YMAX = 16;
+  const W = 360, H = 300;
+
+  // Conversion des coordonnées mathématiques en coordonnées SVG
+  function px(x) {
+    return (x - XMIN) / (XMAX - XMIN) * W;
+  }
+
+  function py(y) {
+    return H - (y - YMIN) / (YMAX - YMIN) * H;
+  }
+
+  function update() {
+    let a = Number(aInput.value);
+    const b = Number(bInput.value);
+    const c = Number(cInput.value);
+
+    // Un trinôme du second degré nécessite a ≠ 0
+    if (a === 0) {
+      a = 0.1;
+      aInput.value = 0.1;
+    }
+
+    const delta = b * b - 4 * a * c;
+
+    // Mise à jour des valeurs affichées
+    const fmt = n => n.toFixed(1).replace(".", ",");
+    document.getElementById("aValue").textContent = fmt(a);
+    document.getElementById("bValue").textContent = fmt(b);
+    document.getElementById("cValue").textContent = fmt(c);
+
+    document.getElementById("calculation").textContent =
+      `Δ = ${fmt(b)}² − 4 × ${fmt(a)} × (${fmt(c)}) = ${fmt(delta)}`;
+
+    // Message et solutions
+    let message = "";
+    let roots = "";
+
+    if (delta > 0) {
+      const x1 = (-b - Math.sqrt(delta)) / (2 * a);
+      const x2 = (-b + Math.sqrt(delta)) / (2 * a);
+
+      message = "Le discriminant est positif, donc l'équation admet deux solutions réelles distinctes.";
+      roots = `x₁ = ${fmt(x1)} ; x₂ = ${fmt(x2)}`;
+    } else if (Math.abs(delta) < 1e-9) {
+      const x0 = -b / (2 * a);
+      message = "Le discriminant est nul, donc l'équation admet une solution réelle double.";
+      roots = `x₀ = ${fmt(x0)}`;
+    } else {
+      message = "Le discriminant est négatif, donc l'équation n'admet aucune solution réelle.";
+      roots = "Aucune racine réelle.";
+    }
+
+    document.getElementById("message").textContent = message;
+    document.getElementById("roots").textContent = roots;
+
+    drawGraph(a, b, c, delta);
+  }
+
+  function drawGraph(a, b, c, delta) {
+    // Quadrillage
+    let grid = "";
+
+    for (let x = -10; x <= 10; x += 5) {
+      grid += `
+        <line x1="${px(x)}" y1="0" x2="${px(x)}" y2="${H}"
+          stroke="#e5e7eb" stroke-width="1"/>
+        <text x="${px(x)}" y="169" text-anchor="middle"
+          fill="#888" font-size="14">${x}</text>`;
+    }
+
+    for (let y = -15; y <= 15; y += 5) {
+      grid += `
+        <line x1="0" y1="${py(y)}" x2="${W}" y2="${py(y)}"
+          stroke="#e5e7eb" stroke-width="1"/>
+        <text x="188" y="${py(y)-5}" fill="#888"
+          font-size="14">${y}</text>`;
+    }
+
+    document.getElementById("grid").innerHTML = grid;
+
+    // Axes
+    document.getElementById("axes").innerHTML = `
+      <line x1="0" y1="${py(0)}" x2="${W}" y2="${py(0)}"
+        stroke="#555" stroke-width="1.5"/>
+      <line x1="${px(0)}" y1="0" x2="${px(0)}" y2="${H}"
+        stroke="#555" stroke-width="1.5"/>
+    `;
+
+    // Tracé de la parabole
+    let path = "";
+
+    for (let x = XMIN; x <= XMAX; x += 0.05) {
+      const y = a*x*x + b*x + c;
+      path += (x === XMIN ? "M" : "L") +
+              `${px(x)},${py(y)} `;
+    }
+
+    document.getElementById("curve").innerHTML = `
+      <path d="${path}" fill="none" stroke="#1683ff"
+        stroke-width="3.5" stroke-linecap="round"/>
+    `;
+
+    // Racines représentées par des points bleus
+    let points = "";
+
+    if (delta >= 0) {
+      const x1 = (-b - Math.sqrt(Math.max(0, delta))) / (2*a);
+      const x2 = (-b + Math.sqrt(Math.max(0, delta))) / (2*a);
+
+      if (x1 >= XMIN && x1 <= XMAX) {
+        points += `<circle cx="${px(x1)}" cy="${py(0)}"
+          r="5.5" fill="#1683ff" stroke="white" stroke-width="2"/>`;
+      }
+
+      if (delta > 0 && x2 >= XMIN && x2 <= XMAX) {
+        points += `<circle cx="${px(x2)}" cy="${py(0)}"
+          r="5.5" fill="#1683ff" stroke="white" stroke-width="2"/>`;
+      }
+    }
+
+    document.getElementById("points").innerHTML = points;
+  }
+
+  function resetSimulation() {
+    aInput.value = 1;
+    bInput.value = 2;
+    cInput.value = -3;
+    update();
+  }
+
+  // Actualisation dès qu'un curseur bouge
+  [aInput, bInput, cInput].forEach(input => {
+    input.addEventListener("input", update);
+  });
+
+  update();
+</script>
+
+</body>
+</html>

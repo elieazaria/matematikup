@@ -94,6 +94,7 @@
     .bx select { border:2px solid rgba(55,48,163,.2); border-radius:12px; background:#fff; padding:6px 8px; font-weight:700; max-width:100%; }
     .bx select.ok { border-color:#24AE86; background:rgba(47,217,168,.2); } .bx select.ko { border-color:#FF5A36; background:#FFE9E3; }
     .go { margin-top:8px; background:#FF5A36; color:#fff; font-weight:900; border-radius:12px; padding:8px 20px; }
+    .sg.bad { border-color:#FF5A36; background:#FFF1ED; }
     .sg { margin-top:10px; border:2px dashed #24AE86; background:#E9FBF5; border-radius:12px; padding:8px 12px; font-size:.88rem; font-weight:700; }
     .vid { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; aspect-ratio:16/9; border:2px dashed rgba(55,48,163,.25); border-radius:16px; background:#EEF0FF; }
     .vid .play { width:64px; height:64px; border-radius:50%; background:#3730A3; color:#fff; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:10px; }
@@ -120,6 +121,37 @@
     .kfb.good { background:#dcfce7; color:#166534; } .kfb.bad { background:#fee2e2; color:#b91c1c; }
     .kfc .kopt { display:inline-flex; align-items:center; gap:8px; background:#f3f4f6; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
 
+    /* ── QCM à réponses multiples ── */
+    .om { display:flex; align-items:flex-start; gap:10px; margin:8px 0; border:2px solid rgba(55,48,163,.2); border-radius:12px; background:#fff; padding:9px 14px; font-weight:700; cursor:pointer; }
+    .om:hover { border-color:#3730A3; background:#EEF0FF; }
+    .om input { accent-color:#3730A3; width:18px; height:18px; margin-top:3px; flex-shrink:0; }
+    .om.ok { border-color:#24AE86; background:rgba(47,217,168,.2); } .om.ko { border-color:#FF5A36; background:#FFE9E3; }
+
+    /* ── Score d'un quiz (reste visible pendant le défilement) ── */
+    .qscore { position:sticky; top:74px; z-index:6; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:4px 16px; margin-bottom:6px; border:2px solid rgba(55,48,163,.2); border-radius:12px; background:#fff; padding:8px 14px; font-weight:900; font-size:.9rem; color:#3730A3; box-shadow:0 4px 14px rgba(39,34,117,.08); }
+    .qscore.fin { background:#EEF0FF; border-color:#3730A3; }
+    .qscore .qs-m { color:#272275; }
+
+    /* ── Activité autonome affichée dans un cadre (elle garde ses propres couleurs) ── */
+    .fr { border:2px solid rgba(55,48,163,.15); border-radius:18px; overflow:hidden; background:#fff; }
+    .fr iframe { display:block; width:100%; border:0; }
+
+    /* ── Activité Yas 036 : couleurs propres à l'activité (jaune et bleu de l'annonce) ── */
+    .ay { background:#FFD100; border-radius:20px; padding:14px; color:#0B2F6B; }
+    .ay h2 { display:flex; align-items:center; gap:8px; margin:0 0 12px; padding-bottom:6px; border-bottom:4px solid #fff; color:#0B2F6B; font-weight:900; font-size:1.25rem; line-height:1.25; scroll-margin-top:96px; }
+    .ay h2 i { font-style:normal; background:#0B2F6B; color:#FFD100; border-radius:10px; padding:0 10px; flex-shrink:0; }
+    .ay .yp { background:#fff; border-radius:12px; border-bottom:6px solid #0B2F6B; padding:14px; margin-bottom:12px; font-size:.92rem; color:#1f2937; }
+    .ay .yp > p { margin:6px 0; overflow-x:auto; overflow-y:hidden; }
+    .ay .yp h3 { margin-bottom:6px; font-weight:900; color:#0B2F6B; }
+    .ay .yp ul { list-style:disc; padding-left:22px; margin:6px 0; }
+    .ay img.ad { display:block; margin:10px auto; width:60%; max-width:250px; border-radius:6px; box-shadow:0 6px 16px rgba(0,0,0,.25); }
+    .ay .corr { border-color:#0B2F6B; background:#FFFBE0; }
+    .ay .corr label { color:#0B2F6B; }
+    .ay .ta { border-color:#0B2F6B; }
+    .ay .bt { background:#0B2F6B !important; color:#fff !important; }
+    .ay .bt[data-a="i"] { background:#fff !important; color:#0B2F6B !important; border:2px solid #0B2F6B; }
+    .ay .msg { background:#fff; border:1px solid #0B2F6B; }
+
     ::-webkit-scrollbar { width:5px; height:5px; } ::-webkit-scrollbar-track { background:#EEF0FF; }
     ::-webkit-scrollbar-thumb { background:#FF5A36; border-radius:99px; }
   </style>
@@ -130,7 +162,7 @@
 <header id="main-header" class="fixed top-0 left-0 right-0 z-40 w-full px-5 md:px-10 lg:px-16 py-3 border-b border-primary/5 bg-white/95 backdrop-blur-md">
   <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
     <a href="index.html" class="flex items-center flex-shrink-0" aria-label="MATEMATIKUP — Accueil">
-      <img src="logo_mate.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
     </a>
 
     <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
@@ -236,13 +268,41 @@ const fil = (dernier) => `
     <span class="text-primary">${dernier}</span>
   </nav>`;
 
+/* Ajuste la hauteur d'une activité (iframe) à son contenu. Fonctionne sur le site en ligne (même origine) ;
+   si la page est ouverte en local (file://), le navigateur l'interdit : le cadre garde sa hauteur fixe et défile. */
+function fitFrame(f) {
+  try {
+    const d = f.contentDocument, st = d.createElement('style');
+    st.textContent = 'body{min-height:0!important}';
+    d.head.appendChild(st);
+    const fit = () => { const h = Math.ceil(d.documentElement.getBoundingClientRect().height); if (h > 200) f.style.height = h + 'px'; };
+    new d.defaultView.ResizeObserver(fit).observe(d.documentElement);
+    fit();
+  } catch (e) { /* hauteur fixe */ }
+}
+
+/* Score d'un quiz : seule la première réponse à chaque question est comptée */
+function majScore(carte, ok) {
+  if (carte.dataset.done) return;
+  carte.dataset.done = '1'; if (ok) carte.dataset.pt = '1';
+  const set = carte.closest('.qzset'); if (!set) return;
+  const cartes = [...set.querySelectorAll('.bx.pu')], cfg = QS[+set.dataset.s], sc = set.querySelector('.qscore');
+  const faites = cartes.filter((c) => c.dataset.done).length, pts = cartes.filter((c) => c.dataset.pt).length;
+  sc.querySelector('.qs-n').textContent = 'Score : ' + pts + ' / ' + cartes.length;
+  if (faites === cartes.length) {
+    const r = pts / cartes.length, m = cfg.fin, s = cfg.seuils;
+    sc.classList.add('fin');
+    sc.querySelector('.qs-m').textContent = '🏁 Quiz terminé ! ' + (r >= s[0] ? m[0] : r >= s[1] ? m[1] : r >= s[2] ? m[2] : m[3]);
+  }
+}
+
 function bientot() {
   document.title = 'Chapitre bientôt disponible — MATEMATIKUP';
   $('page').innerHTML = `<div class="max-w-4xl mx-auto">${fil('Chapitre ' + (n || ''))}
     <div class="rounded-3xl border border-primary/10 bg-white p-10 text-center shadow-xl shadow-primary/5">
       <p class="text-5xl mb-4">🛠️</p>
-      <h1 class="font-black text-3xl">Les contenus arrivent bientôt</h1>
-      <p class="mt-3 text-primary-dark/65">Le contenu du chapitre ${n || ''} de la ${nomClasse} est en cours de mise à jour.</p>
+      <h1 class="font-black text-3xl">Ce chapitre arrive bientôt</h1>
+      <p class="mt-3 text-primary-dark/65">Le contenu du chapitre ${n || ''} de la ${nomClasse} est en cours de préparation.</p>
       <a href="${retour}" class="mt-6 inline-block rounded-xl bg-secondary hover:bg-secondary-dark px-6 py-3 font-black text-white transition-colors">← Retour au programme</a>
     </div></div>`;
 }
@@ -262,9 +322,11 @@ function demarrer(builder) {
     });
   });
 
-  const sectionHtml = (s) => s.kfc
-    ? `<div class="sec kfc"><h2 id="${s.id}"><i>${s.n}</i>${s.t}</h2>${s.h}</div>`
+  const sectionHtml = (s) => (s.kfc || s.ay)
+    ? `<div class="sec ${s.kfc ? 'kfc' : 'ay'}"><h2 id="${s.id}"><i>${s.n}</i>${s.t}</h2>${s.h}</div>`
     : `<div class="sec"><h2 id="${s.id}" class="ttl"><i>${s.n}</i><span>${s.t}</span></h2>${s.h}</div>`;
+  // « partie » peut dépendre de la classe : { defaut: '…', '1ere-L': '…' }
+  const partie = (fiche.partie && typeof fiche.partie === 'object') ? (fiche.partie[classe] || fiche.partie.defaut) : fiche.partie;
 
   const pagesHtml = pages.map((p, i) => `
     <section class="pg${i === 0 ? ' on' : ''}" data-t="${p.ti}">
@@ -281,7 +343,7 @@ function demarrer(builder) {
   $('page').innerHTML = `
     ${fil(fiche.titre)}
     <section>
-      <p class="text-sm font-black uppercase tracking-widest text-secondary">${nomClasse} · ${fiche.partie}</p>
+      <p class="text-sm font-black uppercase tracking-widest text-secondary">${nomClasse} · ${partie}</p>
       <h1 class="mt-2 font-black text-3xl md:text-4xl leading-tight">${fiche.titre}</h1>
       <p class="mt-3 text-primary-dark/65">${fiche.resume}</p>
     </section>
@@ -332,8 +394,20 @@ function demarrer(builder) {
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.o'); if (b) {
       const g = b.parentElement, q = QZ[+g.dataset.k], btns = [...g.children], i = btns.indexOf(b), ok = i === q.ans;
-      btns.forEach((x) => x.classList.remove('ok', 'ko')); b.classList.add(ok ? 'ok' : 'ko');
-      const ex = g.nextElementSibling; ex.classList.remove('hidden'); ex.innerHTML = (ok ? '✅ Bravo ! ' : '❌ Pas tout à fait. ') + q.expl; tex(ex); return;
+      btns.forEach((x) => x.classList.remove('ok', 'ko')); b.classList.add(ok ? 'ok' : 'ko'); majScore(b.closest('.bx'), ok);
+      const ex = g.nextElementSibling; ex.classList.remove('hidden'); ex.classList.toggle('bad', !ok); ex.innerHTML = (ok ? '✅ Bravo ! ' : '❌ Pas tout à fait. ') + q.expl; tex(ex); return;
+    }
+    const mb = e.target.closest('.chkm'); if (mb) {
+      const g = mb.previousElementSibling, q = QZ[+g.dataset.k], labs = [...g.children], ex = mb.nextElementSibling;
+      const sel = labs.map((l, i) => (l.querySelector('input').checked ? i : -1)).filter((i) => i >= 0);
+      labs.forEach((l) => l.classList.remove('ok', 'ko'));
+      ex.classList.remove('hidden');
+      if (!sel.length) { ex.textContent = 'Coche au moins une réponse avant de valider.'; return; }
+      const ok = sel.length === q.ans.length && sel.every((i) => q.ans.includes(i));
+      labs.forEach((l, i) => { if (q.ans.includes(i)) l.classList.add('ok'); else if (sel.includes(i)) l.classList.add('ko'); });
+      majScore(mb.closest('.bx'), ok);
+      ex.classList.toggle('bad', !ok);
+      ex.innerHTML = (ok ? '✅ Bonne réponse ! ' : '❌ Ce n’est pas la bonne réponse. ') + q.expl; tex(ex); return;
     }
     const k = e.target.closest('.chk'); if (k) {
       k.closest('.bx').querySelectorAll('select').forEach((s) => { s.classList.remove('ok', 'ko'); if (s.value) s.classList.add(s.value === s.dataset.ans ? 'ok' : 'ko'); }); return;
@@ -346,15 +420,19 @@ function demarrer(builder) {
   texAll();
 }
 
-/* Chargement à la demande : seul le fichier du chapitre demandé est téléchargé */
-if (!id) bientot();
-else {
+/* Chargement à la demande : seuls le fichier du chapitre demandé et ses dépendances éventuelles sont téléchargés */
+const charger = (cid) => new Promise((ok, ko) => {
+  if (CHAPITRES[cid]) return ok();
   const s = document.createElement('script');
-  s.src = 'chapitres/' + id + '.js';
-  s.onload = () => (CHAPITRES[id] ? demarrer(CHAPITRES[id]) : bientot());
-  s.onerror = bientot;
+  s.src = 'chapitres/' + cid + '.js';
+  s.onload = () => (CHAPITRES[cid] ? ok() : ko());
+  s.onerror = ko;
   document.head.appendChild(s);
-}
+});
+if (!id) bientot();
+else charger(id)
+  .then(() => Promise.all((DEPS[id] || []).map(charger)))
+  .then(() => demarrer(CHAPITRES[id]), bientot);
 
 /* Header */
 $('burger').addEventListener('click', () => $('mob-menu').classList.toggle('open'));

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La combinatoire au service du style – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--co:#F0775A;--te:#2FB5A3;--la:#8E7CC3;--tx:#3B2F4F;--pe:#FFF1E8}
+body{background:linear-gradient(160deg,#FFE3D3,#FFF6EF 45%,#E4F6F2);color:var(--tx);font-family:Poppins,system-ui,sans-serif;min-height:100vh}
+h1,h2{font-family:Merriweather,Georgia,serif}
+.pg{display:none}.pg.on{display:block}
+.card{background:#fff;border-radius:26px;box-shadow:0 10px 30px rgba(240,119,90,.18)}
+.btn{background:var(--co);color:#fff;border-radius:14px;padding:.6rem 1rem;font-weight:600}
+.btn:disabled{opacity:.4}
+.btn2{background:#fff;color:var(--tx);border:2px solid var(--la);border-radius:14px;padding:.5rem .9rem;font-weight:600}
+.opt{border:3px solid transparent;background:var(--pe);border-radius:14px;padding:4px;text-align:center;font-size:11px;line-height:1.1}
+.opt.on{border-color:var(--co);background:#fff}
+.th{border:3px solid transparent;border-radius:14px;background:var(--pe);padding:3px;text-align:center;font-size:11px}
+.th.on{border-color:var(--te);background:#E4F6F2}
+.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.ok{background:#E4F6F2;border-radius:12px;padding:.5rem}
+.ko{background:#FFE9E3;border-radius:12px;padding:.5rem}
+</style>
+</head>
+<body>
+<main class="max-w-4xl mx-auto p-3 sm:p-5">
+<div class="flex items-center justify-between gap-3 mb-3">
+  <h1 class="text-xl sm:text-3xl" style="color:var(--co)">La combinatoire au service du style !</h1>
+  <div class="text-sm font-semibold whitespace-nowrap" style="color:var(--la)">Page <span id="pn">1</span>/2</div>
+</div>
+
+<section id="p1" class="pg on card p-4 sm:p-6">
+  <h2 class="text-lg sm:text-xl mb-2" style="color:var(--la)">Défi 1 : habille Nina, puis compte !</h2>
+  <p class="text-sm sm:text-base mb-3 text-justify">Nina est une passionnée de mode. Elle adore composer des tenues originales chaque jour. Sa garde-robe est limitée : elle possède seulement <b>3 jupes</b>, <b>3 chemisiers</b> et <b>2 vestes</b>. Chaque matin, elle choisit une jupe, un chemisier et une veste. Elle ne porte jamais la même combinaison deux fois.</p>
+  <div class="grid md:grid-cols-5 gap-4">
+    <div class="md:col-span-2 rounded-2xl p-2 flex flex-col items-center" style="background:var(--pe)">
+      <div id="nina" class="w-44 sm:w-52"></div>
+      <button id="save" class="btn w-full mt-2">➕ Enregistrer cette tenue</button>
+      <div id="msg1" class="text-xs mt-1 min-h-[18px] text-center"></div>
+    </div>
+    <div class="md:col-span-3">
+      <div id="pick" class="space-y-2"></div>
+      <div class="mt-3 rounded-2xl p-2" style="background:#F1EEFB">
+        <div class="text-xs font-semibold mb-1">✨ Accessoires (pour le style : ils ne changent pas le nombre de tenues)</div>
+        <div id="accs" class="flex gap-2"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3">
+    <div class="font-semibold text-sm mb-1">👗 Tenues enregistrées : <span id="cnt">0</span></div>
+    <div id="gal" class="flex flex-wrap gap-2 min-h-[40px]"></div>
+  </div>
+  <div class="mt-4 rounded-2xl p-3" style="border:2px solid var(--co)">
+    <p class="font-semibold mb-2">1) Combien de tenues différentes peut-elle composer ?</p>
+    <div class="flex flex-wrap gap-2 items-center">
+      <input id="a1" type="number" inputmode="numeric" class="rounded-xl px-3 py-2 w-28" style="border:2px solid var(--la)" placeholder="Ta réponse">
+      <button id="v1" class="btn">Vérifier</button>
+      <button id="h1" class="btn2">💡 Indice</button>
+    </div>
+    <div id="f1" class="mt-2 text-sm"></div>
+  </div>
+  <div class="mt-3 flex flex-wrap items-center justify-between gap-2"><div id="chk" class="text-sm font-semibold"></div><button id="next" class="btn">Page suivante ➜</button></div>
+</section>
+
+<section id="p2" class="pg card p-4 sm:p-6">
+  <h2 class="text-lg sm:text-xl mb-2" style="color:var(--la)">Défi 2 : la semaine de la Saint-Valentin ❤️</h2>
+  <p class="text-sm sm:text-base mb-2">Pour la semaine de la Saint-Valentin, Nina sélectionne <b>3 tenues différentes</b> parmi celles qu’elle a déjà composées. Touche 3 tenues :</p>
+  <div id="pool" class="flex flex-wrap gap-2 mb-3"></div>
+  <div id="order" class="hidden rounded-2xl p-3" style="background:var(--pe)">
+    <p class="font-semibold mb-2 text-sm">Change l’ordre des tenues et trouve toutes les possibilités :</p>
+    <div id="slots" class="grid grid-cols-3 gap-2 text-center"></div>
+    <div class="flex flex-wrap gap-2 mt-3 items-center">
+      <button class="btn2" id="s12">↔ 1 et 2</button>
+      <button class="btn2" id="s23">↔ 2 et 3</button>
+      <span class="text-sm font-semibold">Ordres trouvés : <span id="fo">1</span></span>
+    </div>
+  </div>
+  <div id="q2" class="hidden mt-4 rounded-2xl p-3" style="border:2px solid var(--co)">
+    <p class="font-semibold mb-2">2) Combien de façons différentes Nina peut-elle organiser l’ordre de ses 3 tenues ?</p>
+    <div class="flex flex-wrap gap-2 items-center">
+      <input id="a2" type="number" inputmode="numeric" class="rounded-xl px-3 py-2 w-28" style="border:2px solid var(--la)" placeholder="Ta réponse">
+      <button id="v2" class="btn">Vérifier</button>
+      <button id="h2" class="btn2">💡 Indice</button>
+    </div>
+    <div id="f2" class="mt-2 text-sm"></div>
+  </div>
+  <div class="mt-3"><button id="back" class="btn2">⬅ Retour</button></div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const S="#C99568",H="#1E1520";
+const mir=s=>`<g transform="translate(200 0) scale(-1 1)">${s}</g>`;
+const both=s=>s+mir(s);
+const T="M70 80Q100 72 130 80L124 158H76Z";
+const SL="M66 82Q54 120 56 168L71 170Q73 120 78 86Z";
+const SS="M66 82Q60 98 58 114L74 118Q76 100 78 86Z";
+const S3="M66 82Q55 118 57 146L72 148Q73 118 78 86Z";
+
+const SK=[
+ {n:"Évasée sable",g:()=>`<path d="M76 146H124L148 264Q100 274 52 264Z" fill="#F2C9A0"/><path d="M76 146H124V154H76Z" fill="#D9A56F"/><path d="M100 154L114 270" stroke="#000" opacity=".07"/>`},
+ {n:"Crayon corail",g:()=>`<path d="M77 146H123L120 272Q100 280 80 272Z" fill="#E58F7B"/><path d="M77 146H123V154H77Z" fill="#C9705D"/><path d="M100 214V274" stroke="#fff" opacity=".4"/>`},
+ {n:"Plissée menthe",g:()=>`<path d="M76 146H124L154 306Q100 316 46 306Z" fill="#9DC9B5"/><g stroke="#fff" opacity=".4">${[0,1,2,3,4,5,6,7,8].map(j=>`<path d="M${78+j*5.5} 154L${52+j*12} 310"/>`).join('')}</g><path d="M76 146H124V154H76Z" fill="#76AE98"/>`},
+ {n:"Mini denim",g:()=>`<path d="M76 146H124L138 226H62Z" fill="#7FA3D6"/><path d="M76 146H124V155H76Z" fill="#5F84B8"/><path d="M70 222L76 160M130 222L124 160" stroke="#fff" stroke-dasharray="3 2" opacity=".6"/><rect x="82" y="170" width="14" height="14" rx="2" fill="none" stroke="#fff" opacity=".6"/><rect x="104" y="170" width="14" height="14" rx="2" fill="none" stroke="#fff" opacity=".6"/>`}
+];
+const BL=[
+ {n:"Blanc classique",g:()=>`<path d="${SL}" fill="#fff" stroke="#E8DDD6"/>${mir(`<path d="${SL}" fill="#fff" stroke="#E8DDD6"/>`)}<path d="${T}" fill="#fff" stroke="#E8DDD6"/><path d="M90 78L100 96L110 78Z" fill="${S}"/><path d="M90 74L100 94L91 100L82 80Z" fill="#fff" stroke="#E8DDD6"/><path d="M110 74L100 94L109 100L118 80Z" fill="#fff" stroke="#E8DDD6"/><g fill="#CDBFB6"><circle cx="100" cy="112" r="1.7"/><circle cx="100" cy="128" r="1.7"/><circle cx="100" cy="144" r="1.7"/></g>`},
+ {n:"Crème à nœud",g:()=>`<path d="${SS}" fill="#F6E7CF"/>${mir(`<path d="${SS}" fill="#F6E7CF"/>`)}<path d="${T}" fill="#F6E7CF"/><path d="M88 78Q100 90 112 78Z" fill="${S}"/><path d="M100 86L85 77L85 95Z M100 86L115 77L115 95Z" fill="#F0775A"/><circle cx="100" cy="86" r="3.5" fill="#D9573B"/>`},
+ {n:"Rouge à pois",g:()=>`<path d="${SS}" fill="#E4604A"/>${mir(`<path d="${SS}" fill="#E4604A"/>`)}<path d="${T}" fill="#E4604A"/><path d="M90 78L100 102L110 78Z" fill="${S}"/><g fill="#fff">${[[84,100],[116,100],[92,120],[108,120],[84,140],[116,140],[100,136],[76,116],[124,116]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="2.6"/>`).join('')}</g>`},
+ {n:"Rose à volants",g:()=>`<path d="${SL}" fill="#F3B7B0"/>${mir(`<path d="${SL}" fill="#F3B7B0"/>`)}<path d="${T}" fill="#F3B7B0"/><path d="M87 78Q100 94 113 78Z" fill="${S}"/><path d="M85 77Q100 98 115 77" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="3 2"/>`},
+ {n:"Rayé marin",g:()=>`<clipPath id="ct"><path d="${T}"/></clipPath><path d="${S3}" fill="#fff" stroke="#BFE4E8"/>${mir(`<path d="${S3}" fill="#fff" stroke="#BFE4E8"/>`)}<path d="${T}" fill="#fff"/><g clip-path="url(#ct)" fill="#3FA7B5">${[88,100,112,124,136,148].map(y=>`<rect x="60" y="${y}" width="80" height="5"/>`).join('')}</g><path d="M84 78Q100 90 116 78Z" fill="${S}"/>`}
+];
+const PAN=(h)=>`M67 80L91 78L96 ${h}L69 ${h}Q63 110 67 80Z`;
+const JK=[
+ {n:"Blazer camel",g:()=>{const c="#C9915F";return `<path d="${SL}" fill="${c}"/>${mir(`<path d="${SL}" fill="${c}"/>`)}${both(`<path d="${PAN(176)}" fill="${c}"/><path d="M91 78L98 108L90 104L82 90Z" fill="#B27B4C"/>`)}<circle cx="94" cy="140" r="2" fill="#7A4E2D"/>`}},
+ {n:"Cardigan sauge",g:()=>{const c="#BFD8B8";return `<path d="${SL}" fill="${c}"/>${mir(`<path d="${SL}" fill="${c}"/>`)}${both(`<path d="${PAN(198)}" fill="${c}"/><g stroke="#fff" opacity=".45">${[74,80,86,92].map(x=>`<path d="M${x} 90V196"/>`).join('')}</g>`)}`}},
+ {n:"Veste en jean",g:()=>{const c="#6F97CC";return `<path d="${SL}" fill="${c}"/>${mir(`<path d="${SL}" fill="${c}"/>`)}${both(`<path d="${PAN(152)}" fill="${c}"/><path d="M71 150H95" stroke="#fff" stroke-dasharray="3 2" opacity=".7"/><rect x="73" y="112" width="12" height="12" rx="2" fill="none" stroke="#fff" opacity=".6"/>`)}`}}
+];
+const SKs=SK.slice(0,3),BLs=[BL[0],BL[2],BL[4]],JKs=JK.slice(0,2);
+const AC=[
+ {k:"hat",n:"Chapeau",e:"👒"},{k:"bag",n:"Sac paille",e:"👜"},{k:"boots",n:"Bottes",e:"🥾"}
+];
+
+function fig(o,a){
+ let s=`<path d="M80 36Q76 100 74 156L126 156Q124 100 120 36Z" fill="${H}"/>`;
+ s+=`<path d="M78 186Q76 260 82 330Q84 360 86 388L98 388Q99 350 100 300L100 186Z" fill="${S}"/><path d="M122 186Q124 260 118 330Q116 360 114 388L102 388Q101 350 100 300L100 186Z" fill="${S}"/>`;
+ s+=`<path d="M82 346L98 346M102 346L118 346" stroke="#000" opacity=".06"/>`;
+ s+=a.boots?`<path d="M80 296H99L99 382Q99 392 88 392H72Q70 384 80 378Z" fill="#8B5A3C"/>${mir(`<path d="M80 296H99L99 382Q99 392 88 392H72Q70 384 80 378Z" fill="#8B5A3C"/>`)}`:`<path d="M82 384H99V394H78Q80 388 82 384Z" fill="#D99C8A"/>${mir(`<path d="M82 384H99V394H78Q80 388 82 384Z" fill="#D99C8A"/>`)}`;
+ s+=both(`<path d="M68 82Q56 120 58 160Q58 180 62 196L72 196Q72 160 76 120Q78 98 76 84Z" fill="${S}"/>`);
+ s+=`<path d="M72 80Q100 74 128 80L122 150Q124 170 126 192L74 192Q76 170 78 150Z" fill="${S}"/><rect x="94" y="58" width="12" height="24" fill="#B98558"/>`;
+ s+=SKs[o.jupe].g()+BLs[o.chemisier].g()+JKs[o.veste].g();
+ s+=both(`<ellipse cx="65" cy="201" rx="6" ry="9" fill="${S}"/>`);
+ s+=`<ellipse cx="100" cy="44" rx="16.5" ry="20" fill="${S}"/><path d="M89 38Q94 35 98 38M102 38Q106 35 111 38" stroke="#2A1A1A" stroke-width="1.5" fill="none"/><path d="M90 43Q94 40 98 43Q94 46 90 43ZM102 43Q106 40 110 43Q106 46 102 43Z" fill="#fff"/><circle cx="94" cy="43" r="1.8" fill="#3A241A"/><circle cx="106" cy="43" r="1.8" fill="#3A241A"/><path d="M100 46L99 51Q100 52 102 51" stroke="#A8744B" fill="none"/><path d="M94 56Q100 53 106 56Q100 62 94 56Z" fill="#B8475A"/><circle cx="90" cy="51" r="3" fill="#E88" opacity=".2"/><circle cx="110" cy="51" r="3" fill="#E88" opacity=".2"/>`;
+ s+=`<path d="M83 42Q80 14 100 14Q122 14 117 42Q114 27 100 26Q90 27 83 42Z" fill="${H}"/><path d="M83 42Q78 90 82 128L89 126Q86 84 88 46Z" fill="${H}"/><path d="M117 42Q122 90 118 128L111 126Q114 84 112 46Z" fill="${H}"/>`;
+ if(a.hat)s+=`<ellipse cx="100" cy="24" rx="36" ry="7" fill="#EBCB82"/><path d="M82 24Q82 4 100 4Q118 4 118 24Z" fill="#EBCB82"/><path d="M82 21Q100 26 118 21V17Q100 22 82 17Z" fill="#F0775A"/>`;
+ if(a.bag)s+=`<path d="M52 200Q62 164 74 200" fill="none" stroke="#B98B45" stroke-width="3"/><ellipse cx="62" cy="218" rx="15" ry="12" fill="#E2BC76"/><path d="M50 214H74M52 222H72" stroke="#B98B45"/>`;
+ return s;
+}
+const svgF=(o,a,w)=>`<svg viewBox="0 0 200 400" class="${w}">${fig(o,a)}</svg>`;
+const icon=(g,vb)=>`<svg viewBox="${vb}" class="w-12 h-14 mx-auto">${g}</svg>`;
+
+let cur={jupe:0,chemisier:0,veste:0},acc={hat:false,bag:false,boots:false},saved=[],sel=[],seen=new Set(),ord=[0,1,2],ok1=false;
+const key=o=>o.jupe+'-'+o.chemisier+'-'+o.veste;
+const SETS={jupe:[SKs,"Jupes","40 140 120 180"],chemisier:[BLs,"Chemisiers","50 70 100 96"],veste:[JKs,"Vestes","50 70 100 130"]};
+
+function nina(){$('nina').innerHTML=svgF(cur,acc,"w-full")}
+function picks(){
+ $('pick').innerHTML=Object.entries(SETS).map(([k,[L,t,vb]])=>`<div><div class="text-xs font-semibold mb-1">${t} (${L.length}) : <span class="font-normal">${L[cur[k]].n}</span></div><div class="grid grid-cols-3 gap-1.5">${L.map((x,i)=>`<button data-k="${k}" data-i="${i}" class="opt ${cur[k]===i?'on':''}">${icon(x.g(),vb)}${x.n}</button>`).join('')}</div></div>`).join('');
+ $('pick').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur[b.dataset.k]=+b.dataset.i;picks();nina()});
+ $('accs').innerHTML=AC.map(x=>`<button data-k="${x.k}" class="opt flex-1 ${acc[x.k]?'on':''}"><div class="text-2xl">${x.e}</div>${x.n}</button>`).join('');
+ $('accs').querySelectorAll('button').forEach(b=>b.onclick=()=>{acc[b.dataset.k]=!acc[b.dataset.k];picks();nina()});
+}
+function gal(){
+ $('cnt').textContent=saved.length;$('chk').innerHTML=(saved.length>=5?'✅':'⬜')+' Tenues enregistrées : '+saved.length+'/5 &nbsp; '+(ok1?'✅':'⬜')+' Question 1 réussie';
+ $('gal').innerHTML=saved.length?saved.map((o,i)=>`<div class="th" style="width:64px">${svgF(o,o.a,"w-full")}Tenue ${i+1}</div>`).join(''):`<span class="text-xs opacity-60">Aucune tenue pour l’instant : enregistre ta première !</span>`;
+ 
+}
+$('save').onclick=()=>{
+ if(saved.some(s=>key(s)===key(cur))){$('msg1').textContent="⚠️ Déjà enregistrée : Nina ne porte jamais deux fois la même tenue !";return}
+ saved.push({...cur,a:{...acc}});$('msg1').textContent="✔️ Tenue n°"+saved.length+" enregistrée.";gal();
+};
+$('h1').onclick=()=>$('f1').innerHTML=`<div class="ko">💡 Avec <b>une seule jupe</b> : 3 chemisiers × 2 vestes = <b>6</b> tenues. Et avec les 3 jupes ?</div>`;
+$('v1').onclick=()=>{
+ if(!$('a1').value)return;const v=+$('a1').value,f=$('f1');
+ if(v===18){ok1=true;f.innerHTML=`<div class="ok pop">✅ Bravo ! 3 × 3 × 2 = <b>18 tenues</b>. On multiplie le nombre de choix à chaque étape.${saved.length<5?'<br>👉 Enregistre au moins 5 tenues différentes pour passer à la page suivante.':'<br>👉 Tu peux passer à la page suivante !'}</div>`;gal()}
+ else if(v===8)f.innerHTML=`<div class="ko">❌ 3 + 3 + 2 = 8 compte les vêtements, pas les tenues. Une tenue combine <b>trois</b> choix : multiplie !</div>`;
+ else if(v===9||v===6)f.innerHTML=`<div class="ko">❌ Il manque un type de vêtement. Une tenue = jupe + chemisier + veste.</div>`;
+ else f.innerHTML=`<div class="ko">❌ Pas encore. Essaie l’indice 💡 ou compose quelques tenues.</div>`;
+};
+const show=p=>{$('p1').classList.toggle('on',p===1);$('p2').classList.toggle('on',p===2);$('pn').textContent=p;$('pn').scrollIntoView({block:'start'})};
+$('next').onclick=()=>{const f=$('f1');if(!ok1){f.innerHTML=`<div class="ko">👉 Réponds d’abord correctement à la question 1.</div>`;return}if(saved.length<5){f.innerHTML=`<div class="ko">👉 Enregistre encore ${5-saved.length} tenue(s) différente(s) pour continuer.</div>`;return}show(2);pool()};$('back').onclick=()=>show(1);
+
+function pool(){
+ $('pool').innerHTML=saved.map((o,i)=>`<button data-i="${i}" class="th ${sel.includes(i)?'on pop':''}" style="width:78px">${svgF(o,o.a,"w-full")}Tenue ${i+1}</button>`).join('');
+ $('pool').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.i;sel=sel.includes(i)?sel.filter(x=>x!==i):(sel.length<3?[...sel,i]:sel);pool();
+  if(sel.length===3){ord=[0,1,2];seen=new Set(['0,1,2']);$('order').classList.remove('hidden');$('q2').classList.remove('hidden');slots()}
+  else{$('order').classList.add('hidden');$('q2').classList.add('hidden')}
+ });
+}
+function slots(){
+ $('slots').innerHTML=ord.map((x,i)=>{const o=saved[sel[x]];return `<div class="th" style="background:#fff;border-color:var(--la)"><div class="font-semibold">Jour ${i+1}</div>${svgF(o,o.a,"w-20 mx-auto")}Tenue ${"ABC"[x]}</div>`}).join('');
+ $('fo').textContent=seen.size;
+}
+const sw=(a,b)=>{[ord[a],ord[b]]=[ord[b],ord[a]];seen.add(ord.join(','));slots()};
+$('s12').onclick=()=>sw(0,1);$('s23').onclick=()=>sw(1,2);
+$('h2').onclick=()=>$('f2').innerHTML=`<div class="ko">💡 Jour 1 : <b>3</b> choix. Jour 2 : il reste <b>?</b> choix. Jour 3 : il reste <b>?</b> choix.</div>`;
+$('v2').onclick=()=>{
+ if(!$('a2').value)return;const v=+$('a2').value,f=$('f2');
+ if(v===6)f.innerHTML=`<div class="ok pop">🏆 Excellent ! 3 × 2 × 1 = 3! = <b>6 façons</b>.<br>Ordres possibles : ABC, ACB, BAC, BCA, CAB, CBA.</div>`;
+ else if(v===3)f.innerHTML=`<div class="ko">❌ 3 est le nombre de tenues, pas d’ordres. Jour 1 : 3 choix, puis ?</div>`;
+ else if(v===9)f.innerHTML=`<div class="ko">❌ 3 × 3 = 9 oublie qu’une tenue déjà portée ne revient pas : le 2e jour, il reste 2 choix.</div>`;
+ else if(v>6)f.innerHTML=`<div class="ko">❌ Trop grand : on ordonne seulement les <b>3</b> tenues déjà choisies.</div>`;
+ else f.innerHTML=`<div class="ko">❌ Pas encore. Cherche tous les ordres avec les boutons ↔ ou ouvre l’indice 💡</div>`;
+};
+nina();picks();gal();
+</script>
+</body>
+</html>

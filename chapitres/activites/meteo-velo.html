@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La météo de Velo – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--dk:#1F2A55;--or:#FF8A3D;--bl:#3B82F6;--gr:#18A87C}
+body{background:linear-gradient(180deg,#FFD9A8,#FFF1DD 40%,#DDEBFF);color:var(--dk);font-family:Poppins,system-ui,sans-serif;min-height:100vh}
+.card{background:#fff;border-radius:22px;box-shadow:0 10px 26px rgba(31,42,85,.16)}
+.btn{background:var(--bl);color:#fff;border-radius:14px;padding:.55rem 1rem;font-weight:700}
+.opt{border:3px solid #BFD4FB;background:#fff;border-radius:14px;padding:.55rem .8rem;font-weight:600;text-align:left;font-size:.92rem;width:100%}
+.opt:hover:not(:disabled){background:#EEF4FF}
+.opt.good{border-color:var(--gr);background:#DDF7EE}.opt.bad{border-color:#E4572E;background:#FFE9E2}
+.ok{background:#DDF7EE;border-radius:12px;padding:.6rem}.ko{background:#FFEDE3;border-radius:12px;padding:.6rem}
+.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.dot{width:12px;height:12px;border-radius:50%;background:#C9D8F5}.dot.on{background:var(--or);transform:scale(1.3)}.dot.dn{background:var(--gr)}
+details summary{cursor:pointer;font-weight:600;font-size:.85rem}
+.tb td,.tb th{padding:.25rem .5rem;border:1px solid #D4E1FA}
+</style>
+</head>
+<body>
+<main class="max-w-3xl mx-auto p-3 sm:p-5">
+  <header class="flex items-center justify-between gap-2 mb-2">
+    <h1 class="text-xl sm:text-3xl font-bold">🌡️ La météo de Velo</h1>
+    <div class="font-bold text-sm whitespace-nowrap">⭐ <span id="xp">0</span> XP</div>
+  </header>
+  <section class="card p-4 mb-3 text-sm">
+    <p>Velo part en voyage ce soir à <b>23 h</b>. Il veut connaître la température afin de porter des vêtements adaptés.</p>
+    <p class="mt-1">La station météo d’Ampasapito a noté la température (en °C) à différentes heures de la journée.</p>
+    <details class="mt-2"><summary>📋 Voir le relevé de la station</summary>
+      <div class="overflow-x-auto mt-2"><table class="tb text-center text-xs sm:text-sm"><tr style="background:#EEF4FF"><th>Heure x (h)</th><td>6</td><td>9</td><td>12</td><td>15</td><td>18</td><td>20</td><td>21</td></tr><tr><th style="background:#FFF1DD">Température T(x) (°C)</th><td>10</td><td>15</td><td>24</td><td>26</td><td>18</td><td>15</td><td>12</td></tr></table></div></details>
+  </section>
+  <section class="card p-2 sm:p-3 mb-3"><svg id="g" viewBox="0 0 820 390" class="w-full" role="img" aria-label="Courbe de la température en fonction de l’heure"></svg></section>
+  <div id="dots" class="flex gap-1.5 mb-2"></div>
+  <section id="app" class="card p-4 sm:p-5"></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const DATA=[[6,10],[9,15],[12,24],[15,26],[18,18],[20,15],[21,12]];
+const px=x=>70+(x-6)*40, py=t=>340-t*9.6875;
+let hl=0; // 0 = rien, 1..5 = surbrillance après réponse
+function graph(){
+ let s=`<defs><pattern id="hat" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="8" fill="#C9D3EA"/></pattern></defs>`;
+ s+=`<rect x="70" y="30" width="720" height="310" fill="#F8FBFF" stroke="#BFD4FB"/>`;
+ for(let t=0;t<=30;t+=5)s+=`<line x1="70" y1="${py(t)}" x2="790" y2="${py(t)}" stroke="#DCE7FB"/><text x="62" y="${py(t)+4}" font-size="12" text-anchor="end" fill="#1F2A55">${t}</text>`;
+ [6,9,12,15,18,20,21,23].forEach(x=>s+=`<line x1="${px(x)}" y1="30" x2="${px(x)}" y2="340" stroke="#DCE7FB"/><text x="${px(x)}" y="360" font-size="12" text-anchor="middle" fill="#1F2A55">${x}</text>`);
+ s+=`<text x="430" y="382" font-size="13" text-anchor="middle" font-weight="700" fill="#1F2A55">Heure x (h)</text><text x="18" y="185" font-size="13" font-weight="700" fill="#1F2A55" transform="rotate(-90 18 185)" text-anchor="middle">Température T(x) (°C)</text>`;
+ if(hl===5)s+=`<rect x="${px(21)}" y="30" width="${px(24)-px(21)}" height="310" fill="url(#hat)" opacity=".7"/>`;
+ if(hl===4){
+  s+=`<polygon points="${px(6)},340 ${DATA.filter(d=>d[0]<=15).map(d=>px(d[0])+','+py(d[1])).join(' ')} ${px(15)},340" fill="#18A87C" opacity=".18"/><polygon points="${px(15)},340 ${DATA.filter(d=>d[0]>=15).map(d=>px(d[0])+','+py(d[1])).join(' ')} ${px(21)},340" fill="#FF8A3D" opacity=".2"/>
+  <text x="${px(10)}" y="75" font-size="15" font-weight="700" fill="#0E8A63" text-anchor="middle">↗ monte</text><text x="${px(18.2)}" y="75" font-size="15" font-weight="700" fill="#D9660F" text-anchor="middle">↘ descend</text>`;
+ }
+ if(hl===3)s+=`<line x1="70" y1="${py(30)}" x2="790" y2="${py(30)}" stroke="#E4572E" stroke-width="2.5" stroke-dasharray="7 5"/><text x="780" y="${py(30)-6}" font-size="13" font-weight="700" fill="#E4572E" text-anchor="end">30 °C : jamais atteint</text><circle cx="${px(15)}" cy="${py(26)}" r="11" fill="none" stroke="#E4572E" stroke-width="3"/>`;
+ if(hl===2)s+=`<line x1="70" y1="${py(15)}" x2="790" y2="${py(15)}" stroke="#E4572E" stroke-width="2.5" stroke-dasharray="7 5"/>`+[9,20].map(x=>`<line x1="${px(x)}" y1="${py(15)}" x2="${px(x)}" y2="340" stroke="#E4572E" stroke-width="2.5"/><circle cx="${px(x)}" cy="${py(15)}" r="11" fill="none" stroke="#E4572E" stroke-width="3"/><text x="${px(x)}" y="330" font-size="14" font-weight="700" fill="#E4572E" text-anchor="middle" style="paint-order:stroke" stroke="#fff" stroke-width="4">${x} h</text>`).join('');
+ if(hl===1)s+=`<line x1="${px(12)}" y1="${py(24)}" x2="${px(12)}" y2="340" stroke="#E4572E" stroke-width="2.5" stroke-dasharray="6 4"/><line x1="70" y1="${py(24)}" x2="${px(12)}" y2="${py(24)}" stroke="#E4572E" stroke-width="2.5" stroke-dasharray="6 4"/><circle cx="${px(12)}" cy="${py(24)}" r="11" fill="none" stroke="#E4572E" stroke-width="3"/><text x="${px(12)+14}" y="${py(24)+22}" font-size="14" font-weight="700" fill="#E4572E">24 °C</text>`;
+ if(hl===5)s+=`<line x1="${px(23)}" y1="30" x2="${px(23)}" y2="340" stroke="#E4572E" stroke-width="2.5" stroke-dasharray="6 4"/><text x="${px(23)}" y="${py(14)}" font-size="34" font-weight="800" fill="#E4572E" text-anchor="middle">?</text><text x="${px(22.5)}" y="52" font-size="12" font-weight="700" fill="#5A6A99" text-anchor="middle">pas de mesure</text>`;
+ s+=`<polyline points="${DATA.map(d=>px(d[0])+','+py(d[1])).join(' ')}" fill="none" stroke="#3B82F6" stroke-width="4" stroke-linejoin="round"/>`;
+ DATA.forEach(d=>s+=`<circle cx="${px(d[0])}" cy="${py(d[1])}" r="6" fill="#FF8A3D" stroke="#fff" stroke-width="2"/>`);
+ $('g').innerHTML=s;
+}
+const Q=[
+ {q:"Quelle température fait-il à 12 h ?",o:["10 °C","15 °C","24 °C","26 °C"],g:2,e:"On repère 12 h sur l’axe des heures, on monte jusqu’à la courbe, puis on lit la température : <b>24 °C</b>."},
+ {q:"À quelle(s) heure(s) fait-il 15 °C ?",o:["À 9 h seulement","À 9 h et à 20 h","À 20 h seulement","À 12 h et à 18 h"],g:1,e:"On trace la droite horizontale à 15 °C : elle coupe la courbe <b>deux fois</b>, à <b>9 h</b> et à <b>20 h</b>."},
+ {q:"À quelle heure fait-il 30 °C ?",o:["À 12 h","À 15 h","À 21 h","À aucune heure"],g:3,e:"La température maximale relevée est <b>26 °C</b> (à 15 h). La droite à 30 °C ne coupe jamais la courbe : <b>à aucune heure</b>."},
+ {q:"Entre 6 h et 15 h, la température monte-t-elle ou descend-elle ? Et entre 15 h et 21 h ?",o:["Elle monte puis elle descend","Elle descend puis elle monte","Elle monte tout le temps","Elle descend tout le temps"],g:0,e:"Entre 6 h et 15 h, elle passe de 10 °C à 26 °C : elle <b>monte</b>. Entre 15 h et 21 h, elle passe de 26 °C à 12 °C : elle <b>descend</b>."},
+ {q:"La station ne mesure qu’entre 6 h et 21 h. Peut-on lire la température à 23 h ?",o:["Oui, environ 10 °C","Oui, environ 12 °C","Non, 23 h est en dehors de l’intervalle de mesure","Oui, 15 °C"],g:2,e:"Le graphique s’arrête à 21 h : <b>on ne peut pas lire</b> la température à 23 h. On peut seulement supposer qu’elle continue de baisser."}
+];
+let i=0,ans=[],xp=0;
+function render(){
+ $('xp').textContent=xp;
+ $('dots').innerHTML=Q.map((_,k)=>`<span class="dot ${ans[k]!==undefined?'dn':''} ${k===i?'on':''}"></span>`).join('');
+ hl=ans[i]!==undefined&&i<5?i+1:0;graph();
+ if(i>=5){
+  const sc=ans.filter((a,k)=>a===Q[k].g).length;
+  $('app').innerHTML=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:var(--bl)">🏆 Bilan</h2><div class="ok pop"><b>${sc}/5 bonnes réponses</b> · ${xp} XP<br>${sc===5?'Bravo, tu lis très bien un graphique !':'Reviens sur les questions ratées et regarde les corrections.'}</div><div class="mt-3"><button class="btn" id="rp">↺ Rejouer</button></div>`;return;
+ }
+ const q=Q[i],a=ans[i];
+ $('app').innerHTML=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:var(--bl)">Question ${i+1}/5</h2><p class="text-sm mb-3 font-semibold">${q.q}</p>
+ <div class="grid gap-2">${q.o.map((o,j)=>`<button class="opt ${a!==undefined?(j===q.g?'good':j===a?'bad':''):''}" data-j="${j}" ${a!==undefined?'disabled':''}>${'ABCD'[j]}. ${o}</button>`).join('')}</div>
+ ${a!==undefined?`<div class="mt-3 text-sm ${a===q.g?'ok pop':'ko'}">${a===q.g?'🏆 Bravo !':'❌ Pas tout à fait.'} ${q.e}</div><div class="mt-3 text-right"><button class="btn pop" id="nx">${i<4?'Question suivante ➜':'Voir le bilan ➜'}</button></div>`:''}`;
+}
+$('app').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.j!==undefined&&ans[i]===undefined){ans[i]=+t.dataset.j;if(ans[i]===Q[i].g)xp+=20;render()}
+ else if(t.id==='nx'){i++;render();window.scrollTo(0,0)}
+ else if(t.id==='rp'){i=0;ans=[];xp=0;render();window.scrollTo(0,0)}
+};
+render();
+</script>
+</body>
+</html>

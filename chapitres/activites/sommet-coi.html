@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sommet de la COI – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bl:#009ACD;--lb:#6BCBEE;--dk:#0B3C5D;--ye:#FFC928;--gr:#2E9E6B;--rd:#E4572E}
+body{background:linear-gradient(170deg,#009ACD,#6BCBEE 70%,#BDEBFA);color:var(--dk);font-family:Poppins,system-ui,sans-serif;min-height:100vh}
+.card{background:#fff;border-radius:24px;box-shadow:0 10px 28px rgba(11,60,93,.25);border:3px solid #2F6FD0}
+.rule{background:#FFF6D6;border-left:6px solid var(--ye);border-radius:12px;padding:.6rem .8rem;font-weight:600;font-size:.92rem}
+.btn{background:var(--bl);color:#fff;border-radius:14px;padding:.55rem 1rem;font-weight:600}
+.btn:disabled{opacity:.4}
+.btn2{background:#fff;color:var(--dk);border:2px solid var(--bl);border-radius:14px;padding:.45rem .8rem;font-weight:600;font-size:.9rem}
+.seat{border:3px dashed #8CC8E0;border-radius:14px;background:#EAF7FD;padding:2px;min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.seat.full{border:3px solid var(--bl);background:#fff}
+.seat small{font-size:10px;font-weight:600;opacity:.7}
+.rep{border:3px solid transparent;border-radius:14px;background:#EAF7FD;padding:2px}
+.rep.on{border-color:var(--ye);background:#FFF6D6;transform:scale(1.07)}
+.step{width:38px;height:38px;border-radius:50%;font-weight:700;background:#fff;color:var(--dk);border:3px solid #2F6FD0}
+.step.cur{background:var(--ye)}.step.done{background:var(--gr);color:#fff}.step:disabled{opacity:.45}
+.ok{background:#DDF6EA;border-radius:12px;padding:.55rem}.ko{background:#FFE6DE;border-radius:12px;padding:.55rem}.tip{background:#E3F2FD;border-radius:12px;padding:.55rem}
+.pt{display:inline-flex;gap:2px;padding:4px;border-radius:8px;background:#EAF7FD;border:2px solid #8CC8E0}
+.pt i{width:11px;height:11px;border-radius:3px;background:#A5D4E8}.pt i.w{background:var(--rd)}
+.mini{background:#fff;border:2px solid #8CC8E0;border-radius:10px;padding:2px 3px;text-align:center;font-size:10px;font-weight:600}.step.try{background:#FFD9CC}.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+</style>
+</head>
+<body>
+<main class="max-w-3xl mx-auto p-3 sm:p-5">
+  <header class="flex items-center justify-between gap-2 mb-3 text-white">
+    <h1 class="text-2xl sm:text-3xl font-bold">Sommet de la COI</h1>
+    <div id="flags" class="flex gap-1"></div>
+  </header>
+  <div class="flex items-center justify-between mb-3">
+    <div id="steps" class="flex gap-2"></div>
+    <div class="text-white font-bold text-sm">⭐ <span id="xp">0</span> XP</div>
+  </div>
+  <section id="app" class="card p-4 sm:p-5"></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fl=(s)=>`<svg viewBox="0 0 36 24" class="w-8 h-5 rounded-sm shadow">${s}</svg>`;
+$('flags').innerHTML=[
+ fl(`<rect width="36" height="6" fill="#FCD116"/><rect y="6" width="36" height="6" fill="#fff"/><rect y="12" width="36" height="6" fill="#CE1126"/><rect y="18" width="36" height="6" fill="#3A75C4"/><path d="M0 0L16 12L0 24Z" fill="#3D8E33"/>`),
+ fl(`<rect width="12" height="24" fill="#0055A4"/><rect x="12" width="12" height="24" fill="#fff"/><rect x="24" width="12" height="24" fill="#EF4135"/>`),
+ fl(`<rect width="36" height="24" fill="#fff"/><rect x="12" width="24" height="12" fill="#FC3D32"/><rect x="12" y="12" width="24" height="12" fill="#007E3A"/>`),
+ fl(`<rect width="36" height="6" fill="#EA2839"/><rect y="6" width="36" height="6" fill="#1A206D"/><rect y="12" width="36" height="6" fill="#FFD500"/><rect y="18" width="36" height="6" fill="#00A551"/>`),
+ fl(`<rect width="36" height="24" fill="#003F87"/><path d="M0 24L12 0H24Z" fill="#FCD856"/><path d="M0 24L24 0H36V8Z" fill="#D62828"/><path d="M0 24L36 8V16Z" fill="#fff"/><path d="M0 24L36 16V24Z" fill="#007A3D"/>`)
+].join('');
+
+const REP=[{o:"ONU",s:"#2B5BA8",k:"#C99568"},{o:"UA",s:"#3A3A4A",k:"#8D5524"},{o:"UE",s:"#1F7A8C",k:"#E0AC85"},{o:"OIF",s:"#6B4E9B",k:"#6F4528"},{o:"UNICEF",s:"#E4572E",k:"#D9A37A"},{o:"OMS",s:"#2E9E6B",k:"#A9744A"}];
+const isW=i=>i>=4;
+function av(i,cl){
+ const r=REP[i],w=isW(i);
+ return `<svg viewBox="0 0 60 72" class="${cl}">${w?`<path d="M16 26Q14 4 30 6Q46 4 44 26L47 54L13 54Z" fill="#1E1520"/>`:''}<path d="M6 72Q8 46 30 44Q52 46 54 72Z" fill="${r.s}"/><path d="M24 44L30 58L36 44Z" fill="#fff"/>${w?`<path d="M23 46Q30 54 37 46" stroke="#FFC928" stroke-width="2" fill="none"/>`:`<path d="M29 50h2l1.5 12-2.5 3-2.5-3z" fill="#FFC928"/>`}<rect x="26" y="34" width="8" height="12" fill="${r.k}"/><ellipse cx="30" cy="24" rx="11" ry="13" fill="${r.k}"/>${w?`<path d="M19 22Q20 9 30 9Q40 9 41 22Q36 14 30 14Q24 14 19 22Z" fill="#1E1520"/>`:`<path d="M19 22Q19 8 30 8Q41 8 41 22Q38 15 30 15Q22 15 19 22Z" fill="#1E1520"/>`}<circle cx="25.5" cy="25" r="1.4" fill="#1E1520"/><circle cx="34.5" cy="25" r="1.4" fill="#1E1520"/><path d="M26 31Q30 34 34 31" stroke="#8A3B3B" stroke-width="1.5" fill="none"/><rect x="34" y="57" width="22" height="9" rx="2" fill="#fff"/><text x="45" y="63.8" font-size="5.6" font-weight="700" text-anchor="middle" fill="${r.s}">${r.o}</text></svg>`;
+}
+const chair=`<svg viewBox="0 0 40 44" class="w-9 h-10 opacity-60"><rect x="8" y="2" width="24" height="22" rx="4" fill="#8CC8E0"/><rect x="5" y="24" width="30" height="8" rx="3" fill="#5FAFD0"/><rect x="8" y="32" width="4" height="10" fill="#5FAFD0"/><rect x="28" y="32" width="4" height="10" fill="#5FAFD0"/></svg>`;
+
+const PL={
+ P2:["01","45"],P3:["13","14","24"],P4:["01","12","23","34","45"]
+};
+const CFG=[
+ {h:"Mission 1 : tous les placements",rule:"Aucune contrainte : place les 6 représentants comme tu veux.",goal:null,
+  intro:"Lors du sommet, 6 représentants d’organisations internationales (<b>4 hommes</b> et <b>2 femmes</b>) sont assis sur <b>6 chaises alignées</b>. Nous sommes les agents événementiels chargés de la réception des VIP.",
+  q:"1) Combien de dispositions différentes des 6 représentants sont possibles sur les 6 chaises ?",ans:720,
+  hint:"Chaise 1 : 6 choix. Chaise 2 : il en reste ? Chaise 3 : ? … Que fait-on de ces nombres ?",
+  ex:"6! = 6 × 5 × 4 × 3 × 2 × 1 = <b>720</b>",
+  bad:v=>v===36?"Chaque représentant ne s’assoit qu’une fois : après la 1re chaise, il en reste 5 à placer.":v===21?"Tu as additionné 6 + 5 + 4 + … : pour combiner des choix successifs, on multiplie.":v===120?"Tu as oublié un facteur : il y a 6 chaises à remplir, donc 6 facteurs.":v===6?"6 est le nombre de représentants, pas de dispositions.":null,
+  chk:()=>null},
+ {h:"Mission 2 : deux camps",rule:"Les hommes sont assis d’un côté et les femmes de l’autre.",goal:"P2",
+  q:"2) Les hommes sont assis d’un côté et les femmes de l’autre. Combien de dispositions possibles ?",ans:96,
+  hint:"Combien de côtés possibles pour les femmes ? Puis : ordre des 4 hommes (4!) et des 2 femmes (2!).",
+  ex:"2 côtés × 4! × 2! = 2 × 24 × 2 = <b>96</b>",
+  bad:v=>v===48?"Il manque un facteur : pense aux deux côtés possibles ou à l’ordre des 2 femmes.":v===24?"4! ne compte que l’ordre des hommes. Et les femmes ? Et les côtés ?":v===720?"720 ignore la règle : ici, les camps sont séparés.":null,
+  chk:p=>PL.P2.includes(p)?null:"Règle non respectée : tous les hommes d’un côté, toutes les femmes de l’autre."},
+ {h:"Mission 3 : femmes entourées",rule:"Chaque femme est intercalée entre deux hommes.",goal:"P3",
+  q:"3) Chaque femme est intercalée entre deux hommes. Combien de dispositions possibles ?",ans:144,
+  hint:"Trouve d’abord tous les schémas de placement des femmes (ci-dessus). Puis multiplie par 4! × 2!.",
+  ex:"3 schémas × 4! × 2! = 3 × 24 × 2 = <b>144</b>",
+  bad:v=>v===48?"48 = 4! × 2! : c’est l’ordre des personnes pour UN schéma. Combien de schémas y a-t-il ?":v===24?"Tu as oublié l’ordre des femmes et le nombre de schémas.":v===720?"720 ignore la règle des femmes entre deux hommes.":null,
+  chk:p=>PL.P3.includes(p)?null:"Règle non respectée : une femme ne peut être ni au bout de la rangée, ni à côté de l’autre femme."},
+ {h:"Mission 4 : les deux amies",rule:"Les deux femmes souhaitent rester côte à côte.",goal:"P4",
+  q:"4) Les deux femmes souhaitent rester côte à côte. Combien de dispositions possibles ?",ans:240,
+  hint:"Colle les deux femmes en un bloc : combien d’éléments à ranger ? Et dans le bloc, combien d’ordres ?",
+  ex:"Bloc : 5! × 2! = 120 × 2 = <b>240</b><br>Vérification : 5 schémas × 4! × 2! = 5 × 24 × 2 = <b>240</b>",
+  bad:v=>v===120?"Il manque le × 2! : dans le bloc, les deux femmes peuvent échanger leurs places.":v===720?"720 ignore la règle : ici, les femmes sont voisines.":v===48?"Pense aux 5 positions possibles du bloc.":null,
+  chk:p=>PL.P4.includes(p)?null:"Règle non respectée : les deux femmes doivent être sur des chaises voisines."}
+];
+
+let P=0,seats,sel=null,xp=0,att=[0,0,0,0],solved=[0,0,0,0],saved=[[],[],[],[]],pf=[new Set,new Set,new Set,new Set],last=["","","",""],tries=[0,0,0,0],fb="",qf="",hint="",blk=false,showEx=false;
+const reset=()=>{seats=Array(6).fill(null);sel=null;fb="";qf="";hint="";blk=false;showEx=false};
+reset();
+const pt=p=>`<span class="pt">${[0,1,2,3,4,5].map(i=>`<i class="${p.includes(i)?'w':''}"></i>`).join('')}</span>`;
+const unlocked=i=>i===0||att[i-1];
+
+function render(){
+ const c=CFG[P];
+ $('xp').textContent=xp;
+ $('steps').innerHTML=CFG.map((_,i)=>`<button data-s="${i}" class="step ${i===P?'cur':''} ${solved[i]?'done':att[i]?'try':''}" ${unlocked(i)?'':'disabled'}>${solved[i]?'✓':i+1}</button>`).join('');
+ const pool=[0,1,2,3,4,5].filter(i=>!seats.includes(i));
+ let h=`<h2 class="text-lg sm:text-xl font-bold mb-2" style="color:#2F6FD0">${c.h}</h2>`;
+ if(c.intro)h+=`<p class="text-sm mb-2">${c.intro}</p>`;
+ h+=`<div class="rule mb-3">📋 Consigne du protocole : ${c.rule}</div>`;
+ h+=`<div class="grid grid-cols-6 gap-1.5">${seats.map((s,i)=>`<button data-seat="${i}" class="seat ${s!==null?'full':''}">${s!==null?av(s,'w-full'):chair}<small>Chaise ${i+1}</small></button>`).join('')}</div>`;
+ h+=`<div class="mt-3 text-xs font-semibold">Représentants à installer (touche un représentant, puis une chaise) :</div>`;
+ h+=`<div class="grid grid-cols-6 gap-1.5 mt-1 min-h-[70px]">${pool.map(i=>`<button data-rep="${i}" class="rep ${sel===i?'on':''}">${av(i,'w-full')}</button>`).join('')||'<span class="col-span-6 text-xs opacity-60">Tous sont assis : enregistre la disposition !</span>'}</div>`;
+ h+=`<div class="flex flex-wrap gap-2 mt-3"><button id="sv" class="btn">➕ Enregistrer cette disposition</button><button id="rnd" class="btn2">🎲 Au hasard</button><button id="clr" class="btn2">↺ Vider</button></div>`;
+ if(fb)h+=`<div class="mt-2 text-sm ${fb[0]==='✅'?'ok pop':fb[0]==='❌'?'ko':'tip'}">${fb}</div>`;
+ h+=`<div class="mt-3 text-sm font-semibold">📚 Dispositions enregistrées : ${saved[P].length}</div><div class="flex flex-wrap gap-2 mt-1 p-1.5 rounded-xl max-h-60 overflow-y-auto" style="background:#F3FAFD;min-height:44px">${saved[P].length?saved[P].map((d,i)=>`<div class="mini"><div class="flex">${d.map(r=>av(r,'w-6')).join('')}</div>n° ${i+1}</div>`).join(''):'<span class="text-xs opacity-60 p-1">Aucune pour l’instant : enregistre ta première !</span>'}</div>`;
+ if(c.goal){
+  const L=PL[c.goal];
+  h+=`<div class="mt-2 text-xs font-semibold">Schémas de placement des femmes (rouge = femme) : ${pf[P].size}/${L.length}</div><div class="flex flex-wrap gap-2 mt-1">${L.map(p=>pf[P].has(p)?pt([...p].map(Number)):`<span class="pt" style="opacity:.45;font-weight:700;padding:2px 14px">?</span>`).join('')}</div>`;
+  if(pf[P].size===L.length)h+=`<div class="tip mt-2 text-sm pop">🔎 Tu as trouvé les <b>${L.length}</b> schémas ! Pour chacun, il reste à ordonner les hommes (4!) et les femmes (2!).</div>`;
+ }
+ if(P===3){
+  h+=`<div class="mt-2"><button id="blk" class="btn2">🔗 Coller les deux femmes en un bloc</button></div>`;
+  if(blk)h+=`<div class="tip mt-2 text-sm pop"><div class="flex gap-1 items-center mb-1">${[0,1,2,3].map(()=>`<span class="px-2 py-1 rounded bg-white font-bold">H</span>`).join('')}<span class="px-2 py-1 rounded font-bold" style="background:#FFC928">F F</span></div>5 éléments à ranger (4 hommes + 1 bloc) : <b>5!</b> façons. Dans le bloc, les femmes peuvent échanger leurs places : <b>2!</b>.</div>`;
+ }
+ h+=`<div class="mt-4 rounded-2xl p-3" style="border:3px solid #FFC928"><p class="font-semibold text-sm mb-2">${c.q}</p><div class="flex flex-wrap gap-2 items-center"><input id="ans" type="number" inputmode="numeric" value="${last[P]}" class="rounded-xl px-3 py-2 w-28" style="border:2px solid var(--bl)" placeholder="Ta réponse"><button id="vq" class="btn">Vérifier</button><button id="hq" class="btn2">💡 Indice</button>${att[P]&&!solved[P]?`<button id="ex" class="btn2">👀 Voir la correction</button>`:''}</div>${hint?`<div class="tip mt-2 text-sm">${hint}</div>`:''}${qf?`<div class="mt-2 text-sm ${qf.startsWith('🏆')?'ok pop':'ko'}">${qf}</div>`:''}${showEx&&!solved[P]?`<div class="ok mt-2 text-sm pop">✔️ Correction : ${c.ex}</div>`:''}</div>`;
+ h+=`<div class="mt-3 flex items-center justify-between gap-2">${P>0?`<button id="pv" class="btn2">⬅ Mission précédente</button>`:'<span></span>'}${P<3?`<button id="nx" class="btn ${att[P]?'pop':''}" ${att[P]?'':'disabled'}>Mission suivante ➜</button>`:''}</div>`;
+ if(!att[P]&&P<3)h+=`<div class="text-xs mt-1 text-right opacity-70">Réponds à la question (même si tu n’es pas sûr) pour continuer.</div>`;
+ if(P===3&&att[3]){
+  const n=solved.reduce((a,b)=>a+b,0);
+  h+=n===4?`<div class="mt-4 text-center rounded-2xl p-4 pop" style="background:#FFF6D6"><div class="text-5xl">🏅</div><div class="text-xl font-bold">Agent VIP du sommet !</div><p class="text-sm mt-1">4 missions réussies. Matematikup souhaite que ce soit toi qui représentes notre pays lors d’un tel événement dans le futur !</p></div>`:`<div class="mt-4 text-center rounded-2xl p-4 pop" style="background:#FFF6D6"><div class="text-5xl">🎖️</div><div class="text-xl font-bold">Agent en progression : ${n}/4 réussies</div><p class="text-sm mt-1">Reviens sur les missions orange et ouvre « 👀 Voir la correction » pour t’améliorer. Matematikup compte sur toi !</p></div>`;
+ }
+ $('app').innerHTML=h;
+}
+
+$('steps').onclick=e=>{const b=e.target.closest('[data-s]');if(b&&!b.disabled){P=+b.dataset.s;reset();render()}};
+$('app').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;
+ if(t.dataset.rep!==undefined){sel=+t.dataset.rep;render();return}
+ if(t.dataset.seat!==undefined){
+  const i=+t.dataset.seat;
+  if(seats[i]!==null){seats[i]=null;sel=null}
+  else if(sel!==null){seats[i]=sel;sel=null}
+  fb="";render();return}
+ if(t.id==='clr'){seats=Array(6).fill(null);sel=null;fb="";render()}
+ if(t.id==='rnd'){seats=[0,1,2,3,4,5].sort(()=>Math.random()-.5);sel=null;fb="";render()}
+ if(t.id==='blk'){blk=!blk;render()}
+ if(t.id==='nx'&&att[P]){P++;reset();render();window.scrollTo(0,0)}
+ if(t.id==='pv'){P--;reset();render();window.scrollTo(0,0)}
+ if(t.id==='hq'){hint="💡 "+CFG[P].hint;render()}
+ if(t.id==='ex'){showEx=true;render()}
+ if(t.id==='sv'){
+  if(seats.includes(null)){fb="👉 Installe d’abord les 6 représentants.";render();return}
+  const p=seats.map((s,i)=>isW(s)?i:-1).filter(x=>x>=0).join('');
+  const err=CFG[P].chk(p),k=seats.join('');
+  if(err)fb="❌ "+err;
+  else if(saved[P].some(d=>d.join('')===k))fb="ℹ️ Cette disposition est déjà enregistrée : essaie une autre !";
+  else{saved[P].push([...seats]);if(CFG[P].goal)pf[P].add(p);fb="✅ Disposition n°"+saved[P].length+" enregistrée !"}
+  render();
+ }
+ if(t.id==='vq'){
+  const raw=$('ans').value;if(!raw)return;last[P]=raw;const v=+raw,c=CFG[P];
+  att[P]=1;
+  if(v===c.ans){
+   if(!solved[P]){solved[P]=1;xp+=25}
+   qf=`🏆 Bravo ! ${c.ex}`;
+  }else{tries[P]++;qf="❌ "+(c.bad(v)||"Pas encore. Essaie l’indice 💡 ou explore avec les chaises.")+" Tu peux continuer : ouvre « 👀 Voir la correction » pour comprendre."}
+  render();
+ }
+};
+render();
+</script>
+</body>
+</html>
