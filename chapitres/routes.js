@@ -22,13 +22,4 @@ const ROUTES = {
   "1ere-S:24":   "denombrement",        // 1ère S   › Traitement de données et probabilités › Dénombrement
   "1ere-OSE:14": "ensembles",           // 1ère OSE › Traitement de données et probabilités › Notion sur la théorie des ensembles
   "1ere-OSE:15": "applications",        // 1ère OSE › Traitement de données et probabilités › Applications
-  /* Seconde */
-  "2nde:5":      "trinome",               // 2nde     › Analyse › Trinôme du second degré
-  "2nde:8":      "generalites-fonctions", // 2nde     › Analyse › Généralités sur les fonctions de référence (cours : généralités sur les fonctions numériques)
-  "2nde:11":     "logique",               // 2nde     › Algèbre › Logique
-  /* 1ère : généralités et trinôme */
-  "1ere-L:1":    "generalites-fonctions", // 1ère L   › Analyse › Généralités sur les fonctions numériques d'une variable réelle
-  "1ere-L:7":    "trinome",               // 1ère L   › Algèbre › Équations du second degré
-  "1ere-L:8":    "trinome",               // 1ère L   › Algèbre › Inéquations du second degré
-  "1ere-S:2":    "trinome",               // 1ère S   › Analyse › Équations du second degré
 };

@@ -99,27 +99,13 @@ Ouvre le site depuis un serveur (pas par double-clic sur le fichier : les activi
 - [ ] Les activités s'ouvrent, répondent et ne coupent pas leur contenu.
 - [ ] Affichage correct sur téléphone (390 px de large).
 
-## 7. Ce qui est déjà en place, et ce qu'il reste à insérer
+## 7. Ce qu'il reste à insérer (ordre conseillé)
 
-**Déjà en place** (clé de `routes.js` → fichier) :
-
-| Classe et carte | Fichier |
-|---|---|
-| 2nde : 5 Trinôme · 8 Généralités sur les fonctions · 11 Logique | `trinome.js` · `generalites-fonctions.js` · `logique.js` |
-| 1ère L : 1 Généralités sur les fonctions · 7 et 8 Équations / Inéquations du 2nd degré | `generalites-fonctions.js` · `trinome.js` |
-| 1ère S : 1 Fonction numérique · 2 Équations du 2nd degré | `fonctions.js` · `trinome.js` |
-| 1ère L 12, 1ère S 24 Dénombrement · 1ère OSE 14 et 15 | `denombrement.js` · `ensembles.js` · `applications.js` |
-| 1ère L 5-6, 1ère S 11-12, 1ère OSE 6-7 Suites | `suites-generalites.js` · `suites-arith-geo.js` |
-
-**Reste à insérer** (ordre conseillé) :
-
-1. **Activité ensemble** : `ensembles.js`, repérer `SOON()`.
-2. **Activité des applications** : `applications.js`, repérer `SOON()`.
-3. **Vidéos** : `VID()` ou `VID('')` dans les fichiers de chapitre (voir §4).
-4. **Corrections des exercices** : dans `generalites-fonctions.js`, `trinome.js` et `logique.js`, les exercices utilisent `exo(...)` / `corr(BIENTOT…)` (message « arrive bientôt »). Pour une vraie correction, remplace `exo(n, …)` par `B('gr', 'Exercice n', …, corr(solution, indice, true))`.
-5. **Autres liens possibles** vers un chapitre existant : une ligne dans `routes.js`. Exemples : `"1ere-OSE:1": "generalites-fonctions"` (généralités sur les fonctions en 1ère OSE) ; `"1ere-L:4": "logique"`, `"1ere-S:10": "logique"`, `"1ere-OSE:3": "logique"` (logique en 1ère, si le même cours convient).
-6. **Probabilité** : 1ère L n=13, 1ère S n=25, 1ère OSE n=16 (aucun contenu pour l'instant).
-7. **Autres chapitres de `classe.html`** : un chapitre à la fois, dans l'ordre du programme.
+1. **Activité ensemble** : `ensembles.js`, repérer `SOON()` (rubrique « Activité ensemble »).
+2. **Activité des applications** : `applications.js`, repérer `SOON()` (rubrique « Activité : applications »).
+3. **Vidéos** : 3 emplacements (voir §4).
+4. **Probabilité** : 1ère L n=13, 1ère S n=25, 1ère OSE n=16 (aucun contenu pour l'instant).
+5. **Autres chapitres de `classe.html`** : un chapitre à la fois, dans l'ordre du programme.
 
 ## 8. En cas de problème
 

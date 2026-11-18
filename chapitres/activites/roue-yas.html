@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La roue de la fortune de Yas – MATEMATIKUP</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+if(window.tailwind)tailwind.config={theme:{extend:{colors:{yas:{bg:'#11349F',navy:'#01377D',yellow:'#FFCF00',coral:'#FB6362',maroon:'#9B4A6B',blue:'#5DA1D2',gold:'#C59F16'}}}}};
+</script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:#11349F;color:#fff;font-family:Roboto,system-ui,sans-serif;min-height:100vh}
+.stick{position:sticky;top:0;z-index:20;background:#11349F;padding-top:env(safe-area-inset-top,0px)}
+.ch{border:3px solid #5DA1D2;border-radius:14px;padding:.5rem .8rem;font-weight:500;font-size:.92rem;text-align:left;width:100%;background:#fff;color:#01377D}
+.ch.on{background:#FFCF00;border-color:#FFCF00}
+.ch.good{background:#FFCF00;border-color:#FFCF00}
+.ch.bad{background:#FB6362;border-color:#FB6362}
+.ch:disabled{opacity:1}
+.inp{background:#fff;color:#01377D;border:3px solid #5DA1D2;border-radius:12px;padding:.35rem .5rem;font-weight:700;width:100%;text-align:center}
+.inp.good{border-color:#FFCF00;background:#FFCF00}.inp.bad{border-color:#FB6362;background:#FB6362}
+.pop{animation:pop .35s ease}@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.tb td,.tb th{border:3px solid #5DA1D2;padding:.3rem}
+</style>
+</head>
+<body>
+<div class="stick shadow-lg">
+ <div class="max-w-3xl mx-auto px-3 pt-2 pb-2">
+  <div class="flex items-center justify-between gap-2">
+   <h1 class="text-sm sm:text-lg font-black leading-tight">La roue de la fortune de Yas : chance ou calcul ?</h1>
+   <div class="text-xs font-bold text-yas-yellow whitespace-nowrap">★ <span id="xp">0</span> XP</div>
+  </div>
+  <div class="h-2 rounded-full bg-white/20 my-1.5"><div id="bar" class="h-2 rounded-full bg-yas-yellow transition-all" style="width:0%"></div></div>
+  <div class="flex items-center gap-3">
+   <svg id="wheel" viewBox="0 0 220 240" class="w-44 sm:w-72 shrink-0" role="img" aria-label="Roue de la fortune Yas"></svg>
+   <div class="flex-1 min-w-0">
+    <button id="spin" class="w-full rounded-full bg-yas-yellow text-yas-navy font-black py-2 text-lg shadow">Tourne</button>
+    <div id="last" class="mt-2 rounded-xl bg-yas-navy px-3 py-1.5 text-sm font-bold min-h-[2.2rem]">Résultat : —</div>
+    <div class="mt-1 flex items-center justify-between gap-2"><div id="tally" class="text-xs opacity-90">Mes lancers : 0</div><button id="clr" class="rounded-full border-2 border-white px-2 py-0.5 text-xs font-bold whitespace-nowrap" title="Vider les lancers">↺ Vider</button></div>
+   </div>
+  </div>
+ </div>
+</div>
+<main class="max-w-3xl mx-auto px-3 py-3">
+ <section id="app" class="rounded-3xl bg-yas-navy p-4 sm:p-5 shadow-xl"></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+/* ===== Roue : 14 secteurs, dans le sens horaire à partir du repère ===== */
+const SEC=["PUBG 60 UC","Tour sup","Oups","Combo","Tour sup","Netflix 15 USD","Oups","Oups","50 SMS","Tour sup","1 Go","Oups","100 Mo","Oups"];
+const COL=["#5DA1D2","#FB6362","#9B4A6B","#01377D"];
+const N=SEC.length,isO=i=>SEC[i]==="Oups";
+/* poids = angle de chaque secteur (1 unité = 360°/63 ≈ 5,71°), mesurés sur l’image de la roue : Tour sup = 3, Combo = 4, les autres = 5 */
+const W=[5,3,5,4,3,5,5,5,5,3,5,5,5,5],TW=W.reduce((a,b)=>a+b,0),CUM=[];W.reduce((c,w)=>{CUM.push(c);return c+w},0);
+const aS=i=>CUM[i]*360/TW,aE=i=>(CUM[i]+W[i])*360/TW,pick=u=>{for(let i=0;i<N;i++)if(u>=aS(i)&&u<aE(i))return i;return N-1};
+const NG=SEC.filter(s=>s!=="Oups").length,NO=N-NG;
+let rot=0,spinning=false,hl='all',tally={n:0,o:0};
+const pt=(a,r)=>[110+r*Math.sin(a*Math.PI/180),120-r*Math.cos(a*Math.PI/180)];
+function drawWheel(){
+ let s=`<circle cx="110" cy="120" r="108" fill="#FFCF00"/>`;
+ for(let k=0;k<24;k++){const [x,y]=pt(k*15,102);s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.8" fill="#fff"/>`}
+ s+=`<g transform="rotate(${rot} 110 120)">`;
+ SEC.forEach((l,i)=>{
+  const a0=aS(i),a1=aE(i),[x0,y0]=pt(a0,94),[x1,y1]=pt(a1,94),m=(a0+a1)/2;
+  const on=hl==='all'||(hl==='oups'&&isO(i))||(hl==='gain'&&!isO(i));
+  s+=`<path d="M110 120L${x0.toFixed(1)} ${y0.toFixed(1)}A94 94 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}Z" fill="${COL[i%4]}" stroke="#fff" stroke-width=".6" opacity="${on?1:.22}"/>`;
+  s+=`<text x="${110+62}" y="123" font-size="${W[i]===3?7.4:l.length>10?7.6:9.4}" font-weight="900" fill="#fff" text-anchor="middle" transform="rotate(${m-90} 110 120)" opacity="${on?1:.3}">${l}</text>`;
+ });
+ s+=`</g><circle cx="110" cy="120" r="26" fill="#C59F16" stroke="#FFCF00" stroke-width="3"/><polygon points="97,4 123,4 123,20 110,36 97,20" fill="#01377D" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/>`;
+ $('wheel').innerHTML=s;
+}
+function spinTo(u,done){
+ if(spinning)return;spinning=true;
+ const delta=(((-u-rot)%360)+360)%360,from=rot,to=rot+360*5+delta,t0=performance.now(),D=2800;
+ const tick=t=>{const p=Math.min((t-t0)/D,1),e=1-Math.pow(1-p,3);rot=from+(to-from)*e;drawWheel();if(p<1)requestAnimationFrame(tick);else{spinning=false;done()}};
+ requestAnimationFrame(tick);
+}
+function tallyTxt(){const f=tally.n?` · Oups : ${tally.o} (${(100*tally.o/tally.n).toFixed(0)} %)`:'';$('tally').textContent='Mes lancers : '+tally.n+f}
+$('clr').onclick=()=>{if(spinning)return;tally={n:0,o:0};tallyTxt();$('last').textContent='Résultat : —'};
+$('spin').onclick=()=>{
+ if(spinning)return;
+ const u=Math.random()*360,i=pick(u);$('last').textContent='La roue tourne…';
+ spinTo(u,()=>{tally.n++;if(isO(i))tally.o++;$('last').innerHTML='Résultat : <span class="text-yas-yellow">'+SEC[i]+'</span>'+(SEC[i]==='Tour sup'?' (tourne encore !)':'');tallyTxt()});
+};
+
+/* ===== Outils de lecture des réponses ===== */
+const P=s=>{s=String(s??'').trim().replace(/\s/g,'').replace(',','.').replace('−','-');if(!s)return NaN;let pc=false;if(s.endsWith('%')){pc=true;s=s.slice(0,-1)}let v;if(s.includes('/')){const[a,b]=s.split('/');v=parseFloat(a)/parseFloat(b)}else v=parseFloat(s);return pc?v/100:v};
+const PC=s=>{s=String(s??'').trim();return s.includes('%')?parseFloat(s.replace('%','').replace(',','.')):P(s)};
+const fr=n=>String(+n.toFixed(3)).replace('.',',');
+const WO=W.reduce((a,w,i)=>a+(isO(i)?w:0),0),WG=TW-WO,pO=WO/TW,pG=WG/TW;
+const A3=3*360/TW,A4=4*360/TW,A5=5*360/TW;
+
+/* ===== Questions (une par page) ===== */
+const Q=[
+{k:'intro'},
+{k:'num',t:"Question 1",q:"Combien de secteurs y a-t-il au total sur cette roue ?",lab:"Le nombre de secteurs de cette roue est :",ans:[N],
+ hint:"Fais un tour complet de la roue en comptant chaque secteur une seule fois.",
+ bad:v=>v===8?"8 est le nombre de résultats différents, pas le nombre de secteurs.":null,
+ e:`La roue compte <b>${N} secteurs</b> (ils n’ont pas tous la même taille).`},
+{k:'multi',t:"Question 2",q:"Listez les résultats uniques possibles. <span class='opacity-80'>(Touche tous les résultats qui existent sur la roue.)</span>",
+ o:[["PUBG 60 UC",1],["Tour sup",1],["Oups",1],["Combo",1],["Netflix 15 USD",1],["50 SMS",1],["1 Go",1],["100 Mo",1],["WiFiber",0],["5 Go",0]],
+ hint:"Un même résultat peut apparaître sur plusieurs secteurs, mais on ne le compte qu’une fois dans la liste.",
+ e:`Il y a <b>8 résultats uniques</b> : PUBG 60 UC, Tour sup, Oups, Combo, Netflix 15 USD, 50 SMS, 1 Go et 100 Mo. « Tour sup » apparaît 3 fois et « Oups » 5 fois, c’est pourquoi on a 14 secteurs mais 8 résultats.`},
+{k:'two',t:"Question 3",hl:1,intro:"Nous allons nous intéresser à deux événements principaux :<br><b>Événement G</b> : « Obtenir un Gain »<br><b>Événement O</b> : « Obtenir Oups »",q:"Détermine le nombre de secteurs gagnants et le nombre de secteurs perdants (Oups).",
+ labs:["Secteurs gagnants :","Secteurs perdants :"],ans:[NG,NO],
+ hint:"Compte d’abord les secteurs « Oups », puis déduis les autres : 14 − nombre d’Oups. Utilise les boutons pour surligner la roue.",
+ e:`Secteurs perdants (Oups) : <b>${NO}</b>. Secteurs gagnants : ${N} − ${NO} = <b>${NG}</b> (« Tour sup » est un gain, car ce n’est pas un Oups).`},
+{k:'table',t:"Question 4",hl:1,q:"Complète le tableau suivant :",panel:`Les secteurs <b>n’ont pas tous la même taille</b>. Angles mesurés sur la roue : <b>Tour sup : ${fr(+A3.toFixed(1))}°</b> · <b>Combo : ${fr(+A4.toFixed(1))}°</b> · <b>tous les autres : ${fr(+A5.toFixed(1))}°</b>.<br>La probabilité d’un événement est la part de la roue qu’il occupe : <b>angle total ÷ 360°</b>.`,hint:"Calcule l’angle total des secteurs « Oups » (5 secteurs), puis divise par 360°. L’angle des gains = 360° − angle des Oups. Pourcentage = probabilité × 100.",
+ e:`Oups : ${NO} secteurs de ${fr(+A5.toFixed(1))}° chacun, soit ≈ ${fr(+(NO*A5).toFixed(0))}° → P(O) ≈ ${fr(+(NO*A5).toFixed(0))}/360 ≈ ${fr(+pO.toFixed(3))}, soit ≈ ${fr(+(pO*100).toFixed(1))} %.<br>Gain : ${NG} secteurs, ≈ ${fr(+(360-NO*A5).toFixed(0))}° → P(G) ≈ ${fr(+pG.toFixed(3))}, soit ≈ ${fr(+(pG*100).toFixed(1))} %.<br>Total : ${N} secteurs, probabilité 1, soit 100 %.`},
+{k:'choice',t:"Question 5.a",q:"Quel événement a la probabilité la plus élevée ?",o:["Gain","Oups","Les deux ont la même probabilité"],g:0,hint:"Compare P(G) et P(O) du tableau.",
+ e:`P(G) ≈ ${fr(+(pG*100).toFixed(1))} % est plus grande que P(O) ≈ ${fr(+(pO*100).toFixed(1))} %. L’événement le plus probable est <b>Gain</b>.`},
+{k:'choice',t:"Question 5.b",q:"Peut-on dire que la probabilité de gagner est forte ou faible ? Justifie.",o:[`Forte : elle dépasse 50 % (≈ ${fr(+(pG*100).toFixed(1))} %)`,"Faible : elle est inférieure à 50 %","Certaine : on gagne à tous les coups","On ne peut pas le dire"],g:0,hint:"Compare la probabilité à 50 %.",
+ e:`La probabilité de gagner vaut environ ${fr(+(pG*100).toFixed(1))} % : elle est <b>forte</b>, car elle dépasse 50 %.`},
+{k:'choice',t:"Question 5.c",q:"Toutes les issues élémentaires ont-elles la même probabilité de se produire ? Pourquoi ?",
+ o:["Oui : chaque secteur a la même chance, donc chaque résultat aussi","Non : les secteurs n’ont pas tous la même taille et un résultat peut occuper plusieurs secteurs (Oups : 5 secteurs)","Non : la roue favorise toujours les gains","Oui : il y a 8 résultats différents"],g:1,hint:"Regarde la taille des secteurs « Tour sup » et « Combo », et le nombre de secteurs « Oups ».",
+ e:`Les secteurs « Tour sup » (${fr(+A3.toFixed(1))}°) et « Combo » (${fr(+A4.toFixed(1))}°) sont plus petits que les autres (${fr(+A5.toFixed(1))}°), et « Oups » occupe 5 secteurs : <b>Oups ≈ ${fr(+(pO*100).toFixed(1))} %</b>, Tour sup ≈ ${fr(+(900/TW).toFixed(1))} % (3 secteurs ensemble), chacun des autres résultats ≈ ${fr(+(500/TW).toFixed(1))} % ou moins. Les résultats n’ont <b>pas</b> la même probabilité.`},
+{k:'choice',t:"Question 6",q:"En tournant la roue Yas, quelle est la probabilité d’obtenir l’offre WiFiber ?",o:["0","1/14","1/8","5/14"],g:0,hint:"Cherche WiFiber sur la roue.",
+ e:`Aucun secteur de la roue ne propose WiFiber : c’est un événement <b>impossible</b>. Sa probabilité est 0 ÷ ${N} = <b>0</b>.`},
+{k:'freq',t:"Question 7.a",n:20,i:0,q:"Lance la roue <b>20 fois</b> avec le simulateur. Note la fréquence d’apparition de « Oups ».",
+ note:"Remarque importante : lors d’une expérience aléatoire, les résultats peuvent varier d’une personne à l’autre. Ton résultat n’est pas « faux » s’il est différent de celui de ton voisin."},
+{k:'freq',t:"Question 7.b",n:50,i:1,q:"Lance la roue <b>50 fois</b>. Calcule la nouvelle fréquence."},
+{k:'freq',t:"Question 7.c",n:100,i:2,q:"Lance la roue <b>100 fois</b>. Calcule la nouvelle fréquence."},
+{k:'choice',t:"Question 8.a",chart:1,q:"Que remarques-tu ? La valeur de la fréquence expérimentale se rapproche-t-elle de la probabilité à mesure que le nombre de lancers augmente ?",
+ o:["Oui : plus on lance la roue, plus la fréquence se rapproche de la probabilité de Oups (≈ 0,40)","Non : elle s’éloigne de plus en plus","Non : elle ne change jamais","On ne peut rien remarquer"],g:0,hint:"Regarde les barres F1, F2, F3 et la ligne de la probabilité.",
+ e:`En général, la fréquence se rapproche de <b>P(O) ≈ ${fr(+pO.toFixed(2))}</b> quand le nombre de lancers augmente. Avec peu de lancers, le hasard peut s’en écarter davantage.`},
+{k:'choice',t:"Question 8.b",chart:1,dyn:1,q:"Cette valeur est-elle proche de la probabilité théorique de tomber sur « Oups » que tu as calculée à la question 4 ?",o:["Oui, elle est proche","Non, elle est loin"],hint:"Compare F3 à la probabilité de Oups (≈ 0,40).",
+ after:`<div class="mt-3 rounded-xl bg-yas-yellow text-yas-navy p-3 text-sm font-medium">Ce phénomène, où la fréquence d’un résultat se rapproche de plus en plus de sa probabilité théorique quand on répète l’expérience un très grand nombre de fois, est appelé la <b>stabilisation des fréquences</b>.</div>`},
+{k:'choice',t:"Question 9",q:"Réponds à la question initiale : <b>ce jeu est-il truqué ?</b>",o:["Oui","Non"],g:1,
+ e:`<b>Non, le jeu n’est pas truqué : il est simplement mathématique.</b> « Oups » occupe 5 secteurs, soit environ ${fr(+(pO*100).toFixed(0))} % de la roue : c’est le résultat unique le plus fréquent, donc il est normal de le voir souvent.`},
+{k:'end'}
+];
+
+/* ===== État ===== */
+let st=0,done={},fb='',sel=new Set(),vals=[],exp={},xp=0,tries=0,cur=null;
+const ok=(m)=>`<div class="rounded-xl bg-yas-yellow text-yas-navy p-3 text-sm font-medium pop"><b>✔ Bravo !</b> ${m}</div>`;
+const ko=(m)=>`<div class="rounded-xl bg-yas-coral text-yas-navy p-3 text-sm font-medium"><b>✖ Pas tout à fait.</b> ${m}</div>`;
+const inp=(id,v,d,c)=>`<input id="${id}" class="inp ${c||''}" inputmode="decimal" value="${v??''}" ${d?'disabled':''} placeholder="…">`;
+
+function go(n){st=n;fb='';sel=new Set();vals=[];tries=0;cur=null;hl='all';render();window.scrollTo(0,0)}
+function award(good){done[st]=good?1:0;if(good)xp+=20}
+
+function render(){
+ $('xp').textContent=xp;$('bar').style.width=(st/(Q.length-1)*100)+'%';
+ const q=Q[st],d=done[st]!==undefined;let h='';drawWheel();
+ if(q.k==='intro'){
+  h=`<h2 class="text-lg font-black text-yas-yellow mb-2">Bureau d’enquête</h2>
+  <p class="text-sm mb-2">Un jeu de « roue de la fortune » est proposé sur l’application Yas &amp; moi. Les utilisateurs disposent de <b>deux tentatives par jour</b> pour gagner une offre SMS ou data. Pourtant, de nombreux joueurs constatent qu’ils tombent très souvent sur la case « Oups ». Beaucoup de joueurs se plaignent en disant : « Ce jeu est truqué ! »</p>
+  <p class="text-sm mb-3">Aujourd’hui, notre classe devient un bureau d’enquête. Notre mission : répondre à une question que tout le monde se pose : <b>la roue de Yas est-elle vraiment « truquée » ?</b> Pour le découvrir, nous allons apprendre à utiliser une nouvelle branche des mathématiques qui permet de mesurer la chance et le hasard.</p>
+  <p class="text-xs mb-3 opacity-90">Essaie la roue en haut de la page : elle restera avec toi jusqu’à la fin de la séance.</p>
+  <button class="rounded-xl bg-yas-yellow text-yas-navy font-black px-5 py-2" data-a="next">Commencer l’enquête</button>`;
+ }else if(q.k==='end'){
+  const sc=Object.values(done).reduce((a,b)=>a+b,0),tot=Object.keys(done).length;
+  h=`<h2 class="text-lg font-black text-yas-yellow mb-2">Conclusion de l’enquête</h2>
+  <div class="rounded-xl bg-yas-yellow text-yas-navy p-3 pop"><div class="font-black text-lg">${sc}/${tot} réponses justes · ${xp} XP</div><div class="text-sm font-medium mt-1">La roue de Yas n’est pas truquée : elle est simplement mathématique. « Oups » occupe 5 secteurs, soit environ 40 % de la roue : c’est le résultat le plus fréquent.</div></div>
+  <div class="mt-3"><button class="rounded-xl border-2 border-white px-4 py-2 font-bold" data-a="again">Recommencer</button></div>`;
+ }else{
+  h=`<h2 class="text-lg font-black text-yas-yellow mb-2">${q.t}</h2>`;
+  if(q.intro)h+=`<p class="text-sm mb-2 rounded-xl bg-yas-bg p-2">${q.intro}</p>`;
+  if(q.hl)h+=`<div class="flex flex-wrap gap-2 mb-3 text-xs font-bold items-center"><span>Surligner sur la roue :</span>${[['all','Tout'],['gain','Gains'],['oups','Oups']].map(([k,l])=>`<button data-hl="${k}" class="rounded-full px-3 py-1 ${hl===k?'bg-yas-yellow text-yas-navy':'border-2 border-white'}">${l}</button>`).join('')}</div>`;
+  if(q.q)h+=`<p class="text-sm font-medium mb-3">${q.q}</p>`;
+  if(q.note)h+=`<p class="text-xs mb-3 rounded-xl bg-yas-bg p-2">${q.note}</p>`;
+  if(q.panel)h+=`<div class="rounded-xl bg-yas-bg p-3 text-sm mb-3">${q.panel}</div>`;
+  if(q.chart)h+=chart();
+  if(q.k==='num'){h+=`<div class="flex flex-wrap items-center gap-2"><span class="text-sm">${q.lab}</span><div class="w-24">${inp('v0',vals[0],d,d?(done[st]?'good':'bad'):'')}</div></div>`}
+  if(q.k==='two'){h+=q.labs.map((l,j)=>`<div class="flex items-center gap-2 mb-2"><span class="text-sm w-44">${l}</span><div class="w-24">${inp('v'+j,vals[j],d,d?(P(vals[j])===q.ans[j]?'good':'bad'):'')}</div></div>`).join('')}
+  if(q.k==='multi'){h+=`<div class="grid ${q.o.length>6&&st===2?'grid-cols-2':'grid-cols-1'} gap-2">${q.o.map((o,j)=>`<button data-m="${j}" class="ch ${d?(o[1]?'good':sel.has(j)?'bad':''):sel.has(j)?'on':''}" ${d?'disabled':''}>${sel.has(j)&&!d?'☑':d&&o[1]?'✔':'☐'} ${o[0]}</button>`).join('')}</div>`}
+  if(q.k==='choice'){const g=q.dyn?dynG():q.g;h+=`<div class="grid gap-2">${q.o.map((o,j)=>`<button data-c="${j}" class="ch ${d?(j===g?'good':j===cur?'bad':''):''}" ${d?'disabled':''}>${o}</button>`).join('')}</div>`}
+  if(q.k==='table')h+=tableH(d);
+  if(q.k==='freq')h+=freqH(q,d);
+  if(!d&&q.k!=='choice'&&!(q.k==='freq'&&exp[q.i]===undefined))h+=`<div class="mt-3 flex flex-wrap gap-2"><button class="rounded-xl bg-yas-yellow text-yas-navy font-black px-4 py-2" data-a="chk">Vérifier</button>${q.hint?`<button class="rounded-xl border-2 border-white px-3 py-2 font-bold text-sm" data-a="hint">Indice</button>`:''}</div>`;
+  else if(!d&&q.hint)h+=`<div class="mt-3"><button class="rounded-xl border-2 border-white px-3 py-2 font-bold text-sm" data-a="hint">Indice</button></div>`;
+  if(fb)h+=`<div class="mt-3">${fb}</div>`;
+  if(d){const e=typeof q.e==='function'?q.e():q.e;if(q.after)h+=q.after;h+=`<div class="mt-3 text-right"><button class="rounded-xl bg-yas-yellow text-yas-navy font-black px-5 py-2 pop" data-a="next">${st===Q.length-2?'Voir la conclusion':'Continuer'}</button></div>`}
+ }
+ $('app').innerHTML=h;
+}
+const F=()=>[0,1,2].map(i=>exp[i]?exp[i].o/exp[i].n:null);
+const dynG=()=>{const f=F()[2];return f!==null&&Math.abs(f-pO)<=0.1?0:1};
+function chart(){
+ const f=F(),W=300,H=130,y=v=>110-v*220;
+ let s=`<svg viewBox="0 0 ${W} ${H}" class="w-full max-w-sm mb-3 rounded-xl bg-yas-bg"><line x1="30" y1="110" x2="290" y2="110" stroke="#fff"/>`;
+ [0,.2,.4,.5].forEach(v=>s+=`<text x="26" y="${y(v)+3}" font-size="8" fill="#fff" text-anchor="end">${fr(v)}</text><line x1="30" y1="${y(v)}" x2="290" y2="${y(v)}" stroke="#5DA1D2" stroke-opacity=".35"/>`);
+ f.forEach((v,i)=>{const x=60+i*80;if(v===null){s+=`<text x="${x+15}" y="104" font-size="9" fill="#fff" text-anchor="middle">?</text>`}else s+=`<rect x="${x}" y="${y(v)}" width="30" height="${110-y(v)}" fill="#5DA1D2"/><text x="${x+15}" y="${y(v)-3}" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">${fr(+v.toFixed(2))}</text>`;s+=`<text x="${x+15}" y="123" font-size="9" fill="#fff" text-anchor="middle">F${i+1} (${[20,50,100][i]})</text>`});
+ s+=`<line x1="30" y1="${y(pO)}" x2="290" y2="${y(pO)}" stroke="#FFCF00" stroke-width="2" stroke-dasharray="5 3"/><text x="288" y="${y(pO)-3}" font-size="8" fill="#FFCF00" text-anchor="end" font-weight="700">P(O) ≈ ${fr(+pO.toFixed(2))}</text></svg>`;
+ return s;
+}
+function tableH(d){
+ const rows=[["Gain",NG,pG,pG*100],["Oups",NO,pO,pO*100],["Total",N,1,100]];
+ const c=(r,j,okf)=>{const id=`t${r}${j}`,v=vals[r*3+j];return `<td class="p-1"><input id="${id}" class="inp ${d?(okf(v)?'good':'bad'):''}" value="${v??''}" ${d?'disabled':''} inputmode="decimal" placeholder="…"></td>`};
+ return `<div class="overflow-x-auto"><table class="tb w-full text-center text-sm"><tr class="bg-yas-yellow text-yas-navy font-black"><th>Événement</th><th>Nombre de secteurs</th><th>Probabilité</th><th>Pourcentage</th></tr>${rows.map((R,r)=>`<tr><th class="bg-yas-yellow text-yas-navy">${R[0]}</th>${c(r,0,v=>P(v)===R[1])}${c(r,1,v=>Math.abs(P(v)-R[2])<.008)}${c(r,2,v=>Math.abs(PC(v)-R[3])<1)}</tr>`).join('')}</table></div><div class="text-xs mt-1 opacity-80">Tu peux écrire une probabilité en fraction ou en décimal.</div>`;
+}
+function freqH(q,d){
+ const r=exp[q.i];
+ let h=`<div class="rounded-xl bg-yas-bg p-3 mb-3 flex flex-wrap items-center gap-3"><button class="rounded-xl bg-yas-yellow text-yas-navy font-black px-4 py-2 ${d?'opacity-40':''}" data-a="batch" ${d?'disabled':''}>Lancer ×${q.n}</button><div class="text-sm font-bold">${r?`Série terminée : <span class="text-yas-yellow">« Oups » est sorti ${r.o} fois</span> sur ${r.n} lancers.`:'Lance la série avec le simulateur.'}</div></div>`;
+ if(r&&!d)h+=`<div class="mb-2"><button class="rounded-xl border-2 border-white px-3 py-1 text-xs font-bold" data-a="cancel">↺ Annuler cette série</button></div>`;
+ if(r)h+=`<div class="flex items-center gap-2"><span class="text-sm font-bold">F${q.i+1} =</span><div class="w-28">${inp('v0',vals[0],d,d?(freqOk(q)?'good':'bad'):'')}</div><span class="text-xs opacity-80">(nombre d’Oups ÷ nombre de lancers)</span></div>`;
+ return h;
+}
+const freqOk=q=>{const r=exp[q.i],v=P(vals[0]);return !isNaN(v)&&Math.abs(v-r.o/r.n)<=.006};
+
+$('app').onclick=e=>{
+ const t=e.target.closest('button');if(!t)return;const q=Q[st];
+ if(t.dataset.hl){hl=t.dataset.hl;render();return}
+ if(t.dataset.m!==undefined){const j=+t.dataset.m;sel.has(j)?sel.delete(j):sel.add(j);render();return}
+ if(t.dataset.c!==undefined){const j=+t.dataset.c,g=q.dyn?dynG():q.g;cur=j;award(j===g);fb=j===g?ok(typeof q.e==='function'?'':(q.e||'')):ko(q.e||`Compare F3 à ${fr(pO)} : ${exp[2]?'ta valeur est '+fr(+(exp[2].o/exp[2].n).toFixed(2))+'.':''}`);if(q.dyn)fb=(j===g?ok:ko)(`F3 ${exp[2]?'≈ '+fr(+(exp[2].o/exp[2].n).toFixed(2)):''} et la probabilité théorique vaut ≈ ${fr(+pO.toFixed(2))} : ${g===0?'les deux valeurs sont <b>proches</b>.':'les deux valeurs restent assez <b>éloignées</b> : relance une série pour voir.'}`);render();return}
+ const a=t.dataset.a;
+ if(a==='next'){go(st+1);return}
+ if(a==='again'){done={};xp=0;exp={};tally={n:0,o:0};tallyTxt();$('last').textContent='Résultat : —';go(0);return}
+ if(a==='hint'){fb=`<div class="rounded-xl bg-yas-blue text-yas-navy p-3 text-sm font-medium"><b>Indice :</b> ${q.hint}</div>`;render();return}
+ if(a==='cancel'){delete exp[q.i];vals=[];fb='';$('last').textContent='Résultat : —';render();return}
+ if(a==='batch'){let o=0;for(let k=0;k<q.n;k++)if(isO(pick(Math.random()*360)))o++;exp[q.i]={o,n:q.n};$('last').innerHTML='Série ×'+q.n+' : <span class="text-yas-yellow">'+o+' Oups</span>';vals=[];fb='';render();return}
+ if(a==='chk'){
+  if(q.k==='num'){const raw=$('v0').value;vals=[raw];const v=P(raw);if(raw==='')return;const g=q.ans.includes(v);award(g);fb=g?ok(q.e):ko((q.bad&&q.bad(v))||'Regarde la correction ci-dessous.')+`<div class="mt-2 text-sm">${q.e}</div>`}
+  else if(q.k==='two'){const r=[$('v0').value,$('v1').value];if(r.some(x=>x===''))return;vals=r;const g=r.every((x,j)=>P(x)===q.ans[j]);award(g);fb=g?ok(q.e):ko('Vérifie ton comptage.')+`<div class="mt-2 text-sm">${q.e}</div>`}
+  else if(q.k==='multi'){if(!sel.size)return;const g=q.o.every((o,j)=>!!o[1]===sel.has(j));award(g);fb=g?ok(q.e):ko('Les bonnes réponses sont cochées (✔) ci-dessus.')+`<div class="mt-2 text-sm">${q.e}</div>`}
+  else if(q.k==='table'){const rows=[[NG,pG,pG*100],[NO,pO,pO*100],[N,1,100]];vals=[];rows.forEach((_,r)=>[0,1,2].forEach(j=>vals.push($(`t${r}${j}`).value)));if(vals.some(x=>x===''))return;
+   const g=rows.every((R,r)=>P(vals[r*3])===R[0]&&Math.abs(P(vals[r*3+1])-R[1])<.008&&Math.abs(PC(vals[r*3+2])-R[2])<1);award(g);fb=g?ok(q.e):ko('Les cases en coral sont à corriger.')+`<div class="mt-2 text-sm">${q.e}</div>`}
+  else if(q.k==='freq'){const raw=$('v0').value;if(raw==='')return;vals=[raw];const g=freqOk(q),r=exp[q.i];award(g);fb=g?ok(`F${q.i+1} = ${r.o}/${r.n} = ${fr(+(r.o/r.n).toFixed(3))}.`):ko(`La fréquence se calcule en divisant : <b>${r.o} ÷ ${r.n} = ${fr(+(r.o/r.n).toFixed(3))}</b>.`)}
+  render();
+ }
+};
+drawWheel();tallyTxt();render();
+</script>
+</body>
+</html>

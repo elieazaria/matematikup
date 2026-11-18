@@ -86,6 +86,10 @@
       <input id="search-input" type="search" placeholder="Chercher un chapitre…" autocomplete="off"
              class="w-full rounded-xl border-2 border-primary/15 px-3 py-2 text-sm font-semibold text-primary-dark placeholder:text-primary-dark/35 focus:outline-none focus:border-primary" />
     </div>
+    <label id="dispo-box" class="sb-link cursor-pointer select-none" title="Masquer les chapitres qui n'ont pas encore de contenu">
+      <input id="dispo-only" type="checkbox" class="h-4 w-4 accent-[#3730A3]" />
+      <span>Chapitres disponibles</span>
+    </label>
     <a id="sb-login" href="connexion.html" class="sb-link">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"/></svg>
       Se connecter
@@ -113,7 +117,7 @@
   <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
     <!-- Le logo est dans la sidebar sur grand écran -->
     <a href="index.html" class="flex items-center flex-shrink-0 lg:hidden" aria-label="MATEMATIKUP — Accueil">
-      <img src="logo_mate.png" alt="MATEMATIKUP" class="h-10 w-auto" />
+      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
     </a>
 
     <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
@@ -214,8 +218,15 @@
       </section>
 
       <!-- Programme de la classe choisie -->
-      <section id="programmes" class="mt-10 scroll-mt-28" aria-live="polite"></section>
-      <p id="no-result" class="hidden mt-6 rounded-2xl border border-primary/15 p-6 text-center font-bold">Aucun chapitre ne correspond à ta recherche.</p>
+      <div id="dispo-bar" class="mt-10 flex flex-wrap items-center gap-3">
+        <label class="inline-flex cursor-pointer select-none items-center gap-2 rounded-full border-2 border-primary/15 bg-white px-4 py-2 text-sm font-bold">
+          <input id="dispo-only-2" type="checkbox" class="h-4 w-4 accent-[#3730A3]" />
+          Afficher seulement les chapitres disponibles
+        </label>
+        <span id="dispo-count" class="text-sm font-bold text-primary/60"></span>
+      </div>
+      <section id="programmes" class="mt-6 scroll-mt-28" aria-live="polite"></section>
+      <p id="no-result" class="hidden mt-6 rounded-2xl border border-primary/15 p-6 text-center font-bold">Aucun chapitre ne correspond à ta recherche ou à ton filtre.</p>
 
       <!-- CTA final (visiteurs) -->
       <section id="cta-bas" class="hidden mt-14 rounded-3xl bg-primary p-8 text-center text-white">
@@ -239,6 +250,8 @@
 </div>
 
 
+<!-- Table des chapitres déjà rédigés (même fichier que chapitre.html) -->
+<script src="chapitres/routes.js"></script>
 <script>
   /* ============ DONNÉES — une seule structure pour toutes les classes ============ */
   // Pour ajouter un chapitre : une ligne dans "chapitres". Pour remplir une classe : renseigner "parties".
@@ -391,20 +404,32 @@
   addEventListener("keydown", (e) => { if (e.key === "Escape") togglePanel(false); });
 
   // Recherche dans la classe affichée
+  function lireDispo() { try { return localStorage.getItem("mk-dispo") === "1"; } catch (e) { return false; } }
+  function ecrireDispo(v) { try { localStorage.setItem("mk-dispo", v ? "1" : "0"); } catch (e) {} }
   function filtrer() {
     const q = norm($("search-input").value.trim());
+    const seul = $("dispo-only").checked;
+    $("dispo-only-2").checked = seul;
     let visibles = 0;
     document.querySelectorAll("#programmes [data-carte]").forEach((a) => {
-      const ok = !q || norm(a.querySelector("h3").textContent).includes(q);
+      const ok = (!q || norm(a.querySelector("h3").textContent).includes(q)) && (!seul || a.hasAttribute("data-dispo"));
       a.classList.toggle("hidden", !ok);
       if (ok) visibles++;
     });
     document.querySelectorAll("#programmes [data-partie]").forEach((p) => {
       p.classList.toggle("hidden", !p.querySelector("[data-carte]:not(.hidden)"));
     });
-    $("no-result").classList.toggle("hidden", !(q && document.querySelector("#programmes [data-carte]") && !visibles));
+    $("no-result").classList.toggle("hidden", !((q || seul) && document.querySelector("#programmes [data-carte]") && !visibles));
+    const total = document.querySelectorAll("#programmes [data-carte]").length;
+    const dispo = document.querySelectorAll("#programmes [data-carte][data-dispo]").length;
+    $("dispo-bar").classList.remove("hidden");
+    $("dispo-count").textContent = total ? `${dispo} chapitre${dispo > 1 ? "s" : ""} disponible${dispo > 1 ? "s" : ""} sur ${total}` : "";
   }
   $("search-input").addEventListener("input", filtrer);
+  $("dispo-only").checked = lireDispo();
+  [$("dispo-only"), $("dispo-only-2")].forEach((cb) => cb.addEventListener("change", () => {
+    $("dispo-only").checked = cb.checked; ecrireDispo(cb.checked); filtrer();
+  }));
   $("search-toggle").addEventListener("click", () => {
     const open = $("search-box").classList.toggle("hidden") === false;
     $("search-toggle").setAttribute("aria-expanded", open);
@@ -446,6 +471,7 @@
 
     if (!c.parties.length) {
       $("toc-block").classList.add("hidden");
+      $("dispo-bar").classList.add("hidden");
       $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Le programme de la ${nom} arrive bientôt.</p>`;
       return;
     }
@@ -461,15 +487,16 @@
         const pct = connecte ? (c.progression[n] || 0) : 0;
         n++;
         const lien = `chapitre.html?classe=${r.classe}&n=${n}`;
+        const dispo = typeof ROUTES !== "undefined" && !!ROUTES[`${r.classe}:${n}`];
         return `
-        <a data-carte href="${lien}" class="block overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <a data-carte ${dispo ? "data-dispo" : ""} href="${lien}" class="block overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           <div class="relative flex h-28 items-start bg-accent/15 p-4">
             ${motif}
             <h3 class="relative text-base font-black leading-snug">${titre}</h3>
           </div>
           <div class="p-4">
             <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-primary/55">
-              <span>Chapitre ${n}</span>
+              <span>Chapitre ${n}${dispo ? ` <span class="ml-1 rounded-full bg-accent/25 px-2 py-0.5 text-[10px] text-primary-dark">✓ Disponible</span>` : ""}</span>
               <span>${connecte ? pct + " %" : " "}</span>
             </div>
             <div class="mt-2 h-2 overflow-hidden rounded-full bg-primary/10" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du chapitre ${n}">
@@ -485,6 +512,7 @@
         <div class="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">${cartes}</div>
       </div>`;
     }).join("");
+    filtrer();
   }
 
   function afficherAccueil() {
@@ -494,6 +522,7 @@
     $("titre").textContent = "Mathématiques";
     $("classe-sous-titre").textContent = "";
     $("toc-block").classList.add("hidden");
+    $("dispo-bar").classList.add("hidden");
     $("no-result").classList.add("hidden");
     $("programmes").innerHTML = `<p class="rounded-2xl border border-primary/15 p-6 text-center font-bold">Clique sur ta classe pour découvrir son programme.</p>`;
   }
