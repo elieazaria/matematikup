@@ -36,6 +36,12 @@ const qz = (num, q, opts, ans, expl) => {
   QZ.push({ ans, expl });
   return `<div class="bx pu"><span class="tg">Question ${num}</span>${P(q)}<div class="opt" data-k="${QZ.length - 1}">${opts.map(o => `<button type="button" class="o">${o}</button>`).join('')}</div><div class="sg hidden"></div></div>`;
 };
+/* Aides d'exercices partagées par plusieurs chapitres */
+const BIENTOT = ['📘 La correction arrive bientôt.', '💡 L’indice arrive bientôt.'];
+const OL = (...a) => `<ol class="list-decimal pl-6">${a.map(x => `<li>${x}</li>`).join('')}</ol>`;
+/* Exercice : énoncé + zone « Ma réponse / Indice / Correction » (correction à venir) */
+const exo = (n, ...c) => B('gr', 'Exercice ' + n, ...c, corr(BIENTOT[0], BIENTOT[1], true));
+
 /* Question à réponses multiples : ans = tableau des indices des bonnes réponses */
 const qm = (num, q, opts, ans, expl) => {
   QZ.push({ ans, expl });

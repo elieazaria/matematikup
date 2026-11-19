@@ -50,7 +50,7 @@
 
   <!-- Logo -->
   <a href="index.html" class="block" aria-label="MATEMATIKUP — Accueil">
-    <img src="logo_mate.png" alt="MATEMATIKUP" class="h-11 w-auto" />
+    <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-11 w-auto" />
   </a>
 
   <!-- Choix de la classe (dynamique) -->
@@ -117,7 +117,7 @@
   <nav class="max-w-7xl mx-auto flex items-center justify-between gap-6">
     <!-- Le logo est dans la sidebar sur grand écran -->
     <a href="index.html" class="flex items-center flex-shrink-0 lg:hidden" aria-label="MATEMATIKUP — Accueil">
-      <img src="logo_mate.jpeg" alt="MATEMATIKUP" class="h-10 w-auto" />
+      <img src="logo_mate.png" alt="MATEMATIKUP" class="h-10 w-auto" />
     </a>
 
     <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-bold text-primary-dark">
@@ -404,8 +404,6 @@
   addEventListener("keydown", (e) => { if (e.key === "Escape") togglePanel(false); });
 
   // Recherche dans la classe affichée
-  function lireDispo() { try { return localStorage.getItem("mk-dispo") === "1"; } catch (e) { return false; } }
-  function ecrireDispo(v) { try { localStorage.setItem("mk-dispo", v ? "1" : "0"); } catch (e) {} }
   function filtrer() {
     const q = norm($("search-input").value.trim());
     const seul = $("dispo-only").checked;
@@ -423,12 +421,14 @@
     const total = document.querySelectorAll("#programmes [data-carte]").length;
     const dispo = document.querySelectorAll("#programmes [data-carte][data-dispo]").length;
     $("dispo-bar").classList.remove("hidden");
-    $("dispo-count").textContent = total ? `${dispo} chapitre${dispo > 1 ? "s" : ""} disponible${dispo > 1 ? "s" : ""} sur ${total}` : "";
+    $("dispo-count").textContent = !total ? "" : seul
+      ? `Filtre actif : ${total - dispo} chapitre${total - dispo > 1 ? "s" : ""} masqué${total - dispo > 1 ? "s" : ""} (sans contenu pour l’instant) — décoche la case pour tout voir`
+      : `${dispo} chapitre${dispo > 1 ? "s" : ""} disponible${dispo > 1 ? "s" : ""} sur ${total}`;
   }
   $("search-input").addEventListener("input", filtrer);
-  $("dispo-only").checked = lireDispo();
+  $("dispo-only").checked = false; // jamais mémorisé : à chaque visite, tous les chapitres sont affichés
   [$("dispo-only"), $("dispo-only-2")].forEach((cb) => cb.addEventListener("change", () => {
-    $("dispo-only").checked = cb.checked; ecrireDispo(cb.checked); filtrer();
+    $("dispo-only").checked = cb.checked; filtrer();
   }));
   $("search-toggle").addEventListener("click", () => {
     const open = $("search-box").classList.toggle("hidden") === false;
@@ -467,6 +467,7 @@
 
     // Remise à zéro de la recherche
     $("search-input").value = "";
+    $("dispo-only").checked = false; $("dispo-only-2").checked = false;
     $("no-result").classList.add("hidden");
 
     if (!c.parties.length) {
